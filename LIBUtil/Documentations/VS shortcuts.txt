@@ -1,0 +1,15 @@
+﻿
+Shift F12: Find usages in solution
+F8: Go to next in found searches/usages
+
+F12: Go to definition
+Ctrl - : Go back
+Ctrl Shift - : Go forward
+
+Ctrl Alt (down arrow): open dropdown to go to next open file in editor
+
+F7 Toggle between form designer and text editor
+* If doesn't work, set it up in Tools > Options > Environment > Keyboard. Search for View.ToggleDesigner. Assign F7 to "Text Editor" and "Windows Forms Designer"
+
+
+

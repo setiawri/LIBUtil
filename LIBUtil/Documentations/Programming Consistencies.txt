@@ -1,0 +1,9 @@
+﻿
+Password:
+1. Passwords are hashed in database stored procedure. So different applications can have its own hashing algorithm.
+2. Password is hashed only in one stored procedure so it can be maintained easily.
+
+DB & Stored Procedures:
+> always use nvarchar instead of varchar
+> nvarchar parameters are set to MAX. length is regulated in code behind.
+

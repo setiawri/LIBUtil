@@ -1,0 +1,15 @@
+﻿USE [iSpeak]
+GO
+
+IF(select COUNT(name)  from sys.types where is_user_defined = 1 AND name = 'Array') > 0
+DROP TYPE [dbo].[Array]
+GO
+
+CREATE TYPE [dbo].[Array] AS TABLE(
+	[value_str] [nvarchar](max) NULL,
+	[value_int] [int]
+)
+GO
+
+
+

@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using LIBUtil;
+using LIBiSpeak;
+
+namespace iSpeakWindows.UserAccounts
+{
+    public partial class MasterData_v1_UserAccounts_Form : LIBUtil.Desktop.Forms.MasterData_v1_Form
+    {
+        /*******************************************************************************************************/
+        #region SETTINGS
+
+        private const bool FORM_SHOWDATAONLOAD = true;
+
+        #endregion SETTINGS
+        /*******************************************************************************************************/
+        #region PRIVATE VARIABLES
+
+        private DataGridViewColumn col_dgv_Username;
+
+        #endregion PRIVATE VARIABLES
+        /*******************************************************************************************************/
+        #region CONSTRUCTOR METHODS
+
+        public MasterData_v1_UserAccounts_Form() : this(FormModes.Add) { }
+        public MasterData_v1_UserAccounts_Form(FormModes startingMode) : base(GlobalData.MDIParent, startingMode, FORM_SHOWDATAONLOAD) { InitializeComponent(); }
+        
+        #endregion CONSTRUCTOR METHODS
+        /*******************************************************************************************************/
+        #region METHODS
+
+        #endregion
+        /*******************************************************************************************************/
+        #region OVERRIDE METHODS
+		
+        protected override void setupFields()
+        {
+            setColumnsDataPropertyNames(UserAccount.COL_DB_Id, UserAccount.COL_DB_Active, null, null, null, null);
+
+            col_dgv_Username = base.addColumn<DataGridViewTextBoxCell>(dgv, "col_dgv_Username", itxt_Username.LabelText, UserAccount.COL_DB_Username, true, "", true);
+            
+        }
+		
+        protected override void setupControlsBasedOnRoles() 
+        {
+            Helper.hideIfNoAccess(GlobalData.UserAccount, btnRoles, UserAccountAccessEnum.UserAccountRoles_AddUpdate);
+        }
+
+        protected override void additionalSettings()
+        {
+        }
+
+        protected override void clearInputFields()
+        {
+        }
+
+        protected override bool isValidToPopulateGridViewDataSource()
+        {
+            return true; 
+        }
+
+        //protected override System.Data.DataView loadGridviewDataSource()
+        //{
+        //    return UserAccount.get(DBConnection.ConnectionString, chkIncludeInactive.Checked, null, itxt_Username.ValueText, itxt_Notes.ValueText).DefaultView;
+        //}
+        
+        //protected override void populateInputFields()
+        //{
+        //    UserAccount obj = new UserAccount(DBConnection.ConnectionString, selectedRowID());
+        //    itxt_Username.ValueText = obj.Name;
+        //}
+
+        //protected override void update()
+        //{
+        //    UserAccount.update(DBConnection.ConnectionString, GlobalData.UserAccount.Id, selectedRowID(), itxt_Username.ValueText, itxt_Notes.ValueText);
+        //}
+
+        //protected override void add()
+        //{
+        //    UserAccount.add(DBConnection.ConnectionString, GlobalData.UserAccount.Id, itxt_Username.ValueText, itxt_Notes.ValueText);
+        //}
+
+        protected override Boolean isInputFieldsValid()
+        {
+            if (string.IsNullOrEmpty(itxt_Username.Text))
+                return itxt_Username.isValueError("Please provide name");
+            //else if ((Mode != FormMode.Update && City.isNameExist(_inputTxtName.ValueText, null))
+            //    || (Mode == FormMode.Update && City.isNameExist(_inputTxtName.ValueText, selectedRowID())))
+            //    return _inputTxtName.TextError("Name is already in the list");
+            //else if (_inputDDLStates.SelectedValue == null)
+            //    return _inputDDLStates.SelectedValueError("Please select a state listed in the drop down list");
+
+            return true;
+        }
+
+        protected override void updateActiveStatus(Guid id, Boolean activeStatus)
+        {
+            UserAccount.updateActiveStatus(DBConnection.ConnectionString, GlobalData.UserAccount.Id, id, activeStatus);
+        }
+		
+        protected override void btnLog_Click(object sender, EventArgs e)
+        {
+            Util.displayForm(null, new SharedForms.ActivityLogs_Form(selectedRowID()));
+            txtQuickSearch.Focus();
+        }
+
+        protected override void updateDefaultRow(Guid id) { }
+
+        protected override void updateCheckbox1Column(Guid id, Boolean newValue) { }
+
+        #endregion METHODS
+        /*******************************************************************************************************/
+        #region EVENT HANDLERS
+
+        //private void lnkUpdateStates_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        //{
+        //    Tools.displayForm(new MasterData.States_Form(FormMode.New));
+        //    State.populateDropDownList(_inputDDLStates.Dropdownlist, false, true);
+        //}
+
+        #endregion EVENT HANDLERS
+        /*******************************************************************************************************/
+    }
+}

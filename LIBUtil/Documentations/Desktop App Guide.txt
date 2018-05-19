@@ -1,0 +1,5 @@
+﻿
+Forms:
+1. Always use form's top right exit button to close form. No need to create a button just to close the form.
+
+

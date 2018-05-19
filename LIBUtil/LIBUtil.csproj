@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{23013BFC-021E-426A-8A92-8C1C34836974}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LIBUtil</RootNamespace>
+    <AssemblyName>LIBUtil</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBConnection.cs" />
+    <Compile Include="Desktop\Classes\PrintLayout.cs" />
+    <Compile Include="Desktop\Classes\ReceiptPrinter.cs" />
+    <Compile Include="Desktop\Forms\CheckDBConnection_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Desktop\Forms\CheckDBConnection_Form.Designer.cs">
+      <DependentUpon>CheckDBConnection_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\Forms\MasterData_v1_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Desktop\Forms\MasterData_v1_Form.Designer.cs">
+      <DependentUpon>MasterData_v1_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\Forms\MessageBox_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Desktop\Forms\MessageBox_Form.Designer.cs">
+      <DependentUpon>MessageBox_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\DragDropLabelWithCheckedListBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\DragDropLabelWithCheckedListBox.Designer.cs">
+      <DependentUpon>DragDropLabelWithCheckedListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\Dropdownlist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\Dropdownlist.Designer.cs">
+      <DependentUpon>Dropdownlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\PanelToggle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\PanelToggle.Designer.cs">
+      <DependentUpon>PanelToggle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_CheckedListBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_CheckedListBox.Designer.cs">
+      <DependentUpon>InputControl_CheckedListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl.Designer.cs">
+      <DependentUpon>InputControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_DateTimePicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_DateTimePicker.Designer.cs">
+      <DependentUpon>InputControl_DateTimePicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_Dropdownlist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_Dropdownlist.Designer.cs">
+      <DependentUpon>InputControl_Dropdownlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_Textbox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_Textbox.Designer.cs">
+      <DependentUpon>InputControl_Textbox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeTree.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Desktop\Forms\CheckDBConnection_Form.resx">
+      <DependentUpon>CheckDBConnection_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\Forms\MasterData_v1_Form.resx">
+      <DependentUpon>MasterData_v1_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\Forms\MessageBox_Form.resx">
+      <DependentUpon>MessageBox_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\DragDropLabelWithCheckedListBox.resx">
+      <DependentUpon>DragDropLabelWithCheckedListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\Dropdownlist.resx">
+      <DependentUpon>Dropdownlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\PanelToggle.resx">
+      <DependentUpon>PanelToggle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\InputControl_CheckedListBox.resx">
+      <DependentUpon>InputControl_CheckedListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\InputControl_DateTimePicker.resx">
+      <DependentUpon>InputControl_DateTimePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\InputControl_Dropdownlist.resx">
+      <DependentUpon>InputControl_Dropdownlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\InputControl_Textbox.resx">
+      <DependentUpon>InputControl_Textbox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documentations\Programming Consistencies.txt" />
+    <Content Include="Documentations\Desktop App Guide.txt" />
+    <Content Include="Documentations\Scripts\DB user query.txt" />
+    <Content Include="Documentations\SQL syntax.txt" />
+    <Content Include="Documentations\VS shortcuts.txt" />
+    <Content Include="Documentations\Scripts\User Defined Types - Array.txt" />
+    <Content Include="Documentations\Template - Classes.txt" />
+    <Content Include="Documentations\Template - Desktop Forms.txt" />
+    <Content Include="Documentations\Template - MasterData_v1.txt" />
+    <Content Include="Images\Calendar_Button.png" />
+    <Content Include="Images\expand-collapse-down.png" />
+    <None Include="Images\expand-collapse-right.png" />
+    <None Include="Images\expand-collapse-left.png" />
+    <Content Include="Images\expand-collapse-up.png" />
+    <Content Include="Images\lock.png" />
+    <Content Include="Images\refresh.png" />
+    <Content Include="Images\unlock.png" />
+    <Resource Include="Images\gear-black.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

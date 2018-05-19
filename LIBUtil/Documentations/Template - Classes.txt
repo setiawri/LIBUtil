@@ -1,0 +1,144 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using LIBUtil;
+
+namespace NamespaceName
+{
+    public class ClassName
+    {
+        /*******************************************************************************************************/
+        #region PUBLIC VARIABLES
+
+        public Guid Id;
+        public string Notes = "";
+		public bool Active;
+
+        #endregion PUBLIC VARIABLES
+        /*******************************************************************************************************/
+        #region DATABASE FIELDS
+
+        public const string COL_DB_Id = "Id";
+        public const string COL_DB_Notes = "Notes";
+        public const string COL_DB_Active = "Active";
+
+        #endregion PUBLIC VARIABLES
+        /*******************************************************************************************************/
+        #region CONSTRUCTOR METHODS
+		
+        public ClassName(Guid id)
+        {
+            DataRow row =  Util.getFirstRow(get(id));
+            Id = id;
+            Notes = Util.wrapNullable<string>(row, COL_DB_Notes);
+        }
+
+        public ClassName() { }
+
+        #endregion CONSTRUCTOR METHODS
+        /*******************************************************************************************************/
+        #region DATABASE METHODS
+
+        public static Guid add(Guid userAccountID, string notes)
+        {
+            Guid id = Guid.NewGuid();
+            using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
+            {
+                SqlQueryResult result = DBConnection.query(
+                    sqlConnection,
+                    QueryTypes.ExecuteNonQuery,
+                    "xxx_add",
+                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id),
+                    new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(notes))
+                );
+
+                if(result.IsSuccessful)
+                    ActivityLog.add(sqlConnection, userAccountID, id, "Added");
+            }
+            
+            return id;
+        }
+
+        public static DataTable get(Guid? id, string notes)
+        {		
+            SqlQueryResult result = DBConnection.query(
+                QueryTypes.FillByAdapter, 
+                "xxx_get",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Util.wrapNullable(id)),
+                new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(notes))
+                );
+            return result.Datatable;
+        }
+
+        public static void update(Guid userAccountID, Guid id, string notes)
+        {
+            ClassName objOld = new ClassName(id);
+            string log = "";
+            log = Util.appendChange(log, objOld.Notes, notes, "Notes: '{0}' to '{1}'");
+
+            if (string.IsNullOrEmpty(log))
+                Util.displayMessageBoxError("No changes to record");
+            else
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
+                {
+                    SqlQueryResult result = DBConnection.query(
+                        sqlConnection,
+                        QueryTypes.ExecuteNonQuery,
+                        "xxx_update",
+                        new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id),
+                        new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(notes))
+                    );
+
+                    if(result.IsSuccessful)
+						ActivityLog.add(sqlConnection, userAccountID, id, String.Format("Updated: {0}", log));
+					
+					//notify supervisor role
+					//if (new UserAccount(userAccountID).UserRole != UserAccountRoles.Supervisor)
+					//  add row to Notifications table
+                }
+            }
+        }
+
+        public static void updateActiveStatus(Guid userAccountID, Guid id, bool value)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
+            {
+                SqlQueryResult result = DBConnection.query(
+                    sqlConnection,
+                    QueryTypes.ExecuteNonQuery,
+                    "xxx_update_Active",
+                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id),
+                    new SqlQueryParameter(COL_DB_Active, SqlDbType.Bit, value)
+                );
+
+                if(result.IsSuccessful)
+                    ActivityLog.add(sqlConnection, userAccountID, id, "Update Active Status to " + value);
+            }
+        }
+
+        public static void delete(Guid userAccountID, Guid id)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
+            {
+                SqlQueryResult result = DBConnection.query(
+                    sqlConnection,
+                    QueryTypes.ExecuteNonQuery,
+                    "xxx_delete",
+                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id)
+                );
+
+                if(result.IsSuccessful)
+                    ActivityLog.add(sqlConnection, userAccountID, id, "Deleted");
+            }
+        }
+
+        #endregion DATABASE METHODS
+        /*******************************************************************************************************/
+        #region CLASS METHODS
+
+        #endregion CLASS METHODS
+        /*******************************************************************************************************/
+    }
+}
+

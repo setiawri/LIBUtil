@@ -1,0 +1,113 @@
+﻿--------------------------------------------------------------------------------------------------------------------------------------------
+
+select into temp table and iterate through rows
+
+	-- drop table if already exists
+	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
+		DROP TABLE #TEMP_INPUTARRAY
+		
+	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM @ARRAY_UserAccountAccessEnum) AS x
+	
+	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
+	BEGIN
+		SELECT TOP 1 @UserAccountAccess_EnumId = value_int FROM #TEMP_INPUTARRAY
+		
+		-- remove row to iterate to the next row
+		DELETE #TEMP_INPUTARRAY WHERE value_int = @UserAccountAccess_EnumId
+	END
+	
+	-- clean up
+	DROP TABLE #TEMP_INPUTARRAY
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+query text in all stored procedures
+	DECLARE @keystring varchar(MAX) = 'x'
+
+	SELECT ROUTINE_NAME, ROUTINE_DEFINITION
+	FROM INFORMATION_SCHEMA.ROUTINES
+	WHERE ROUTINE_TYPE='PROCEDURE' AND ROUTINE_DEFINITION LIKE '%' + @keystring + '%'
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+return value as output
+
+	code behind query to database
+		SqlParameter return_value = cmd.Parameters.Add("@errormessage", SqlDbType.tinyint);
+		return_value.Direction = ParameterDirection.Output;
+		return_value.Value
+
+	stored procedure
+		CREATE PROCEDURE [dbo].[inventoryitem_isBarcodeValidForOpname]
+			@barcode varchar(10), 
+			@errorcode tinyint = 0 OUTPUT
+		AS
+		BEGIN
+			SET @errorcode = 0
+			DECLARE @return_value bit = 1
+	
+			EXECUTE @return_value = inventoryitem_isBarcodeExist @barcode, @return_value
+			IF @return_value = 0
+				SET @errorcode = 1
+			IF @errorcode <> 0
+				RETURN
+		END
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+work with date time 
+	SELECT Sales.time_stamp, DATENAME(dw, Sales.time_stamp), DATEPART(HOUR, Sales.time_stamp)
+	FROM Sales
+	WHERE DATENAME(dw, Sales.time_stamp) = 'Saturday'  
+	ORDER BY Sales.time_stamp DESC
+	
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+execute stored procedure
+	
+	DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
+	SELECT @LastHex_String = ISNULL(MAX(No),'') From Payments	
+	EXEC UTIL_IncrementHex @HexLength, @LastHex_String, @NewNo OUTPUT
+	SELECT @NewNo
+
+	****************************************************************************************************************************************
+	CREATE PROCEDURE [dbo].[UTIL_IncrementHex]
+		@HexLength int,
+		@LastHex_String nvarchar(MAX),
+		@NewHex_String nvarchar(MAX) OUTPUT
+	AS
+	BEGIN
+		DECLARE @LastHex_Int int
+		SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
+		SET @NewHex_String = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
+	END
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE COLUMN
+==================
+
+	ADD Column				
+
+		ALTER TABLE {TABLENAME} 
+		ADD {COLUMNNAME} {TYPE} {NULL|NOT NULL} 
+		CONSTRAINT {CONSTRAINT_NAME} DEFAULT {DEFAULT_VALUE}
+		WITH VALUES
+	
+		Example: ALTER TABLE Queues ADD CounterAddresses_Id uniqueidentifier NOT NULL 
+
+	RENAME column
+		EXEC sp_RENAME 'TableName.OldColumnName' , 'NewColumnName', 'COLUMN'
+
+	DROP column
+		ALTER TABLE Queues DROP COLUMN CounterAddresses_Id
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1137 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using System.Data;
+using System.ComponentModel;
+using System.Configuration;
+using System.Drawing;
+using System.Drawing.Printing;
+
+namespace LIBUtil
+{
+    public enum FormModes
+    {
+        Search,
+        Add,
+        Update,
+        Browse,
+        Normal
+    }
+
+    public enum Position
+    {
+        Top,
+        Right,
+        Bottom,
+        Left
+    }
+
+    public enum Days
+    {
+        Sun,
+        Mon,
+        Tue,
+        Wed,
+        Thu,
+        Fri,
+        Sat
+    }
+
+    public class Util
+    {
+        public static bool DBConnectionTestCompleted;
+
+        public const string TYPE_ARRAY_NAME = "dbo.Array";
+        public const string TYPE_ARRAY_STR = "value_str";
+        public const string TYPE_ARRAY_INT = "value_int";
+
+        public static List<string> sanitizeList = new List<string> { ";" };
+        
+        /*******************************************************************************************************/
+        //Experiment to pass a method (has a parameter) as a parameter
+        public void passMethodWithParameters()
+        {
+            string parameter = "hmm";
+            string i = ShowValue(() => methodToPass(parameter));
+            Util.displayMessageBox("", i.ToString());
+            return;
+        }
+        private T ShowValue<T>(Func<T> method)
+        {
+            return method();
+        }
+        private string methodToPass(string i)
+        {
+            return i;
+        }
+
+        /*******************************************************************************************************/
+        #region DATABASE CONNECTION
+
+        /// <summary><para></para></summary>
+        public static bool isDBConnectionAvailable(System.Drawing.Icon icon, bool showError, bool showProgressBar)
+        {
+            var form = new Desktop.Forms.CheckDBConnection_Form(icon, showError, showProgressBar);
+            form.ShowDialog();
+            return DBConnection.hasDBConnection = form.isDBConnectionAvailable;
+        }
+
+        /// <summary><para></para></summary>
+        public static void testDBConnection()
+        {
+            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(DBConnection.ConnectionString))
+            {
+                conn.Open();
+            }
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DATABASE QUERY
+
+        public static void addListParameter(System.Data.SqlClient.SqlCommand cmd, string name, DataTable data)
+        {
+            System.Data.SqlClient.SqlParameter param = cmd.Parameters.Add(name, SqlDbType.Structured);
+            param.Value = data;
+            param.TypeName = TYPE_ARRAY_NAME;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DESKTOP FORMS
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void disableFormResize(Form form)
+        {
+            form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            form.MaximizeBox = false;
+            form.MinimizeBox = false;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void displayMDIParent(ref Form MDIParentReference, Form form)
+        {
+            form.WindowState = FormWindowState.Maximized;
+            MDIParentReference = form;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.ShowInTaskbar = true;
+            form.ShowDialog();
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void displayMDIChild(Form MDIParent, Form form)
+        {
+            //check existing forms
+            Type type = form.GetType();
+            foreach(Form child in MDIParent.MdiChildren)
+                if(child.GetType() == type)
+                {
+                    child.BringToFront();
+                    child.Focus();
+                    return;
+                }
+
+            //display the new form
+            form.MdiParent = MDIParent;
+            form.StartPosition = FormStartPosition.CenterParent;
+            if (!form.IsDisposed)
+                form.Show();
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayForm(Form parentFormToHide, Form form)
+        {
+            if(parentFormToHide != null)
+                parentFormToHide.Hide();
+
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.ShowDialog();
+
+            if (parentFormToHide != null && !parentFormToHide.IsDisposed)
+                parentFormToHide.Show();
+
+            return form.DialogResult == DialogResult.OK;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void setPosition(Form form, Position vertical, Position horizontal)
+        {
+            var screen = Screen.FromPoint(form.Location);
+
+            int x = screen.WorkingArea.Left;
+            int y = screen.WorkingArea.Top;
+
+            if (horizontal == Position.Right)
+                x = screen.WorkingArea.Right - form.Width;
+
+            if (vertical == Position.Bottom)
+                y = screen.WorkingArea.Bottom - form.Height;
+
+            form.Location = new System.Drawing.Point(x, y);       
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static Form browseForm(Desktop.Forms.MasterData_v1_Form form, ref Desktop.UserControls.InputControl_Textbox control)
+        {
+            displayForm(null, form);
+            if (form.DialogResult == DialogResult.OK)
+            {
+                control.ValueGuid = form.BrowsedItemSelectionId;
+                control.ValueText = form.BrowsedItemSelectionDescription;
+                control.ParentForm.GetNextControl(control, true).Focus();
+            }
+            return form;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DESKTOP MESSAGE BOX
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayMessageBoxYesNo(string message) { return MessageBox.Show(message, "", MessageBoxButtons.YesNo) == DialogResult.Yes; }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayMessageBoxSuccess(string message) { return displayMessageBox("SUCCESS:", message); }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayMessageBoxError(string message) { return displayMessageBox("ERROR:", message); }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayMessageBox(string prefix, string message)
+        {
+            if (string.IsNullOrEmpty(message))
+                return false;
+            else
+            {
+                MessageBox.Show(prefix + " " + message);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// <para>Desktop app use only.</para>
+        /// <para>T is type of control.Currently supports: TextBox, ComboBox, DateTimePicker</para>
+        /// </summary>
+        public static bool inputError<T>(object obj, string errorMessage)
+        {
+            displayMessageBoxError(errorMessage);
+            if (typeof(T) == typeof(TextBox))
+            {
+                TextBox txt = (TextBox)obj;
+                txt.SelectAll();
+                txt.Focus();
+            }
+            else if (typeof(T) == typeof(ComboBox))
+            {
+                ComboBox cb = (ComboBox)obj;
+                cb.Focus();
+            }
+            else if (typeof(T) == typeof(DateTimePicker))
+            {
+                DateTimePicker dtp = (DateTimePicker)obj;
+                dtp.Focus();
+            }
+
+            return false;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region NULLABLE WRAPPER
+
+        /// <summary><para></para></summary>
+        public static object wrapNullable(object value)
+        {
+            if (value != null && value.GetType() == typeof(string) && string.IsNullOrEmpty((string)value))
+                return DBNull.Value;
+            else
+                return value ?? DBNull.Value;
+        }
+
+        /// <summary><para></para></summary>
+        public static T wrapClickedCellValueNullable<T>(DataGridViewColumn column, DataGridViewCellEventArgs e)
+        {
+            return wrapNullable<T>(column.DataGridView.Rows[e.RowIndex].Cells[column.Name].Value);
+        }
+
+        /// <summary><para></para></summary>
+        public static T wrapFirstSelectedRowValueNullable<T>(DataGridViewColumn column)
+        {
+            object obj = null;
+            if (column.DataGridView.SelectedRows.Count > 0)
+                obj = column.DataGridView.SelectedRows[0].Cells[column.Name].Value;
+            return wrapNullable<T>(obj);
+        }
+
+        /// <summary><para></para></summary>
+        public static T wrapNullable<T>(DataRow row, string columnName)
+        {
+            object obj = null;
+            if (row != null)
+                obj = row[columnName];
+            return wrapNullable<T>(obj);
+        }
+
+        /// <summary><para></para></summary>
+        public static T wrapNullable<T>(DataGridViewRow row, string columnName)
+        {
+            object obj = null;
+            if (row != null)
+                obj = row.Cells[columnName].Value;
+            return wrapNullable<T>(obj);
+        }
+
+        /// <summary><para></para></summary>
+        public static T wrapNullable<T>(object value)
+        {
+            object val = wrapNullable(value);
+            if (val == null || val == DBNull.Value)
+            {
+                if (typeof(T) == typeof(Guid?))
+                {
+                    object obj = null;
+                    return (T)obj;
+                }
+                else
+                    return default(T);
+            }
+            else if (typeof(T) == typeof(Guid?))
+                return (T)val;
+            else if (Nullable.GetUnderlyingType(typeof(T)) != null)
+                return (T)Convert.ChangeType(val, Nullable.GetUnderlyingType(typeof(T)));
+            else
+                return (T)Convert.ChangeType(val, typeof(T));
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region CLIPBOARD
+
+        public static T getClipboardText<T>()
+        {
+            object value = Clipboard.GetText();
+            if (typeof(T) == typeof(Guid))
+            {
+                Guid guidValue;
+                Guid.TryParse(Clipboard.GetText(), out guidValue);
+                value = guidValue;
+            }
+
+            return Util.wrapNullable<T>(value);
+        }
+
+        #endregion 
+        /*******************************************************************************************************/
+        #region STRING MANIPULATORS
+
+        /// <summary> append the first character to the end </summary>
+        public static string getNextRollingText(string value)
+        {
+            return value.Substring(1) + value.Substring(0, 1);
+        }
+
+        /// <summary>
+        /// <para>string is sanitized to prevent sql injection</para>
+        /// </summary>
+        public static string sanitize(string str)
+        {
+            foreach(string item in sanitizeList)
+                str = (str ?? string.Empty).Replace(item, "");
+
+            return str.Trim();
+        }
+
+        /// <summary>
+        /// <para>Content of multiple textboxes are sanitized to prevent sql injection</para>
+        /// </summary>
+        public static string sanitize(params TextBox[] textboxes)
+        {
+            foreach (TextBox textbox in textboxes)
+                textbox.Text = sanitize(textbox.Text);
+
+            if (textboxes.Length == 1)
+                return textboxes[0].Text;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// <para>Content of multiple textboxes are sanitized to prevent sql injection</para>
+        /// </summary>
+        public static void sanitize(params Desktop.UserControls.InputControl_Textbox[] controls)
+        {
+            foreach (Desktop.UserControls.InputControl_Textbox control in controls)
+                sanitize(control.textbox);
+        }
+
+        /// <summary>
+        /// <para>Textbox content is sanitized to prevent sql injection</para>
+        /// </summary>
+        public static string sanitizeAndNullifyIfEmpty(TextBox textbox)
+        {
+            string text = sanitize(textbox);
+            if (string.IsNullOrEmpty(text))
+                return null;
+            else
+                return text;
+        }
+
+        /// <summary>
+        /// <para>newText is added to originalText if applicable and separated by specified delimiter</para>
+        /// </summary>
+        public static string append(string originalText, string newText, string delimiter)
+        {
+            if (string.IsNullOrEmpty(originalText) && !string.IsNullOrEmpty(newText))
+                return newText.Trim();
+            else if (string.IsNullOrEmpty(newText))
+                return originalText.Trim();
+            else
+            {
+                if (!string.IsNullOrEmpty(originalText)) originalText += " " + delimiter + " ";
+                return originalText += newText.Trim();
+            }
+        }
+
+        /// <summary>
+        /// <para>oldValue is compared to newValue and if different, the values are put together using the format provided and appended to originalText</para>
+        /// <para>if value is null, then empty string is used</para>
+        /// </summary>
+        //public static string appendChange(string originalText, object oldValue, object newValue, string format)
+        //{
+        //    return appendChange(originalText, oldValue, newValue, format, ",");
+        //}
+        //public static string appendChangeInNewLine(string originalText, object oldValue, object newValue, string format)
+        //{
+        //    return appendChange(originalText, oldValue, newValue, format, Environment.NewLine);
+        //}
+        public static string appendChange(string originalText, object oldValue, object newValue, string format)
+        {
+            string oldV = "";
+            string newV = "";
+            if (oldValue != null) oldV = oldValue.ToString();
+            if (newValue != null) newV = newValue.ToString();
+
+            if (oldV != newV)
+                return LIBUtil.Util.append(originalText, String.Format(format, oldV, newV), Environment.NewLine);
+            else
+                return originalText;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DESKTOP DATAGRIDVIEW
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void displayContextMenu(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            DataGridView grid = (DataGridView)sender;
+            if (e.Button == MouseButtons.Right && e.RowIndex > -1)
+            {
+                grid.ClearSelection();
+                grid.Rows[e.RowIndex].Selected = true;
+            }
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void clickDataGridViewCheckbox(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow row = ((DataGridView)sender).Rows[e.RowIndex];
+            row.Cells[e.ColumnIndex].Value = !getCheckboxValue(row, e.ColumnIndex);
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool getCheckboxValue(object sender, DataGridViewCellEventArgs e)
+        {
+            return getCheckboxValue(((DataGridView)sender).Rows[e.RowIndex], e.ColumnIndex);
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool getCheckboxValue(DataGridViewRow row, int columnIndex)
+        {
+            bool value = false;
+            DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[columnIndex];
+            if (cell.Value != null)
+                Boolean.TryParse(cell.Value.ToString(), out value);
+            return value;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static object getClickedRowValue(object sender, DataGridViewCellEventArgs e, DataGridViewColumn column) { return getClickedRowValue(sender, e, column.Index); }
+        public static object getClickedRowValue(object sender, DataGridViewCellEventArgs e) { return getClickedRowValue(sender, e, e.ColumnIndex); }
+        public static object getClickedRowValue(object sender, DataGridViewCellEventArgs e, int columnIndex)
+        {
+            return ((DataGridView)sender).Rows[e.RowIndex].Cells[columnIndex].Value;
+        }
+        
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static Guid getSelectedRowID(DataGridView grid, DataGridViewColumn IdColumn) { return (Guid)getSelectedRowValue(grid, IdColumn); }
+        public static object getSelectedRowValue(DataGridView grid, DataGridViewColumn column)
+        {
+            return grid.SelectedRows[0].Cells[column.Name].Value;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void disableSort(DataGridView grid)
+        {
+            grid.Columns.Cast<DataGridViewColumn>().ToList().ForEach(f => f.SortMode = DataGridViewColumnSortMode.NotSortable);
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void setColumnFormat(DataGridViewColumn column, string format, DataGridViewContentAlignment alignment)
+        {
+            column.DefaultCellStyle.Alignment = alignment;
+            column.DefaultCellStyle.Format = format;
+        }
+
+        /// <summary><para></para></summary>
+        public static void populateDataGridView(DataGridView dgv, object data)
+        {
+            DataGridViewColumn sortColumn = dgv.SortedColumn;
+            SortOrder sortDirection = dgv.SortOrder;
+
+            dgv.DataSource = data;
+
+            if (sortDirection != SortOrder.None)
+                dgv.Sort(sortColumn, Util.getListSortDirection(sortDirection));
+        }
+
+        /// <summary><para></para></summary>
+        public static ListSortDirection getListSortDirection(SortOrder sortOrder)
+        {
+            switch (sortOrder)
+            {
+                case SortOrder.Ascending:
+                    return ListSortDirection.Ascending;
+                case SortOrder.Descending:
+                    return ListSortDirection.Descending;
+                default:
+                    return ListSortDirection.Ascending;
+            }
+        }
+
+        /// <summary><para></para></summary>
+        public static void setGridviewDataSource(DataGridView grid, bool rememberRowPosition, bool reapplySort, object data)
+        {
+            //save top row index
+            int topRowIndex = grid.FirstDisplayedScrollingRowIndex;
+            int selectedRowIndex = -1;
+            if (grid.Rows.Count > 0 && grid.SelectedRows.Count > 0)
+                selectedRowIndex = grid.SelectedRows[0].Index;
+
+            //save sorting
+            DataGridViewColumn sortColumn = grid.SortedColumn;
+            ListSortDirection sortOrder = ListSortDirection.Ascending;
+            if (grid.SortOrder == SortOrder.Descending) sortOrder = ListSortDirection.Descending;
+
+            //update datasource 
+            grid.DataSource = data;
+
+            //reapply sorting
+            if (reapplySort && sortColumn != null)
+                grid.Sort(sortColumn, sortOrder);
+
+            //display top row index 
+            if (rememberRowPosition)
+                Util.setFirstDisplayedScrollingRowIndex(grid, topRowIndex, selectedRowIndex);
+        }
+
+        /// <summary><para></para></summary>
+        public static void setFirstDisplayedScrollingRowIndex(DataGridView grid, int topRowIndex, int selectedRowIndex)
+        {
+            if (grid.Rows.Count > 0 && topRowIndex > -1)
+            {
+                if (grid.Rows.Count >= topRowIndex)
+                    grid.FirstDisplayedScrollingRowIndex = topRowIndex;
+                else if (grid.Rows.Count < topRowIndex)
+                    grid.FirstDisplayedScrollingRowIndex = grid.Rows.Count - 1;
+            }
+
+            if (selectedRowIndex > -1 && grid.Rows.Count > 0)
+            {
+                grid.ClearSelection();
+                if (selectedRowIndex < grid.Rows.Count)
+                    grid.Rows[selectedRowIndex].Selected = true;
+                else
+                    grid.Rows[topRowIndex].Selected = true;
+            }
+        }
+        
+        /// <summary><para></para></summary>
+        public static bool isColumnMatch(object sender, DataGridViewCellEventArgs e, DataGridViewColumn column)
+        {
+            var senderGrid = (DataGridView)sender;
+            if (e.RowIndex > -1 && senderGrid.Columns[e.ColumnIndex].GetType() == column.GetType())
+                if (senderGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn == column)
+                    return true;
+
+            return false;
+        }
+
+        /// <summary><para></para></summary>
+        public static bool isColumnMatch(object sender, DataGridViewDataErrorEventArgs e, DataGridViewColumn column)
+        {
+            var senderGrid = (DataGridView)sender;
+            if (e.RowIndex > -1 && senderGrid.Columns[e.ColumnIndex].GetType() == column.GetType())
+                if (senderGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn == column)
+                    return true;
+
+            return false;
+        }
+
+        /// <summary><para>set columnAutoSizeMode to null to retain its original value</para></summary>
+        public static void setGridviewColumnWordwrap(DataGridViewColumn column, DataGridViewAutoSizeColumnMode? columnAutoSizeMode)
+        {
+            column.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            if(columnAutoSizeMode != null)
+                column.AutoSizeMode = (DataGridViewAutoSizeColumnMode)columnAutoSizeMode;
+            column.DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+        }
+
+        /// <summary><para></para></summary>
+        public static void clearWhenSelected(DataGridView dgv)
+        {
+            dgv.SelectionChanged += new System.EventHandler(clearDataGridViewOnSelectionChanged);
+        }
+
+        /// <summary><para>For DataGridView</para></summary>
+        private static void clearDataGridViewOnSelectionChanged(object sender, EventArgs e)
+        {
+            ((DataGridView)sender).ClearSelection(); //disable cell color change when user click on it
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region ENUMS
+
+        public static T parseEnum<T>(object value)
+        {
+            if (value == null)
+                return default(T);
+
+            try
+            {
+                return (T)Enum.Parse(typeof(T), value.ToString());
+            }
+            catch
+            {
+                return GetEnumFromDescription<T>(value.ToString());
+            }
+        }
+
+        public static T GetEnumFromDescription<T>(string description)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+            foreach (var field in type.GetFields())
+            {
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DescriptionAttribute)) as DescriptionAttribute;
+                if (attribute != null)
+                {
+                    if (attribute.Description == description)
+                        return (T)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (T)field.GetValue(null);
+                }
+            }
+            return default(T);
+        }
+
+        public static DataTable parseEnum<T>(DataTable dataTable, string targetColumnName, string enumIDColumn)
+        {
+            if (!dataTable.Columns.Contains(targetColumnName))
+                Util.addColumnToTable<string>(dataTable, targetColumnName, "");
+
+            foreach (DataRow dr in dataTable.Rows)
+                if (dr[enumIDColumn] != DBNull.Value)
+                    dr[targetColumnName] = Util.GetEnumDescription((Enum)(object)Util.parseEnum<T>(dr[enumIDColumn]));
+
+            return dataTable;
+        }
+
+        public static IEnumerable<T> GetEnumItems<T>()
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>();
+        }
+
+        public static string GetEnumDescription(Enum value)
+        {
+            DescriptionAttribute attribute = value.GetType()
+                .GetField(value.ToString())
+                .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                .SingleOrDefault() as DescriptionAttribute;
+            return attribute == null ? value.ToString() : attribute.Description;
+        }
+
+        public static string GetEnumDescription<T>(object value)
+        {
+            return Util.GetEnumDescription((Enum)(object)Util.parseEnum<T>(value));
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DATATABLE
+
+        /// <summary><para></para></summary>
+        public static DataRow getFirstRow(DataTable datatable)
+        {
+            if (datatable.Rows.Count > 0)
+                return datatable.Rows[0];
+            else
+                return null;
+        }
+
+        /// <summary><para></para></summary>
+        public static DataTable setDataTablePrimaryKey(DataTable dt, string primaryKeyColumnName)
+        {
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = dt.Columns[primaryKeyColumnName];
+            dt.PrimaryKey = keyColumns;
+            return dt;
+        }
+
+        public static List<T> convertToList<T>(DataTable datatable, string columnName)
+        {
+            return datatable.Rows.OfType<DataRow>()
+                        .Select(dr => dr.Field<T>(columnName)).ToList();
+        }
+
+        public static DataTable copyValuesToArrayTable(params Guid?[] values)
+        {
+            DataTable datatable = createArrayTable();
+            foreach (Guid? value in values)
+                if (value != null) datatable.Rows.Add(value.ToString(), null);
+            return datatable;
+        }
+
+        public static DataTable createArrayTable()
+        {
+            DataTable datatable = new DataTable();
+            addColumnToTable<string>(datatable, TYPE_ARRAY_STR, "");
+            addColumnToTable<int>(datatable, TYPE_ARRAY_INT, 0);
+            return datatable;
+        }
+
+        public static DataTable copyIntToArrayTable(params int[] values)
+        {
+            DataTable datatable = createArrayTable();
+            if (values != null)
+                foreach (int value in values)
+                    datatable.Rows.Add(null, value);
+            return datatable;
+        }
+
+        public static DataColumn addColumnToTable<T>(DataTable dt, string columnName, object defaultValue)
+        {
+            DataColumn dc = new DataColumn(columnName, typeof(T));
+
+            if (typeof(T) == typeof(bool))
+                dc.DefaultValue = Convert.ToBoolean(defaultValue);
+            else if (typeof(T) == typeof(int))
+                dc.DefaultValue = Convert.ToInt32(defaultValue);
+            else if (typeof(T) == typeof(decimal))
+                dc.DefaultValue = Convert.ToDecimal(defaultValue);
+
+            dt.Columns.Add(dc);
+            return dc;
+        }
+
+        public static string compileQuickSearchFilter(string keyword, string[] fieldNames)
+        {
+            string filter = "";
+            foreach (string word in keyword.Split())
+            {
+                if (!string.IsNullOrEmpty(word.Trim()))
+                {
+                    foreach (string fieldname in fieldNames)
+                        filter = Util.append(filter, string.Format("CONVERT({0},System.String) LIKE '%{1}%'", fieldname, word), "OR");
+                }
+            }
+            return filter;
+        }
+
+        /// <summary><para></para></summary>
+        public static DataTable sortData(DataTable datatable, string column1Name, SortOrder? column1Direction, string column2Name, SortOrder? column2Direction)
+        {
+            DataView dvw = datatable.DefaultView;
+            dvw.Sort = compileSortPhrase(column1Name, column1Direction, column2Name, column2Direction);
+            return dvw.ToTable();
+        }
+
+        /// <summary><para></para></summary>
+        private static string compileSortPhrase(string column1Name, SortOrder? column1Direction, string column2Name, SortOrder? column2Direction)
+        {
+            string str = "";
+            if (!string.IsNullOrEmpty(column1Name))
+                str = Util.append(str, string.Format("{0} {1}", column1Name, getDirectionString(column1Direction)), ",");
+            if (!string.IsNullOrEmpty(column2Name))
+                str = Util.append(str, string.Format("{0} {1}", column2Name, getDirectionString(column2Direction)), ",");
+            return str;
+        }
+
+        /// <summary><para></para></summary>
+        private static string getDirectionString(SortOrder? direction)
+        {
+            if (direction == SortOrder.Descending)
+                return "DESC ";
+            else
+                return "ASC";
+        }
+
+        public static DataView getDataView(object data)
+        {
+            if (data.GetType() == typeof(DataView))
+                return (DataView)data;
+            else
+                return ((DataTable)data).DefaultView;
+        }
+
+        public static DataTable getDataTable(object data)
+        {
+            if (data.GetType() == typeof(DataTable))
+                return (DataTable)data;
+            else
+                return ((DataView)data).Table;
+        }
+
+        /// <summary></summary>
+        /// <para>operation: example: SUM, COUNT, AVG</para>
+        public static decimal compute(DataTable dt, string operation, string columnName, string filter)
+        {
+            if (dt == null || dt.Columns.IndexOf(columnName) == -1) return 0;
+
+            object sum = dt.Compute(String.Format("{0}({1})", operation, columnName), filter);
+            if (sum != DBNull.Value)
+                return Convert.ToDecimal(sum.ToString());
+            else
+                return 0;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region TREEVIEW
+
+        #endregion
+        /*******************************************************************************************************/
+        #region NUMBERS
+
+        public static decimal zeroNonNumericString(object obj)
+        {
+            try
+            {
+                return Convert.ToDecimal(obj);
+            }
+            catch { return 0; }
+        }
+
+        public static bool isNumeric(string str)
+        {
+            decimal output;
+            return Decimal.TryParse(str, out output);
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region TOOLSTRIPMENU
+
+        public static void setAvailability(params ToolStripMenuItem[] menus)
+        {
+            foreach (ToolStripMenuItem menu in menus)
+            {
+                bool available = false;
+                foreach (ToolStripDropDownItem item in menu.DropDownItems)
+                {
+                    if (item.Available)
+                    {
+                        available = true;
+                        break;
+                    }
+                }
+                menu.Available = available;
+            }
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region APPLICATION
+
+        public static bool isValidIPv4(string ipString)
+        {
+            if (ipString.Count(c => c == '.') != 3)
+                return false;
+
+            System.Net.IPAddress ipAddress;
+            return System.Net.IPAddress.TryParse(ipString, out ipAddress);
+        }
+
+        public static string getIPv4()
+        {
+            System.Net.IPAddress[] addresses = Array.FindAll(System.Net.Dns.GetHostEntry(string.Empty).AddressList, a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            return addresses[0].ToString();
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DESKTOP CONFIG FILE
+
+        //not working because of user permission issue. configuration opens config in temporary folder.
+        /// <summary><para>Desktop app use only.</para></summary>
+        //public static void updateConfigVariable(string key, string value)
+        //{
+        //    Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        //    if (ConfigurationManager.AppSettings.AllKeys.Contains(key))
+        //    {
+        //        config.AppSettings.Settings.Remove(key);
+        //    }
+
+        //    config.AppSettings.Settings.Add(key, value);
+        //    config.Save(ConfigurationSaveMode.Modified);
+        //    ConfigurationManager.RefreshSection(config.AppSettings.SectionInformation.Name);
+        //}
+
+        public static string getAppConfigConnectionString(string key)
+        {
+            return ConfigurationManager.ConnectionStrings[key].ConnectionString;
+        }
+
+        public static string getConfigVariable(string key)
+        {
+            return System.Configuration.ConfigurationManager.AppSettings[key];
+        }
+
+        public static string saveAppData(string filename, string value)
+        {
+            string filepath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+            System.IO.File.WriteAllText(filepath, value);
+            return value;
+        }
+
+        public static string getAppData(string filename)
+        {
+            string filepath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+            if (System.IO.File.Exists(filepath))
+                return System.IO.File.ReadAllText(filepath);
+            else
+                return null;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region SERVER
+
+        public static DateTime getServerTime()
+        {
+            DateTime timestamp = new DateTime();
+            try
+            {
+                using (System.Data.SqlClient.SqlConnection sqlConnection = new System.Data.SqlClient.SqlConnection(DBConnection.ConnectionString))
+                using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand("SERVER_get_timestamp", sqlConnection))
+                using (System.Data.SqlClient.SqlDataAdapter adapter = new System.Data.SqlClient.SqlDataAdapter())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    System.Data.SqlClient.SqlParameter return_value = cmd.Parameters.Add("@timestamp", SqlDbType.DateTime);
+                    return_value.Direction = ParameterDirection.Output;
+
+                    if (sqlConnection.State != ConnectionState.Open) sqlConnection.Open();
+                    cmd.ExecuteNonQuery();
+
+                    timestamp = Convert.ToDateTime(return_value.Value);
+                }
+            }
+            catch { }
+
+            return timestamp;
+
+            //CREATE PROCEDURE [dbo].[SERVER_get_timestamp]
+            //    @timestamp datetime OUTPUT
+            //AS
+            //BEGIN
+            //    SELECT @timestamp = CURRENT_TIMESTAMP
+            //END
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DESKTOP CONTROLS
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static void relocateToCenter(Control control)
+        {
+            System.Drawing.Size parentSize = control.Parent.Size;
+            control.Location = new System.Drawing.Point(parentSize.Width/2 - control.Width/2, parentSize.Height / 2 - control.Height / 2);
+        }
+
+        public static void fitTextToLabelHeight(Label label)
+        {
+            if (TextRenderer.MeasureText(label.Text, new Font(label.Font.FontFamily, label.Font.Size, label.Font.Style)).Height < label.Height)
+            {
+                while (TextRenderer.MeasureText(label.Text, new Font(label.Font.FontFamily, label.Font.Size, label.Font.Style)).Height < label.Height)
+                    label.Font = new Font(label.Font.FontFamily, label.Font.Size + 0.5f, label.Font.Style);
+            }
+            else
+            {
+                while (TextRenderer.MeasureText(label.Text, new Font(label.Font.FontFamily, label.Font.Size, label.Font.Style)).Height >= label.Height)
+                    label.Font = new Font(label.Font.FontFamily, label.Font.Size - 0.5f, label.Font.Style);
+            }
+        }
+
+        public static void fitTextToLabel(Label label)
+        {
+            fitTextToLabelHeight(label); //fits text vertically
+
+            //fits text horizontally
+            while (TextRenderer.MeasureText(label.Text, new Font(label.Font.FontFamily, label.Font.Size, label.Font.Style)).Width >= label.Width)
+                label.Font = new Font(label.Font.FontFamily, label.Font.Size - 0.5f, label.Font.Style);
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region MUTEX
+
+        /// <summary><para>Desktop app use only. Prevent opening multiple instances of this application</para></summary>
+        public static void ensureSingleInstance(Action methodToRun)
+        {
+            using (System.Threading.Mutex mutex = new System.Threading.Mutex(false, "Global\\" + DBConnection.APPGUID))
+            {
+                if (!mutex.WaitOne(0, false))
+                    LIBUtil.Util.displayMessageBoxError("Program is already running");
+                else
+                    methodToRun();
+            }
+        }
+
+        //version with more complete checks to avoid problems. currently not working. copied from stackoverflow
+        public static void runInMutex()
+        {
+            //using System.Runtime.InteropServices;
+            //using System.Reflection;
+            //using System.Threading;
+            //using System.Security.AccessControl;
+            //using System.Security.Principal;
+
+
+            ////get application guid defined in AssemblyInfo.cs
+            //string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
+
+            ////unique id for global mutex- Global prefix means it is global to the machine
+            //string mutexId = string.Format("Global\\{{{0}}}", appGuid);
+
+            ////store a return value in Mutex() constructor call
+            //bool createdNew;
+
+            ////setting up security for multi-user usage. Work also on localized systems (don't just use "Everyone")
+            //var allowEveryoneRule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.FullControl, AccessControlType.Allow);
+            //var securitySettings = new MutexSecurity();
+            //securitySettings.AddAccessRule(allowEveryoneRule);
+
+            ////set to prevent race condition on security settings
+            //using (var mutex = new Mutex(false, mutexId, out createdNew, securitySettings))
+            //{
+            //    var hasHandle = false;
+            //    try
+            //    {
+            //        try
+            //        {
+            //            //may want to time out here instead of waiting forever
+            //            //mutex.WaitOne(Timeout.Infinite, false);
+
+            //            hasHandle = mutex.WaitOne(5000, false);
+            //            if (hasHandle == false)
+            //                throw new TimeoutException("Program is already running");
+
+
+            //        }
+            //        catch (AbandonedMutexException)
+            //        {
+            //            //mutex was abandoned in another process. It will still get acquired
+            //            hasHandle = true;
+            //        }
+
+            //        runApplication();
+            //    }
+            //    finally
+            //    {
+            //        if (hasHandle)
+            //            mutex.ReleaseMutex();
+            //    }
+            //}
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DESKTOP PRINTING
+
+        public static bool print(bool showPrintDialog, bool showPrintStatus, Panel printPanel)
+        {
+            PrintDocument doc = new PrintDocument();
+            doc.PrintPage += delegate (object sender, System.Drawing.Printing.PrintPageEventArgs e)
+            {
+                LIBUtil.Util.printControl(printPanel, e);
+            };
+            doc.DefaultPageSettings.Margins = new System.Drawing.Printing.Margins(30, 0, 0, 0);
+
+            if (!showPrintStatus)
+                doc.PrintController = new StandardPrintController();
+
+            if (!showPrintDialog)
+                doc.Print();
+            else
+            {
+                PrintDialog dlgSettings = new PrintDialog();
+                dlgSettings.Document = doc;
+
+                if (dlgSettings.ShowDialog() == DialogResult.OK)
+                    doc.Print();
+                else
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static void printControl(Panel obj, PrintPageEventArgs e)
+        {
+            float x = e.MarginBounds.Left;
+            float y = e.MarginBounds.Top;
+            Bitmap bmp = new Bitmap(obj.Width, obj.Height);
+            obj.DrawToBitmap(bmp, new Rectangle(0, 0, obj.Width, obj.Height));
+            e.Graphics.DrawImage((Image)bmp, x, y);
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region DATE MANIPULATORS
+
+        public static DateTime addMonths(int additionalMonths, bool isFirstOfMonth, bool isLastOfMonth)
+        {
+            return addMonths(DateTime.Now, additionalMonths, isFirstOfMonth, isLastOfMonth)
+        }
+
+        public static DateTime addMonths(DateTime datetime, int additionalMonths, bool isFirstOfMonth, bool isLastOfMonth)
+        {
+            if (isLastOfMonth)
+                isFirstOfMonth = true;
+
+            DateTime newDate = datetime.AddMonths(additionalMonths);
+
+            int day = datetime.Day;
+            if (isFirstOfMonth)
+                day = 1;
+
+            newDate = new DateTime(newDate.Year, newDate.Month, day);
+
+            if (isLastOfMonth)
+                newDate = newDate.AddMonths(1).AddDays(-1);
+
+            return newDate;
+        }
+        
+        #endregion
+        /*******************************************************************************************************/
+
+    }
+}
