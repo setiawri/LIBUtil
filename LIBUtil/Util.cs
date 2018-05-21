@@ -1108,7 +1108,7 @@ namespace LIBUtil
 
         public static DateTime addMonths(int additionalMonths, bool isFirstOfMonth, bool isLastOfMonth)
         {
-            return addMonths(DateTime.Now, additionalMonths, isFirstOfMonth, isLastOfMonth)
+            return addMonths(DateTime.Now, additionalMonths, isFirstOfMonth, isLastOfMonth);
         }
 
         public static DateTime addMonths(DateTime datetime, int additionalMonths, bool isFirstOfMonth, bool isLastOfMonth)

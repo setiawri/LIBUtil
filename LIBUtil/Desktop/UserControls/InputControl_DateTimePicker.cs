@@ -32,7 +32,7 @@ namespace LIBUtil.Desktop.UserControls
         [Description("CustomFormat"), Category("_Custom")]
         public string CustomFormat
         {
-            get { return datetimepicker.CustomFormat; }
+            get { return datetimepicker.CustomFormat ?? ""; }
             set { datetimepicker.CustomFormat = value.Trim(); }
         }
 
