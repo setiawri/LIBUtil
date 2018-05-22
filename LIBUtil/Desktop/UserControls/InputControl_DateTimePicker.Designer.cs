@@ -49,6 +49,7 @@
             this.datetimepicker.Name = "datetimepicker";
             this.datetimepicker.Size = new System.Drawing.Size(180, 20);
             this.datetimepicker.TabIndex = 4;
+            this.datetimepicker.ValueChanged += new System.EventHandler(this.dropdownlist_ValueChanged);
             // 
             // InputControl_DateTimePicker
             // 

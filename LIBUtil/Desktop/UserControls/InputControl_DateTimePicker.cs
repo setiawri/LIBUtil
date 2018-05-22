@@ -89,6 +89,27 @@ namespace LIBUtil.Desktop.UserControls
             datetimepicker.TabIndex = 0;
         }
 
+
+        public DateTime getFirstDayOfSelectedMonth() { return getFirstDayOfSelectedMonth((DateTime)Value); }
+        public static DateTime getFirstDayOfSelectedMonth(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, 0);
+        }
+
+        public DateTime getLastDayOfSelectedMonth() { return getLastDayOfSelectedMonth((DateTime)Value); }
+        public static DateTime getLastDayOfSelectedMonth(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month), 0, 0, 0, 0);
+        }
+
+        [Description("Value Changed Event"), Category("_Custom")]
+        public event EventHandler ValueChanged;
+        private void dropdownlist_ValueChanged(object sender, EventArgs e)
+        {
+            if (this.ValueChanged != null)
+                this.ValueChanged(this, e);
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
     }
