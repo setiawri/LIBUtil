@@ -60,6 +60,10 @@ work with date time
 	FROM Sales
 	WHERE DATENAME(dw, Sales.time_stamp) = 'Saturday'  
 	ORDER BY Sales.time_stamp DESC
+
+set date to next day at time 00:00:00
+	dateAdd(day, dateDiff(day, 0, @inputdate ), 0)
+	dateAdd(day, dateDiff(day, -1, @inputdate ), 0) --add a day
 	
 --------------------------------------------------------------------------------------------------------------------------------------------
 

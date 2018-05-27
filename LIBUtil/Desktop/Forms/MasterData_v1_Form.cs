@@ -1,4 +1,11 @@
-﻿using System;
+﻿/***************************************************************************************************
+ * 
+ * To adjust the height of the input panel, select scMain and change the splitter distance
+ * 
+ * *************************************************************************************************/
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -46,7 +53,7 @@ namespace LIBUtil.Desktop.Forms
         #region PROTECTED VARIABLES
 
         protected List<Control> InputToClear = new List<Control>();
-        protected static List<string> FieldnamesForQuickSearch = new List<string>();
+        protected List<string> FieldnamesForQuickSearch = new List<string>();
         protected List<InputControl> InputToDisableOnSearch = new List<InputControl>();
         protected bool DoNotClearInputAfterSubmission = false;
 
@@ -172,6 +179,8 @@ namespace LIBUtil.Desktop.Forms
 
             if (_startingMode == FormModes.Browse)
                 scMain.Panel1Collapsed = true;
+
+            clearInputFields();
 
             setupControlsBasedOnRoles();
         }

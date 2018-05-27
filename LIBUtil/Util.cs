@@ -296,12 +296,18 @@ namespace LIBUtil
                 else
                     return default(T);
             }
+            else if (typeof(T) == typeof(TimeSpan?))
+            {
+                TimeSpan t;
+                if (TimeSpan.TryParse(value.ToString(), out t))
+                    return (T)Convert.ChangeType(t, Nullable.GetUnderlyingType(typeof(T)));
+            }
             else if (typeof(T) == typeof(Guid?))
                 return (T)val;
             else if (Nullable.GetUnderlyingType(typeof(T)) != null)
                 return (T)Convert.ChangeType(val, Nullable.GetUnderlyingType(typeof(T)));
-            else
-                return (T)Convert.ChangeType(val, typeof(T));
+
+            return (T)Convert.ChangeType(val, typeof(T));            
         }
 
         #endregion
@@ -1104,7 +1110,7 @@ namespace LIBUtil
 
         #endregion
         /*******************************************************************************************************/
-        #region DATE MANIPULATORS
+        #region DATE AND TIME MANIPULATORS
 
         public static DateTime addMonths(int additionalMonths, bool isFirstOfMonth, bool isLastOfMonth)
         {
