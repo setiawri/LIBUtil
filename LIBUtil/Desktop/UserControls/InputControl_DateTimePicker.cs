@@ -14,7 +14,7 @@ namespace LIBUtil.Desktop.UserControls
     {
         /*******************************************************************************************************/
         #region PROPERTIES
-
+            
         [Description("Label Text"), Category("_Custom")]
         public string LabelText
         {
@@ -64,8 +64,37 @@ namespace LIBUtil.Desktop.UserControls
             }
         }
 
+        public DateTime? ValueAsEndDateFilter
+        {
+            get
+            {
+                DateTime? dt = Value;
+                if(dt != null)
+                {
+                    DateTime date = (DateTime)dt;
+                    dt = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+                }
+                return dt;
+            }
+        }
+
+        public DateTime? ValueAsStartDateFilter
+        {
+            get
+            {
+                DateTime? dt = Value;
+                if (dt != null)
+                {
+                    DateTime date = (DateTime)dt;
+                    dt = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                }
+                return dt;
+            }
+        }
+
         public bool ValueError(string message) { return Util.inputError<DateTimePicker>(datetimepicker, message); }
-        
+
+
         #endregion PROPERTIES
         /*******************************************************************************************************/
         #region CONSTRUCTOR METHODS
@@ -102,6 +131,15 @@ namespace LIBUtil.Desktop.UserControls
             return new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month), 0, 0, 0, 0);
         }
 
+        public bool isValidEndDate(InputControl_DateTimePicker startControl)
+        {
+            return Value > startControl.Value;
+        }
+
+        #endregion METHODS
+        /*******************************************************************************************************/
+        #region EVENT HANDLERS
+
         [Description("Value Changed Event"), Category("_Custom")]
         public event EventHandler ValueChanged;
         private void dropdownlist_ValueChanged(object sender, EventArgs e)
@@ -112,7 +150,7 @@ namespace LIBUtil.Desktop.UserControls
             datetimepicker.Checked = true;
         }
 
-        #endregion METHODS
+        #endregion EVENT HANDLERS
         /*******************************************************************************************************/
     }
 }

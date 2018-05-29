@@ -168,6 +168,12 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region METHODS
 
+        public void setValue(string textValue, Guid guidValue)
+        {
+            ValueText = textValue;
+            ValueGuid = guidValue;
+        }
+
         public override void reset()
         {
             textbox.Text = "";
