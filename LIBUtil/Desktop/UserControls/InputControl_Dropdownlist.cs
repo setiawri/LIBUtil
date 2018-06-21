@@ -115,6 +115,8 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region METHODS
 
+        public void clearItems() { dropdownlist.populate(null, null, null, null); }
+
         public override void reset() { dropdownlist.clearSelection(); }
 
         public override void focus() { dropdownlist.Focus(); }

@@ -35,22 +35,27 @@ namespace LIBUtil.Desktop.UserControls
             get { return _togglePanel; }
             set {
                 _togglePanel = value;
-                
-                if(ArrowOrientation == Orientation.Horizontal)
-                {
-                    if (this.Location.X > _togglePanel.Location.X)
-                        setDirection(ArrowDirection.Left);
-                    else
-                        setDirection(ArrowDirection.Right);
-                }
-                else
-                {
-                    if (this.Location.Y > _togglePanel.Location.Y)
-                        setDirection(ArrowDirection.Up);
-                    else
-                        setDirection(ArrowDirection.Down);
-                }
 
+                if(_togglePanel != null && _togglePanel.FindForm() != null)
+                {
+                    Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
+                    Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
+
+                    if (ArrowOrientation == Orientation.Horizontal)
+                    {
+                        if (toggleButtonLoc.X > togglePanelLoc.X)
+                            setDirection(ArrowDirection.Left);
+                        else
+                            setDirection(ArrowDirection.Right);
+                    }
+                    else
+                    {
+                        if (toggleButtonLoc.Y > togglePanelLoc.Y)
+                            setDirection(ArrowDirection.Up);
+                        else
+                            setDirection(ArrowDirection.Down);
+                    }
+                }
             }
         }
         private Panel _togglePanel;
@@ -66,7 +71,7 @@ namespace LIBUtil.Desktop.UserControls
         }
         private ArrowDirection _initialArrowDirection = ArrowDirection.Left;
 
-        public Orientation ArrowOrientation { get { return getOrientation(_togglePanel); } }
+        public Orientation ArrowOrientation { get { return getOrientation(); } }
 
         #endregion PROPERTIES
         /*******************************************************************************************************/
@@ -105,7 +110,16 @@ namespace LIBUtil.Desktop.UserControls
 
         public void toggle()
         {
-            TogglePanel.Visible = !TogglePanel.Visible;
+            if(TogglePanel.GetType() == typeof(SplitterPanel))
+            {
+                SplitContainer parent = (SplitContainer)TogglePanel.Parent;
+                if (parent.Panel1 == TogglePanel)
+                    parent.Panel1Collapsed = !parent.Panel1Collapsed;
+                else
+                    parent.Panel2Collapsed = !parent.Panel2Collapsed;
+            }
+            else
+                TogglePanel.Visible = !TogglePanel.Visible;
 
             //set arrow image
             if (pictureBox.BackgroundImage == _ArrowLeft)
@@ -116,22 +130,20 @@ namespace LIBUtil.Desktop.UserControls
                 setDirection(ArrowDirection.Down);
             else
                 setDirection(ArrowDirection.Up);
+        }
 
-            //set position
-            if(ArrowOrientation == Orientation.Horizontal)
+        public bool isTogglePanelVisible()
+        {
+            if (TogglePanel.GetType() == typeof(SplitterPanel))
             {
-                if (TogglePanel.Visible)
-                    this.Location = new Point(TogglePanel.Location.X + TogglePanel.Width, TogglePanel.Location.Y);
+                SplitContainer parent = (SplitContainer)TogglePanel.Parent;
+                if (parent.Panel1 == TogglePanel)
+                    return !parent.Panel1Collapsed;
                 else
-                    this.Location = TogglePanel.Location;
+                    return !parent.Panel2Collapsed;
             }
             else
-            {
-                if (TogglePanel.Visible)
-                    this.Location = new Point(TogglePanel.Location.X, TogglePanel.Location.Y + TogglePanel.Height);
-                else
-                    this.Location = TogglePanel.Location;
-            }
+                return TogglePanel.Visible;
         }
 
         public void setArrowImages(Image left, Image up, Image right, Image down)
@@ -144,6 +156,7 @@ namespace LIBUtil.Desktop.UserControls
 
         private void setDirection(ArrowDirection direction)
         {
+            _initialArrowDirection = direction;
             if (direction == ArrowDirection.Left)
                 pictureBox.BackgroundImage = _ArrowLeft;
             else if(direction == ArrowDirection.Up)
@@ -154,9 +167,14 @@ namespace LIBUtil.Desktop.UserControls
                 pictureBox.BackgroundImage = _ArrowDown;
         }
 
-        private Orientation getOrientation(Control control)
+        private Orientation getOrientation()
         {
-            if (this.Location.Y >= control.Location.Y && this.Location.Y <= control.Location.Y + control.Height)
+            Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
+            Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
+
+            if (toggleButtonLoc.X >= togglePanelLoc.X + _togglePanel.Width 
+                    && toggleButtonLoc.Y >= togglePanelLoc.Y 
+                    && toggleButtonLoc.Y <= togglePanelLoc.Y + _togglePanel.Height)
                 return Orientation.Horizontal;
             else
                 return Orientation.Vertical;

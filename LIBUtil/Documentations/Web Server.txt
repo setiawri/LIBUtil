@@ -1,0 +1,39 @@
+﻿
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+********************************************************************************************************************************************
+
+INSTALL IIS
+	- Open Windows Features
+	- Checkmark IIS
+	- Open subtree World Wide Web Services > Application Development Features
+	- Checkmark ASP.NET
+
+INSTALL .NET Framework 4.5 manually if it is not already installed
+
+IIS Setup
+	- Create virtual application and point it to application folder
+
+CREATE SECURITY LOGINS (IIS APPPOOL/DefaultAppPool: windows authentication & WebApp: sql login)
+	- Set Server Roles
+	- Set User Mapping (set as dbo.owner)
+
+WEB.CONFIG
+	- make sure connection string is working
+
+WINDOWS FIREWALL
+	Windows Firewall blocks the World Wide Web Services port by default (Port 80). With this port blocked, other machines cannot connect to 
+	your web server. This severely limits the scope of potential web site viewers. So, in order to show your new web site and server to the 
+	outside world you must add an exception to the Windows Firewall.
+	- Open Firewall
+	- Click 'Allow a program or feature through Windows Firewall'
+	- Checkmark 'World Wide Web Services (HTTP)'
+
+ACCESS MODEM ZTE
+	- https://www.modalsemangat.com/2017/07/username-password-admin-modem-zte-f660.html?m=1
+	- install windows feature Telnet Client
+	- cmd > telnet 192.168.1.1
+	- root/Zte521
+	- to see password: sendcmd 1 DB p UserInfo
+	- *DOES NOT WORK* to set password: sendcmd 1 DB set 0 Password XXX

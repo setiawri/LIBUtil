@@ -294,6 +294,12 @@ namespace LIBUtil.Desktop.UserControls
             textbox.SelectionLength = 0;
         }
 
+        public void selectText()
+        {
+            textbox.Focus();
+            textbox.SelectAll();
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS

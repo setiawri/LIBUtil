@@ -162,9 +162,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Audio\Notification01.wav" />
+    <Content Include="Audio\Notification02.wav" />
+    <Content Include="Audio\Notification03.wav" />
     <Content Include="Documentations\Programming Consistencies.txt" />
     <Content Include="Documentations\Desktop App Guide.txt" />
     <Content Include="Documentations\Scripts\DB user query.txt" />
+    <Content Include="Documentations\Web Server.txt" />
     <Content Include="Documentations\SQL syntax.txt" />
     <Content Include="Documentations\VS shortcuts.txt" />
     <Content Include="Documentations\Scripts\User Defined Types - Array.txt" />
@@ -172,6 +176,7 @@
     <Content Include="Documentations\Template - Desktop Forms.txt" />
     <Content Include="Documentations\Template - MasterData_v1.txt" />
     <Content Include="Images\Calendar_Button.png" />
+    <Content Include="Images\delete-button-01.png" />
     <Content Include="Images\expand-collapse-down.png" />
     <None Include="Images\expand-collapse-right.png" />
     <None Include="Images\expand-collapse-left.png" />

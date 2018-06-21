@@ -177,11 +177,61 @@ namespace LIBUtil
             displayForm(null, form);
             if (form.DialogResult == DialogResult.OK)
             {
-                control.ValueGuid = form.BrowsedItemSelectionId;
-                control.ValueText = form.BrowsedItemSelectionDescription;
+                control.setValue(form.BrowsedItemSelectionDescription, form.BrowsedItemSelectionId);
                 control.ParentForm.GetNextControl(control, true).Focus();
             }
             return form;
+        }
+
+        /// <summary>
+        ///     Must be called after a column is frozen (if there is any). Otherwise, calculation to hide header checkbox won't be accurate
+        /// </summary>
+        public static Control addControlToHeader(DataGridView grid, DataGridViewColumn column, Control control)
+        {
+            setHeaderControlLocation(grid, column, control);
+
+            //reposition checkbox if column width is changed
+            grid.Controls.Add(control);
+            grid.ColumnWidthChanged += (sender, e) => grid_ColumnWidthChanged(sender, e, column, control);
+
+            //reposition checkbox if horizontal scrollbar is scrolled and hide if checkbox is positioned behind frozen columns
+            grid.Scroll += (sender, e) => grid_Scroll_RepositionHeaderControlLocation(sender, e, grid, column, control);
+
+            return control;
+        }
+
+        public static void setHeaderControlLocation(DataGridView grid, DataGridViewColumn column, Control control)
+        {
+            Rectangle rect = grid.GetCellDisplayRectangle(column.DisplayIndex, -1, false);
+            // set control to the center of header cell. +1 pixel to position 
+            rect.Y = rect.Location.Y + (rect.Height - control.Height) / 2 + 1;
+            rect.X = rect.Location.X + (rect.Width - control.Width) / 2 + 2;
+            control.Location = rect.Location;
+        }
+
+        public static void grid_Scroll_RepositionHeaderControlLocation(object sender, ScrollEventArgs e, DataGridView grid, DataGridViewColumn column, Control control)
+        {
+            if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+            {
+                if (control.Location.X < 0)
+                    control.Visible = false;
+                else
+                    control.Visible = true;
+
+                Util.setHeaderControlLocation(grid, column, control);
+            }
+        }
+
+        public static void grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e, DataGridViewColumn column, Control control)
+        {
+            Util.setHeaderControlLocation((DataGridView)sender, column, control);
+        }
+
+        public static void removeSelectedGridviewRows(DataGridView gridview)
+        {
+            for (int i = gridview.Rows.Count - 1; i >= 0; i--)
+                if (gridview.SelectedRows.Contains(gridview.Rows[i]))
+                    gridview.Rows.RemoveAt(i);
         }
 
         #endregion
@@ -440,10 +490,12 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static void clickDataGridViewCheckbox(object sender, DataGridViewCellEventArgs e)
+        public static bool clickDataGridViewCheckbox(object sender, DataGridViewCellEventArgs e)
         {
             DataGridViewRow row = ((DataGridView)sender).Rows[e.RowIndex];
-            row.Cells[e.ColumnIndex].Value = !getCheckboxValue(row, e.ColumnIndex);
+            bool value = !getCheckboxValue(row, e.ColumnIndex);
+            row.Cells[e.ColumnIndex].Value = value;
+            return value;
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
@@ -475,6 +527,12 @@ namespace LIBUtil
         public static object getSelectedRowValue(DataGridView grid, DataGridViewColumn column)
         {
             return grid.SelectedRows[0].Cells[column.Name].Value;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static object setSelectedRowValue(DataGridView grid, DataGridViewColumn column, object value)
+        {
+            return grid.SelectedRows[0].Cells[column.Name].Value = value;
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
@@ -601,7 +659,7 @@ namespace LIBUtil
         }
 
         /// <summary><para>For DataGridView</para></summary>
-        private static void clearDataGridViewOnSelectionChanged(object sender, EventArgs e)
+        public static void clearDataGridViewOnSelectionChanged(object sender, EventArgs e)
         {
             ((DataGridView)sender).ClearSelection(); //disable cell color change when user click on it
         }
@@ -1135,7 +1193,20 @@ namespace LIBUtil
 
             return newDate;
         }
-        
+
+        #endregion
+        /*******************************************************************************************************/
+        #region CONTROL LOCATION
+
+        public static Point getLocationRelativeToForm(Control control)
+        {            
+            Form form = control.FindForm();
+            Point controlLoc = form.PointToScreen(control.Location);
+            Point relativeLoc = new Point(controlLoc.X - form.Location.X, controlLoc.Y - form.Location.Y);
+
+            return relativeLoc;
+        }
+
         #endregion
         /*******************************************************************************************************/
 
