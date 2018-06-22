@@ -78,6 +78,7 @@ namespace LIBUtil.Desktop.Forms
             _startingMode = startingMode;
             Mode = _startingMode;
             _showDataOnLoad = showDataOnLoad;
+            this.ShowIcon = false;
         }
 
         #endregion CONSTRUCTOR METHODS

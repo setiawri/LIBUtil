@@ -47,7 +47,11 @@ namespace LIBUtil
         public const string TYPE_ARRAY_INT = "value_int";
 
         public static List<string> sanitizeList = new List<string> { ";" };
-        
+
+        //placeholder for MDI parent.
+        public static Form MDIParent; 
+        public static Control MDIParentChildrenContainer;
+
         /*******************************************************************************************************/
         //Experiment to pass a method (has a parameter) as a parameter
         public void passMethodWithParameters()
@@ -110,17 +114,18 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static void displayMDIParent(ref Form MDIParentReference, Form form)
+        public static void setAsMDIParent(Form form, Control container)
         {
             form.WindowState = FormWindowState.Maximized;
-            MDIParentReference = form;
+            MDIParent = form;
+            MDIParentChildrenContainer = container;
             form.StartPosition = FormStartPosition.CenterScreen;
             form.ShowInTaskbar = true;
-            form.ShowDialog();
+            //form.ShowDialog();
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static void displayMDIChild(Form MDIParent, Form form)
+        public static void displayMDIChild(Form form)
         {
             //check existing forms
             Type type = form.GetType();
@@ -134,9 +139,13 @@ namespace LIBUtil
 
             //display the new form
             form.MdiParent = MDIParent;
+            form.Parent = MDIParentChildrenContainer;
             form.StartPosition = FormStartPosition.CenterParent;
             if (!form.IsDisposed)
+            {
                 form.Show();
+                form.BringToFront();
+            }
         }
 
         /// <summary><para>Desktop app use only.</para></summary>

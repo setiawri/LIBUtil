@@ -36,26 +36,26 @@ namespace LIBUtil.Desktop.UserControls
             set {
                 _togglePanel = value;
 
-                if(_togglePanel != null && _togglePanel.FindForm() != null)
-                {
-                    Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
-                    Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
+                //if(_togglePanel != null && _togglePanel.FindForm() != null)
+                //{
+                //    Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
+                //    Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
 
-                    if (ArrowOrientation == Orientation.Horizontal)
-                    {
-                        if (toggleButtonLoc.X > togglePanelLoc.X)
-                            setDirection(ArrowDirection.Left);
-                        else
-                            setDirection(ArrowDirection.Right);
-                    }
-                    else
-                    {
-                        if (toggleButtonLoc.Y > togglePanelLoc.Y)
-                            setDirection(ArrowDirection.Up);
-                        else
-                            setDirection(ArrowDirection.Down);
-                    }
-                }
+                //    if (ArrowOrientation == Orientation.Horizontal)
+                //    {
+                //        if (toggleButtonLoc.X > togglePanelLoc.X)
+                //            setDirection(ArrowDirection.Left);
+                //        else
+                //            setDirection(ArrowDirection.Right);
+                //    }
+                //    else
+                //    {
+                //        if (toggleButtonLoc.Y > togglePanelLoc.Y)
+                //            setDirection(ArrowDirection.Up);
+                //        else
+                //            setDirection(ArrowDirection.Down);
+                //    }
+                //}
             }
         }
         private Panel _togglePanel;

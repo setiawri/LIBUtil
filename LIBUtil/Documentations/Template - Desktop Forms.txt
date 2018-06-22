@@ -34,6 +34,7 @@ namespace NamespaceName
 
         private void setupControls()
         {
+            this.ShowIcon = false;
 			setupControlsBasedOnRoles();
         }
 

@@ -31,7 +31,7 @@ namespace iSpeakWindows.UserAccounts
         #region CONSTRUCTOR METHODS
 
         public MasterData_v1_UserAccounts_Form() : this(FormModes.Add) { }
-        public MasterData_v1_UserAccounts_Form(FormModes startingMode) : base(GlobalData.MDIParent, startingMode, FORM_SHOWDATAONLOAD) { InitializeComponent(); }
+        public MasterData_v1_UserAccounts_Form(FormModes startingMode) : base(startingMode, FORM_SHOWDATAONLOAD) { InitializeComponent(); }
         
         #endregion CONSTRUCTOR METHODS
         /*******************************************************************************************************/
@@ -43,15 +43,15 @@ namespace iSpeakWindows.UserAccounts
 		
         protected override void setupFields()
         {
-            setColumnsDataPropertyNames(UserAccount.COL_DB_Id, UserAccount.COL_DB_Active, null, null, null, null);
+            //setColumnsDataPropertyNames(UserAccount.COL_DB_Id, UserAccount.COL_DB_Active, null, null, null, null);
 
-            col_dgv_Username = base.addColumn<DataGridViewTextBoxCell>(dgv, "col_dgv_Username", itxt_Username.LabelText, UserAccount.COL_DB_Username, true, "", true);
+            //col_dgv_Username = base.addColumn<DataGridViewTextBoxCell>(dgv, "col_dgv_Username", itxt_Username.LabelText, UserAccount.COL_DB_Username, true, "", true);
             
         }
 		
         protected override void setupControlsBasedOnRoles() 
         {
-            Helper.hideIfNoAccess(GlobalData.UserAccount, btnRoles, UserAccountAccessEnum.UserAccountRoles_AddUpdate);
+            //Helper.hideIfNoAccess(GlobalData.UserAccount, btnRoles, UserAccountAccessEnum.UserAccountRoles_AddUpdate);
         }
 
         protected override void additionalSettings()
@@ -90,8 +90,8 @@ namespace iSpeakWindows.UserAccounts
 
         protected override Boolean isInputFieldsValid()
         {
-            if (string.IsNullOrEmpty(itxt_Username.Text))
-                return itxt_Username.isValueError("Please provide name");
+            //if (string.IsNullOrEmpty(itxt_Username.Text))
+            //    return itxt_Username.isValueError("Please provide name");
             //else if ((Mode != FormMode.Update && City.isNameExist(_inputTxtName.ValueText, null))
             //    || (Mode == FormMode.Update && City.isNameExist(_inputTxtName.ValueText, selectedRowID())))
             //    return _inputTxtName.TextError("Name is already in the list");
