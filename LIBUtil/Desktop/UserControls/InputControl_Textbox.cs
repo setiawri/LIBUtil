@@ -89,6 +89,7 @@ namespace LIBUtil.Desktop.UserControls
             set
             {
                 _isBrowseMode = value;
+                ShowDeleteButton = value;
                 if(_isBrowseMode)
                 {
                     textbox.BackColor = Color.LightGray;
@@ -146,6 +147,13 @@ namespace LIBUtil.Desktop.UserControls
             set { _allowNegativeValue = value; }
         }
         private bool _allowNegativeValue = true;
+
+        [Description("Show delete button"), Category("_Custom")]
+        public bool ShowDeleteButton
+        {
+            get { return pnlDelete.Visible; }
+            set { pnlDelete.Visible = value; }
+        }
 
         public decimal ValueDecimal { get { return Util.zeroNonNumericString(textbox.Text); } }
         public int ValueInt { get { return (int)Util.zeroNonNumericString(textbox.Text); } }
@@ -341,6 +349,12 @@ namespace LIBUtil.Desktop.UserControls
         private void textbox_MouseHover(object sender, EventArgs e)
         {
             _textboxTooltip.Show(textbox.Text, textbox);
+        }
+
+        private void pbDelete_Click(object sender, EventArgs e)
+        {
+            textbox.Text = string.Empty;
+            ValueGuid = null;
         }
 
         #endregion
