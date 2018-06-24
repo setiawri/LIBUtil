@@ -155,6 +155,8 @@ namespace LIBUtil
                 parentFormToHide.Hide();
 
             form.StartPosition = FormStartPosition.CenterParent;
+            if(form.MdiParent != null)
+                form.ShowInTaskbar = false;
             form.ShowDialog();
 
             if (parentFormToHide != null && !parentFormToHide.IsDisposed)
@@ -743,6 +745,11 @@ namespace LIBUtil
         public static string GetEnumDescription<T>(object value)
         {
             return Util.GetEnumDescription((Enum)(object)Util.parseEnum<T>(value));
+        }
+
+        public static string GetEnumName<T>(int value)
+        {
+            return Enum.GetName(typeof(T), value);
         }
 
         #endregion

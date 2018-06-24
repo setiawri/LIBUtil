@@ -164,11 +164,19 @@ namespace LIBUtil.Desktop.UserControls
 
         public void populateWithTime(int startHour, int startMinute, int endHour, int endMinute, int intervalMinutes, string columnName, string format)
         {
+            TimeSpan startTime = new TimeSpan(startHour, startMinute, 0);
+            TimeSpan endTime = new TimeSpan(endHour, endMinute, 0);
+
+            if (intervalMinutes <= 0)
+                Util.displayMessageBoxError("Interval Minutes cannot be zero or less");
+            else if (endTime < startTime)
+                Util.displayMessageBoxError("End Hour cannot be before than the start hour");
+
             DataTable datatable = new DataTable();
             Util.addColumnToTable<string>(datatable, "text", null);
             Util.addColumnToTable<string>(datatable, columnName, null);
             
-            for (TimeSpan i = new TimeSpan(startHour,startMinute,0); i <= new TimeSpan(endHour, endMinute, 0); i=i.Add(new TimeSpan(0, intervalMinutes, 0)))
+            for (TimeSpan i = startTime; i <= endTime; i=i.Add(new TimeSpan(0, intervalMinutes, 0)))
                 datatable.Rows.Add(string.Format(format, i), string.Format(format, i));
 
             dropdownlist.populate(datatable, "text", columnName, null);
