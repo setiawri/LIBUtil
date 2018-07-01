@@ -43,7 +43,7 @@
             this.label.Location = new System.Drawing.Point(0, 0);
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(180, 19);
-            this.label.TabIndex = 4;
+            this.label.TabIndex = 999;
             this.label.Text = "textbox";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -53,7 +53,7 @@
             this.textbox.Location = new System.Drawing.Point(0, 19);
             this.textbox.Name = "textbox";
             this.textbox.Size = new System.Drawing.Size(160, 20);
-            this.textbox.TabIndex = 5;
+            this.textbox.TabIndex = 0;
             this.textbox.Click += new System.EventHandler(this.textbox_isBrowseMode_Clicked);
             this.textbox.TextChanged += new System.EventHandler(this.textbox_TextChanged);
             this.textbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_onKeyDown);

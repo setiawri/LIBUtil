@@ -45,8 +45,14 @@ namespace NamespaceName
 		
         private void populateData()
         {
-
+            if(isValidToPopulateData())
+            {
+			}
         }
+		
+        private bool isValidToPopulateData()
+        {
+		}
 
 		private void resetData()
 		{

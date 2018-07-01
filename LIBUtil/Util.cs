@@ -38,6 +38,8 @@ namespace LIBUtil
         Sat
     }
 
+    public enum AnimationEffect { Roll, Slide, Center, Blend }
+
     public class Util
     {
         public static bool DBConnectionTestCompleted;
@@ -117,6 +119,7 @@ namespace LIBUtil
         public static void setAsMDIParent(Form form, Control container)
         {
             form.WindowState = FormWindowState.Maximized;
+            form.IsMdiContainer = true;
             MDIParent = form;
             MDIParentChildrenContainer = container;
             form.StartPosition = FormStartPosition.CenterScreen;
@@ -155,8 +158,7 @@ namespace LIBUtil
                 parentFormToHide.Hide();
 
             form.StartPosition = FormStartPosition.CenterParent;
-            if(form.MdiParent != null)
-                form.ShowInTaskbar = false;
+            //form.ShowInTaskbar = showInTaskbar;
             form.ShowDialog();
 
             if (parentFormToHide != null && !parentFormToHide.IsDisposed)
@@ -1225,6 +1227,30 @@ namespace LIBUtil
 
         #endregion
         /*******************************************************************************************************/
+        #region DESKTOP CONTROL ANIMATION
 
+        public static void Animate(Control ctl, AnimationEffect effect, int msec, int angle)
+        {
+            int flags = effmap[(int)effect];
+            if (ctl.Visible) { flags |= 0x10000; angle += 180; }
+            else
+            {
+                if (ctl.TopLevelControl == ctl) flags |= 0x20000;
+                else if (effect == AnimationEffect.Blend) throw new ArgumentException();
+            }
+            flags |= dirmap[(angle % 360) / 45];
+            bool ok = AnimateWindow(ctl.Handle, msec, flags);
+            if (!ok) throw new Exception("Animation failed");
+            ctl.Visible = !ctl.Visible;
+        }
+
+        private static int[] dirmap = { 1, 5, 4, 6, 2, 10, 8, 9 };
+        private static int[] effmap = { 0, 0x40000, 0x10, 0x80000 };
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool AnimateWindow(IntPtr handle, int msec, int flags);
+
+        #endregion
+        /*******************************************************************************************************/
     }
 }

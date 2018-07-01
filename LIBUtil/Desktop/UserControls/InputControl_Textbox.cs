@@ -104,6 +104,13 @@ namespace LIBUtil.Desktop.UserControls
         }
         private bool _isBrowseMode = false;
 
+        [Description("Password Char"), Category("_Custom")]
+        public char PasswordChar
+        {
+            get { return textbox.PasswordChar; }
+            set { textbox.PasswordChar = value; }
+        }
+
         [Description("Row Count: must be 1 or more"), Category("_Custom")]
         public int RowCount { 
             get { return _rowCount; } 
