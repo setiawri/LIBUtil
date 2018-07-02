@@ -321,7 +321,7 @@ namespace LIBUtil.Desktop.UserControls
 
         private void showInNumeric_TextChanged(object sender, EventArgs e)
         {
-            LIBUtil.Desktop.UserControls.InputControl_Textbox.showInNumeric(textbox, _allowDecimal, _allowNegativeValue);
+            InputControl_Textbox.showInNumeric(textbox, _allowDecimal, _allowNegativeValue);
         }
 
         [Description("is Browse Mode Clicked Event"), Category("_Custom")]
@@ -346,6 +346,14 @@ namespace LIBUtil.Desktop.UserControls
         {
             if (onKeyDown != null)
                 this.onKeyDown(this, e);
+        }
+
+        [Description("Focus Enter"), Category("_Custom")]
+        public event EventHandler FocusEnter;
+        private void textbox_FocusEnter(object sender, EventArgs e)
+        {
+            if (FocusEnter != null)
+                this.FocusEnter(this, e);
         }
 
         private void textbox_MouseLeave(object sender, EventArgs e)

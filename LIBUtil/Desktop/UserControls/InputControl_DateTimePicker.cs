@@ -42,6 +42,14 @@ namespace LIBUtil.Desktop.UserControls
             get { return datetimepicker.ShowCheckBox; }
             set { datetimepicker.ShowCheckBox = value; }
         }
+        
+        [Description("Default Checked Value"), Category("_Custom")]
+        public bool DefaultCheckedValue
+        {
+            get { return _DefaultCheckedValue; }
+            set { _DefaultCheckedValue = datetimepicker.Checked = value; }
+        }
+        private bool _DefaultCheckedValue;
 
         public DateTime? Value
         {
@@ -108,7 +116,7 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region METHODS
 
-        public override void reset() { datetimepicker.Value = DateTime.Now; datetimepicker.Checked = false; }
+        public override void reset() { datetimepicker.Value = DateTime.Now; datetimepicker.Checked = DefaultCheckedValue; }
 
         public override void focus() { datetimepicker.Focus(); }
 
@@ -146,8 +154,6 @@ namespace LIBUtil.Desktop.UserControls
         {
             if (this.ValueChanged != null)
                 this.ValueChanged(this, e);
-
-            datetimepicker.Checked = true;
         }
 
         #endregion EVENT HANDLERS

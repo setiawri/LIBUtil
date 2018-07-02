@@ -56,6 +56,7 @@
             this.textbox.TabIndex = 0;
             this.textbox.Click += new System.EventHandler(this.textbox_isBrowseMode_Clicked);
             this.textbox.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.textbox.Enter += new System.EventHandler(this.textbox_FocusEnter);
             this.textbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_onKeyDown);
             this.textbox.MouseLeave += new System.EventHandler(this.textbox_MouseLeave);
             this.textbox.MouseHover += new System.EventHandler(this.textbox_MouseHover);

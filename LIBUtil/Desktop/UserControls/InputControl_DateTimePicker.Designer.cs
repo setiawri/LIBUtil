@@ -44,6 +44,7 @@
             // 
             // datetimepicker
             // 
+            this.datetimepicker.Checked = false;
             this.datetimepicker.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.datetimepicker.Location = new System.Drawing.Point(0, 15);
             this.datetimepicker.Name = "datetimepicker";
