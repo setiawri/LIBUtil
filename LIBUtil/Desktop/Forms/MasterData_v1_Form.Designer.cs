@@ -49,6 +49,7 @@
             this.col_dgv_Active = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.col_dgv_Checkbox1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ptInputPanel = new LIBUtil.Desktop.UserControls.PanelToggle();
             this.lnkClearQuickSearch = new System.Windows.Forms.LinkLabel();
             this.txtQuickSearch = new System.Windows.Forms.TextBox();
             this.chkIncludeInactive = new System.Windows.Forms.CheckBox();
@@ -305,6 +306,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ptInputPanel);
             this.panel1.Controls.Add(this.lnkClearQuickSearch);
             this.panel1.Controls.Add(this.txtQuickSearch);
             this.panel1.Controls.Add(this.chkIncludeInactive);
@@ -315,6 +317,18 @@
             this.panel1.Size = new System.Drawing.Size(1005, 28);
             this.panel1.TabIndex = 0;
             // 
+            // ptInputPanel
+            // 
+            this.ptInputPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ptInputPanel.BackColor = System.Drawing.Color.White;
+            this.ptInputPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptInputPanel.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Up;
+            this.ptInputPanel.Location = new System.Drawing.Point(977, 0);
+            this.ptInputPanel.Name = "ptInputPanel";
+            this.ptInputPanel.Size = new System.Drawing.Size(28, 28);
+            this.ptInputPanel.TabIndex = 96;
+            this.ptInputPanel.TogglePanel = this.scMain.Panel1;
+            // 
             // lnkClearQuickSearch
             // 
             this.lnkClearQuickSearch.ActiveLinkColor = System.Drawing.Color.DarkOrange;
@@ -322,7 +336,7 @@
             this.lnkClearQuickSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkClearQuickSearch.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.lnkClearQuickSearch.LinkColor = System.Drawing.Color.DarkOrange;
-            this.lnkClearQuickSearch.Location = new System.Drawing.Point(183, 8);
+            this.lnkClearQuickSearch.Location = new System.Drawing.Point(180, 8);
             this.lnkClearQuickSearch.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.lnkClearQuickSearch.Name = "lnkClearQuickSearch";
             this.lnkClearQuickSearch.Size = new System.Drawing.Size(15, 13);
@@ -334,7 +348,7 @@
             // 
             // txtQuickSearch
             // 
-            this.txtQuickSearch.Location = new System.Drawing.Point(79, 4);
+            this.txtQuickSearch.Location = new System.Drawing.Point(76, 4);
             this.txtQuickSearch.Name = "txtQuickSearch";
             this.txtQuickSearch.Size = new System.Drawing.Size(100, 20);
             this.txtQuickSearch.TabIndex = 0;
@@ -343,7 +357,7 @@
             // chkIncludeInactive
             // 
             this.chkIncludeInactive.AutoSize = true;
-            this.chkIncludeInactive.Location = new System.Drawing.Point(202, 6);
+            this.chkIncludeInactive.Location = new System.Drawing.Point(199, 6);
             this.chkIncludeInactive.Name = "chkIncludeInactive";
             this.chkIncludeInactive.Size = new System.Drawing.Size(91, 17);
             this.chkIncludeInactive.TabIndex = 1;
@@ -355,7 +369,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 8);
+            this.label1.Location = new System.Drawing.Point(3, 8);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 13);
             this.label1.TabIndex = 1;
@@ -418,5 +432,6 @@
         protected System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_StatusId;
         protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Active;
         protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Checkbox1;
+        public UserControls.PanelToggle ptInputPanel;
     }
 }

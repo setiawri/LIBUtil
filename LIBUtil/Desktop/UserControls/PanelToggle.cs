@@ -180,6 +180,11 @@ namespace LIBUtil.Desktop.UserControls
                 return Orientation.Vertical;
         }
 
+        public void PerformClick()
+        {
+            toggle();
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS

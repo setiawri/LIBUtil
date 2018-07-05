@@ -177,11 +177,11 @@ namespace LIBUtil.Desktop.Forms
             dgv.AutoGenerateColumns = false;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.MultiSelect = false;
+            
+            clearInputFields();
 
             if (_startingMode == FormModes.Browse)
-                scMain.Panel1Collapsed = true;
-
-            clearInputFields();
+                ptInputPanel.Visible = false;
 
             setupControlsBasedOnRoles();
         }
