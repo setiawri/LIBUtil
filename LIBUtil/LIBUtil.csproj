@@ -64,6 +64,12 @@
     <Compile Include="Desktop\Forms\MessageBox_Form.Designer.cs">
       <DependentUpon>MessageBox_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Desktop\UserControls\DatagridviewPaging.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\DatagridviewPaging.Designer.cs">
+      <DependentUpon>DatagridviewPaging.cs</DependentUpon>
+    </Compile>
     <Compile Include="Desktop\UserControls\DragDropLabelWithCheckedListBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -75,6 +81,12 @@
     </Compile>
     <Compile Include="Desktop\UserControls\Dropdownlist.Designer.cs">
       <DependentUpon>Dropdownlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_Numeric.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Desktop\UserControls\InputControl_Numeric.Designer.cs">
+      <DependentUpon>InputControl_Numeric.cs</DependentUpon>
     </Compile>
     <Compile Include="Desktop\UserControls\PanelToggle.cs">
       <SubType>UserControl</SubType>
@@ -134,11 +146,17 @@
     <EmbeddedResource Include="Desktop\Forms\MessageBox_Form.resx">
       <DependentUpon>MessageBox_Form.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\DatagridviewPaging.resx">
+      <DependentUpon>DatagridviewPaging.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Desktop\UserControls\DragDropLabelWithCheckedListBox.resx">
       <DependentUpon>DragDropLabelWithCheckedListBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Desktop\UserControls\Dropdownlist.resx">
       <DependentUpon>Dropdownlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\InputControl_Numeric.resx">
+      <DependentUpon>InputControl_Numeric.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Desktop\UserControls\PanelToggle.resx">
       <DependentUpon>PanelToggle.cs</DependentUpon>

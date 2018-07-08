@@ -36,6 +36,13 @@ namespace LIBUtil.Desktop.UserControls
             set { datetimepicker.CustomFormat = value.Trim(); }
         }
 
+        [Description("Show Up And Down"), Category("_Custom")]
+        public bool ShowUpAndDown
+        {
+            get { return datetimepicker.ShowUpDown; }
+            set { datetimepicker.ShowUpDown = value; }
+        }
+
         [Description("Show CheckBox"), Category("_Custom")]
         public bool ShowCheckBox
         {
@@ -67,7 +74,31 @@ namespace LIBUtil.Desktop.UserControls
                 else
                 {
                     datetimepicker.Checked = true;
-                    datetimepicker.Value = (DateTime)value;
+                    if(((DateTime)value).Year < datetimepicker.MinDate.Year)
+                        datetimepicker.Value = ((DateTime)value).AddYears(datetimepicker.MinDate.Year-((DateTime)value).Year);
+                    else
+                       datetimepicker.Value = (DateTime)value;
+                }
+            }
+        }
+
+        public TimeSpan? ValueTimeSpan
+        {
+            get
+            {
+                if (!datetimepicker.Checked)
+                    return null;
+                else
+                    return datetimepicker.Value.TimeOfDay;
+            }
+            set
+            {
+                if (value == null)
+                    datetimepicker.Checked = false;
+                else
+                {
+                    datetimepicker.Checked = true;
+                    datetimepicker.Value = datetimepicker.MinDate.Add((TimeSpan)value);
                 }
             }
         }
@@ -116,7 +147,14 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region METHODS
 
-        public override void reset() { datetimepicker.Value = DateTime.Now; datetimepicker.Checked = DefaultCheckedValue; }
+        public override void reset()
+        {
+            if (datetimepicker.ShowUpDown)
+                datetimepicker.Value = datetimepicker.MinDate;
+            else
+                datetimepicker.Value = DateTime.Now;
+            datetimepicker.Checked = DefaultCheckedValue;
+        }
 
         public override void focus() { datetimepicker.Focus(); }
 

@@ -174,6 +174,10 @@ namespace LIBUtil.Desktop.Forms
         {
             //this.Text += DBUtil.appendTitleWithInfo();
 
+            //make sure child forms show toggle panel properly
+            ptInputPanel.Parent = panel1;
+            ptInputPanel.Location = new System.Drawing.Point(0, -1);
+
             dgv.AutoGenerateColumns = false;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.MultiSelect = false;

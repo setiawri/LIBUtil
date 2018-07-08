@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NamespaceName
+namespace LIBUtil.Desktop.UserControls
 {
-    public partial class FormName_Form : Form
+    public partial class DatagridviewPaging : UserControl
     {
         /*******************************************************************************************************/
         #region SETTINGS
-		
+
         #endregion SETTINGS
         /*******************************************************************************************************/
         #region PUBLIC VARIABLES
@@ -25,8 +31,8 @@ namespace NamespaceName
         /*******************************************************************************************************/
         #region CONSTRUCTOR METHODS
 
-        public FormName_Form(): this(null) { }
-        public FormName_Form(Guid? id) { InitializeComponent(); }
+        public DatagridviewPaging() : this(null) { }
+        public DatagridviewPaging(Guid? id) { InitializeComponent(); }
 
         #endregion CONSTRUCTOR METHODS
         /*******************************************************************************************************/
@@ -34,31 +40,32 @@ namespace NamespaceName
 
         private void setupControls()
         {
-            this.ShowIcon = false;
-			setupControlsBasedOnRoles();
+            numericUpDown.Controls[0].Visible = false;
+
+            setupControlsBasedOnRoles();
         }
 
-		private void setupControlsBasedOnRoles() 
-		{
+        private void setupControlsBasedOnRoles()
+        {
 
-		}
-		
+        }
+
         private void populateData()
         {
-            if(isValidToPopulateData())
+            if (isValidToPopulateData())
             {
-			}
+            }
         }
-		
+
         private bool isValidToPopulateData()
         {
-			return true;
-		}
+            return true;
+        }
 
-		private void resetData()
-		{
-		
-		}
+        private void resetData()
+        {
+
+        }
 
         #endregion METHODS
         /*******************************************************************************************************/

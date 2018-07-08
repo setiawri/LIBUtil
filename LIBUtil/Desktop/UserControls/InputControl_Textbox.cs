@@ -92,7 +92,7 @@ namespace LIBUtil.Desktop.UserControls
                 ShowDeleteButton = value;
                 if(_isBrowseMode)
                 {
-                    textbox.BackColor = Color.LightGray;
+                    textbox.BackColor = Color.WhiteSmoke;
                     textbox.ReadOnly = true;
                 }
                 else

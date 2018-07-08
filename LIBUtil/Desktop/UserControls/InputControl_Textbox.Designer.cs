@@ -49,10 +49,11 @@
             // 
             // textbox
             // 
-            this.textbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textbox.Location = new System.Drawing.Point(0, 19);
+            this.textbox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.textbox.Location = new System.Drawing.Point(0, 20);
             this.textbox.Name = "textbox";
-            this.textbox.Size = new System.Drawing.Size(160, 20);
+            this.textbox.Size = new System.Drawing.Size(158, 21);
             this.textbox.TabIndex = 0;
             this.textbox.Click += new System.EventHandler(this.textbox_isBrowseMode_Clicked);
             this.textbox.TextChanged += new System.EventHandler(this.textbox_TextChanged);
@@ -68,7 +69,7 @@
             this.pbDelete.Dock = System.Windows.Forms.DockStyle.Top;
             this.pbDelete.Location = new System.Drawing.Point(0, 0);
             this.pbDelete.Name = "pbDelete";
-            this.pbDelete.Size = new System.Drawing.Size(20, 20);
+            this.pbDelete.Size = new System.Drawing.Size(22, 22);
             this.pbDelete.TabIndex = 6;
             this.pbDelete.TabStop = false;
             this.pbDelete.Click += new System.EventHandler(this.pbDelete_Click);
@@ -77,9 +78,9 @@
             // 
             this.pnlDelete.Controls.Add(this.pbDelete);
             this.pnlDelete.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlDelete.Location = new System.Drawing.Point(160, 19);
+            this.pnlDelete.Location = new System.Drawing.Point(158, 19);
             this.pnlDelete.Name = "pnlDelete";
-            this.pnlDelete.Size = new System.Drawing.Size(20, 22);
+            this.pnlDelete.Size = new System.Drawing.Size(22, 22);
             this.pnlDelete.TabIndex = 7;
             this.pnlDelete.Visible = false;
             // 

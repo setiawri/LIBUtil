@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.scMain = new System.Windows.Forms.SplitContainer();
             this.scInputContainer = new System.Windows.Forms.SplitContainer();
             this.scInputLeft = new System.Windows.Forms.SplitContainer();
@@ -74,6 +75,7 @@
             // 
             // scMain
             // 
+            this.scMain.BackColor = System.Drawing.Color.White;
             this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.scMain.IsSplitterFixed = true;
@@ -83,6 +85,7 @@
             // 
             // scMain.Panel1
             // 
+            this.scMain.Panel1.BackColor = System.Drawing.Color.White;
             this.scMain.Panel1.Controls.Add(this.scInputContainer);
             this.scMain.Panel1.Controls.Add(this.pnlButtons);
             this.scMain.Panel1.Controls.Add(this.pnlActionButtons);
@@ -93,6 +96,7 @@
             this.scMain.Panel2.Controls.Add(this.panel1);
             this.scMain.Size = new System.Drawing.Size(1005, 611);
             this.scMain.SplitterDistance = 320;
+            this.scMain.SplitterWidth = 1;
             this.scMain.TabIndex = 0;
             // 
             // scInputContainer
@@ -236,6 +240,14 @@
             this.dgv.AllowUserToResizeRows = false;
             this.dgv.BackgroundColor = System.Drawing.Color.White;
             this.dgv.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_dgv_Id,
@@ -250,7 +262,7 @@
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(1005, 259);
+            this.dgv.Size = new System.Drawing.Size(1005, 262);
             this.dgv.TabIndex = 3;
             this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
             this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
@@ -306,6 +318,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.Controls.Add(this.ptInputPanel);
             this.panel1.Controls.Add(this.lnkClearQuickSearch);
             this.panel1.Controls.Add(this.txtQuickSearch);
@@ -319,13 +332,12 @@
             // 
             // ptInputPanel
             // 
-            this.ptInputPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ptInputPanel.BackColor = System.Drawing.Color.White;
             this.ptInputPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ptInputPanel.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Up;
-            this.ptInputPanel.Location = new System.Drawing.Point(977, 0);
+            this.ptInputPanel.Location = new System.Drawing.Point(1, -1);
             this.ptInputPanel.Name = "ptInputPanel";
-            this.ptInputPanel.Size = new System.Drawing.Size(28, 28);
+            this.ptInputPanel.Size = new System.Drawing.Size(25, 28);
             this.ptInputPanel.TabIndex = 96;
             this.ptInputPanel.TogglePanel = this.scMain.Panel1;
             // 
@@ -336,7 +348,7 @@
             this.lnkClearQuickSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkClearQuickSearch.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.lnkClearQuickSearch.LinkColor = System.Drawing.Color.DarkOrange;
-            this.lnkClearQuickSearch.Location = new System.Drawing.Point(180, 8);
+            this.lnkClearQuickSearch.Location = new System.Drawing.Point(203, 8);
             this.lnkClearQuickSearch.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.lnkClearQuickSearch.Name = "lnkClearQuickSearch";
             this.lnkClearQuickSearch.Size = new System.Drawing.Size(15, 13);
@@ -348,7 +360,7 @@
             // 
             // txtQuickSearch
             // 
-            this.txtQuickSearch.Location = new System.Drawing.Point(76, 4);
+            this.txtQuickSearch.Location = new System.Drawing.Point(99, 4);
             this.txtQuickSearch.Name = "txtQuickSearch";
             this.txtQuickSearch.Size = new System.Drawing.Size(100, 20);
             this.txtQuickSearch.TabIndex = 0;
@@ -357,7 +369,7 @@
             // chkIncludeInactive
             // 
             this.chkIncludeInactive.AutoSize = true;
-            this.chkIncludeInactive.Location = new System.Drawing.Point(199, 6);
+            this.chkIncludeInactive.Location = new System.Drawing.Point(222, 6);
             this.chkIncludeInactive.Name = "chkIncludeInactive";
             this.chkIncludeInactive.Size = new System.Drawing.Size(91, 17);
             this.chkIncludeInactive.TabIndex = 1;
@@ -369,7 +381,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Location = new System.Drawing.Point(26, 8);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 13);
             this.label1.TabIndex = 1;
