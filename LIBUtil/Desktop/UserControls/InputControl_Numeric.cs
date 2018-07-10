@@ -36,6 +36,20 @@ namespace LIBUtil.Desktop.UserControls
         }
         private bool _showTextboxOnly;
 
+        [Description("Hide Up Down"), Category("_Custom")]
+        public bool HideUpDown
+        {
+            get { return lblHideUpDownArrow.Visible; }
+            set { lblHideUpDownArrow.Visible = value; }
+        }
+
+        [Description("Show Checkbox"), Category("_Custom")]
+        public bool ShowCheckbox
+        {
+            get { return checkbox.Visible; }
+            set { checkbox.Visible = value; numericUpDown.Enabled = !checkbox.Checked; }
+        }
+
         [Description("Label Text"), Category("_Custom")]
         public string LabelText { get { return label.Text; } set { label.Text = value; } }
         
@@ -44,6 +58,13 @@ namespace LIBUtil.Desktop.UserControls
         {
             get { return numericUpDown.DecimalPlaces; }
             set { numericUpDown.DecimalPlaces = value; }
+        }
+
+        [Description("Value"), Category("_Custom")]
+        public decimal Value
+        {
+            get { return numericUpDown.Value; }
+            set { numericUpDown.Value = value; }
         }
 
         [Description("Minimum Value"), Category("_Custom")]
@@ -66,11 +87,11 @@ namespace LIBUtil.Desktop.UserControls
             get { return numericUpDown.Increment; }
             set { numericUpDown.Increment = value; }
         }
-
-        public decimal Value { get { return numericUpDown.Value; } set { numericUpDown.Value = value; } }
+        
         public decimal ValueDecimal { get { return numericUpDown.Value; } }
         public int ValueInt { get { return (int)numericUpDown.Value; } }
         public long ValueLong { get { return (long)numericUpDown.Value; } }
+        public bool Checked { get { return checkbox.Checked; } set { checkbox.Checked = value; } }
 
         private ToolTip _textboxTooltip = new ToolTip();
 
@@ -123,6 +144,16 @@ namespace LIBUtil.Desktop.UserControls
         {
             if (onKeyDown != null)
                 this.onKeyDown(this, e);
+        }
+
+        private void numericUpDown_Enter(object sender, EventArgs e)
+        {
+            numericUpDown.Select(0, numericUpDown.Text.Length);
+        }
+
+        private void checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDown.Enabled = !checkbox.Checked;
         }
 
         #endregion

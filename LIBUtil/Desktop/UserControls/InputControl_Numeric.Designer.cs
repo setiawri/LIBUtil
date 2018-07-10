@@ -30,7 +30,11 @@
         {
             this.label = new System.Windows.Forms.Label();
             this.numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.lblHideUpDownArrow = new System.Windows.Forms.Label();
+            this.checkbox = new System.Windows.Forms.CheckBox();
+            this.pnlNumericUpDown = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).BeginInit();
+            this.pnlNumericUpDown.SuspendLayout();
             this.SuspendLayout();
             // 
             // label
@@ -47,27 +51,64 @@
             // numericUpDown
             // 
             this.numericUpDown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDown.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.numericUpDown.Dock = System.Windows.Forms.DockStyle.Fill;
             this.numericUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.numericUpDown.Location = new System.Drawing.Point(0, 20);
+            this.numericUpDown.Location = new System.Drawing.Point(0, 0);
             this.numericUpDown.Name = "numericUpDown";
-            this.numericUpDown.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.numericUpDown.Size = new System.Drawing.Size(180, 21);
+            this.numericUpDown.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericUpDown.Size = new System.Drawing.Size(165, 21);
             this.numericUpDown.TabIndex = 1000;
+            this.numericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown.ThousandsSeparator = true;
+            this.numericUpDown.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericUpDown.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
+            this.numericUpDown.Enter += new System.EventHandler(this.numericUpDown_Enter);
             this.numericUpDown.KeyDown += new System.Windows.Forms.KeyEventHandler(this.numericUpDown_KeyDown);
+            // 
+            // lblHideUpDownArrow
+            // 
+            this.lblHideUpDownArrow.BackColor = System.Drawing.Color.White;
+            this.lblHideUpDownArrow.Location = new System.Drawing.Point(2, 1);
+            this.lblHideUpDownArrow.Name = "lblHideUpDownArrow";
+            this.lblHideUpDownArrow.Size = new System.Drawing.Size(16, 19);
+            this.lblHideUpDownArrow.TabIndex = 1001;
+            this.lblHideUpDownArrow.Visible = false;
+            // 
+            // checkbox
+            // 
+            this.checkbox.AutoSize = true;
+            this.checkbox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.checkbox.Location = new System.Drawing.Point(0, 19);
+            this.checkbox.Name = "checkbox";
+            this.checkbox.Size = new System.Drawing.Size(15, 22);
+            this.checkbox.TabIndex = 1002;
+            this.checkbox.UseVisualStyleBackColor = true;
+            this.checkbox.Visible = false;
+            this.checkbox.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            // 
+            // pnlNumericUpDown
+            // 
+            this.pnlNumericUpDown.Controls.Add(this.lblHideUpDownArrow);
+            this.pnlNumericUpDown.Controls.Add(this.numericUpDown);
+            this.pnlNumericUpDown.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlNumericUpDown.Location = new System.Drawing.Point(15, 19);
+            this.pnlNumericUpDown.Name = "pnlNumericUpDown";
+            this.pnlNumericUpDown.Size = new System.Drawing.Size(165, 22);
+            this.pnlNumericUpDown.TabIndex = 1003;
             // 
             // InputControl_Numeric
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.numericUpDown);
+            this.Controls.Add(this.pnlNumericUpDown);
+            this.Controls.Add(this.checkbox);
             this.Controls.Add(this.label);
             this.Name = "InputControl_Numeric";
             this.Size = new System.Drawing.Size(180, 41);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).EndInit();
+            this.pnlNumericUpDown.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -75,5 +116,8 @@
 
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.NumericUpDown numericUpDown;
+        private System.Windows.Forms.Label lblHideUpDownArrow;
+        private System.Windows.Forms.CheckBox checkbox;
+        private System.Windows.Forms.Panel pnlNumericUpDown;
     }
 }

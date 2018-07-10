@@ -46,19 +46,7 @@ namespace LIBUtil.Desktop.UserControls
         [Description("Text"), Category("_Custom")]
         public string ValueText {
             get { return Util.sanitize(textbox); }
-            set {
-                string val = Util.sanitize(value);
-                if (!ShowInNumeric || string.IsNullOrWhiteSpace(val))
-                    textbox.Text = val;
-                else
-                {
-                    decimal obj = Convert.ToDecimal(val);
-                    if (_allowDecimal)
-                        textbox.Text = obj.ToString("N2");
-                    else
-                        textbox.Text = obj.ToString("N0");
-                }
-            }
+            set { textbox.Text = Util.sanitize(value); }
         }
 
         [Description("Max Length"), Category("_Custom")]
@@ -123,48 +111,14 @@ namespace LIBUtil.Desktop.UserControls
             } 
         }
         private int _rowCount = 1;
-
-        [Description("Show in numeric"), Category("_ShowInNumeric")]
-        public bool ShowInNumeric
-        {
-            get { return _showInNumeric; }
-            set
-            {
-                _showInNumeric = value;
-                if(value)
-                    this.textbox.TextChanged += new System.EventHandler(this.showInNumeric_TextChanged);
-                else
-                    this.textbox.TextChanged -= new System.EventHandler(this.showInNumeric_TextChanged);
-            }
-        }
-        private bool _showInNumeric = false;
-
-        [Description("Allow decimal"), Category("_ShowInNumeric")]
-        public bool AllowDecimal
-        {
-            get { return _allowDecimal; }
-            set { _allowDecimal = value; }
-        }
-        private bool _allowDecimal = true;
-
-        [Description("Allow negative value"), Category("_ShowInNumeric")]
-        public bool AllowNegativeValue
-        {
-            get { return _allowNegativeValue; }
-            set { _allowNegativeValue = value; }
-        }
-        private bool _allowNegativeValue = true;
-
+        
         [Description("Show delete button"), Category("_Custom")]
         public bool ShowDeleteButton
         {
             get { return pnlDelete.Visible; }
             set { pnlDelete.Visible = value; }
         }
-
-        public decimal ValueDecimal { get { return Util.zeroNonNumericString(textbox.Text); } }
-        public int ValueInt { get { return (int)Util.zeroNonNumericString(textbox.Text); } }
-        public long ValueLong { get { return (long)Util.zeroNonNumericString(textbox.Text); } }
+        
         public int Length { get { return textbox.TextLength; } }
         public Guid? ValueGuid = null;
 
@@ -318,12 +272,7 @@ namespace LIBUtil.Desktop.UserControls
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS
-
-        private void showInNumeric_TextChanged(object sender, EventArgs e)
-        {
-            InputControl_Textbox.showInNumeric(textbox, _allowDecimal, _allowNegativeValue);
-        }
-
+            
         [Description("is Browse Mode Clicked Event"), Category("_Custom")]
         public event EventHandler isBrowseMode_Clicked;
         private void textbox_isBrowseMode_Clicked(object sender, EventArgs e)
@@ -336,8 +285,7 @@ namespace LIBUtil.Desktop.UserControls
         public event EventHandler onTextChanged;
         private void textbox_TextChanged(object sender, EventArgs e)
         {
-            if(onTextChanged != null)
-                this.onTextChanged(this, e);
+
         }
 
         [Description("KeyDown Event"), Category("_Custom")]
