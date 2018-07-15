@@ -50,11 +50,12 @@
             this.col_dgv_Active = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.col_dgv_Checkbox1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ptInputPanel = new LIBUtil.Desktop.UserControls.PanelToggle();
+            this.pnlQuickSearch = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.chkIncludeInactive = new System.Windows.Forms.CheckBox();
             this.lnkClearQuickSearch = new System.Windows.Forms.LinkLabel();
             this.txtQuickSearch = new System.Windows.Forms.TextBox();
-            this.chkIncludeInactive = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.ptInputPanel = new LIBUtil.Desktop.UserControls.PanelToggle();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
@@ -71,6 +72,7 @@
             this.pnlActionButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.panel1.SuspendLayout();
+            this.pnlQuickSearch.SuspendLayout();
             this.SuspendLayout();
             // 
             // scMain
@@ -319,27 +321,47 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.pnlQuickSearch);
             this.panel1.Controls.Add(this.ptInputPanel);
-            this.panel1.Controls.Add(this.lnkClearQuickSearch);
-            this.panel1.Controls.Add(this.txtQuickSearch);
-            this.panel1.Controls.Add(this.chkIncludeInactive);
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1005, 28);
             this.panel1.TabIndex = 0;
             // 
-            // ptInputPanel
+            // pnlQuickSearch
             // 
-            this.ptInputPanel.BackColor = System.Drawing.Color.White;
-            this.ptInputPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptInputPanel.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Up;
-            this.ptInputPanel.Location = new System.Drawing.Point(1, -1);
-            this.ptInputPanel.Name = "ptInputPanel";
-            this.ptInputPanel.Size = new System.Drawing.Size(25, 28);
-            this.ptInputPanel.TabIndex = 96;
-            this.ptInputPanel.TogglePanel = this.scMain.Panel1;
+            this.pnlQuickSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlQuickSearch.Controls.Add(this.label1);
+            this.pnlQuickSearch.Controls.Add(this.chkIncludeInactive);
+            this.pnlQuickSearch.Controls.Add(this.lnkClearQuickSearch);
+            this.pnlQuickSearch.Controls.Add(this.txtQuickSearch);
+            this.pnlQuickSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlQuickSearch.Location = new System.Drawing.Point(30, 0);
+            this.pnlQuickSearch.Name = "pnlQuickSearch";
+            this.pnlQuickSearch.Size = new System.Drawing.Size(975, 28);
+            this.pnlQuickSearch.TabIndex = 97;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Quick Search";
+            // 
+            // chkIncludeInactive
+            // 
+            this.chkIncludeInactive.AutoSize = true;
+            this.chkIncludeInactive.Location = new System.Drawing.Point(199, 6);
+            this.chkIncludeInactive.Name = "chkIncludeInactive";
+            this.chkIncludeInactive.Size = new System.Drawing.Size(91, 17);
+            this.chkIncludeInactive.TabIndex = 1;
+            this.chkIncludeInactive.TabStop = false;
+            this.chkIncludeInactive.Text = "show inactive";
+            this.chkIncludeInactive.UseVisualStyleBackColor = true;
+            this.chkIncludeInactive.CheckedChanged += new System.EventHandler(this.chkIncludeInactive_CheckedChanged);
             // 
             // lnkClearQuickSearch
             // 
@@ -348,7 +370,7 @@
             this.lnkClearQuickSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkClearQuickSearch.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.lnkClearQuickSearch.LinkColor = System.Drawing.Color.DarkOrange;
-            this.lnkClearQuickSearch.Location = new System.Drawing.Point(203, 8);
+            this.lnkClearQuickSearch.Location = new System.Drawing.Point(180, 8);
             this.lnkClearQuickSearch.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.lnkClearQuickSearch.Name = "lnkClearQuickSearch";
             this.lnkClearQuickSearch.Size = new System.Drawing.Size(15, 13);
@@ -360,32 +382,22 @@
             // 
             // txtQuickSearch
             // 
-            this.txtQuickSearch.Location = new System.Drawing.Point(99, 4);
+            this.txtQuickSearch.Location = new System.Drawing.Point(76, 4);
             this.txtQuickSearch.Name = "txtQuickSearch";
             this.txtQuickSearch.Size = new System.Drawing.Size(100, 20);
             this.txtQuickSearch.TabIndex = 0;
             this.txtQuickSearch.TextChanged += new System.EventHandler(this.txtQuickSearch_TextChanged);
             // 
-            // chkIncludeInactive
+            // ptInputPanel
             // 
-            this.chkIncludeInactive.AutoSize = true;
-            this.chkIncludeInactive.Location = new System.Drawing.Point(222, 6);
-            this.chkIncludeInactive.Name = "chkIncludeInactive";
-            this.chkIncludeInactive.Size = new System.Drawing.Size(91, 17);
-            this.chkIncludeInactive.TabIndex = 1;
-            this.chkIncludeInactive.TabStop = false;
-            this.chkIncludeInactive.Text = "show inactive";
-            this.chkIncludeInactive.UseVisualStyleBackColor = true;
-            this.chkIncludeInactive.CheckedChanged += new System.EventHandler(this.chkIncludeInactive_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Quick Search";
+            this.ptInputPanel.BackColor = System.Drawing.Color.White;
+            this.ptInputPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ptInputPanel.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Up;
+            this.ptInputPanel.Location = new System.Drawing.Point(0, 0);
+            this.ptInputPanel.Name = "ptInputPanel";
+            this.ptInputPanel.Size = new System.Drawing.Size(30, 28);
+            this.ptInputPanel.TabIndex = 96;
+            this.ptInputPanel.TogglePanel = this.scMain.Panel1;
             // 
             // MasterData_v1_Form
             // 
@@ -412,7 +424,8 @@
             this.pnlActionButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlQuickSearch.ResumeLayout(false);
+            this.pnlQuickSearch.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -445,5 +458,6 @@
         protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Active;
         protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Checkbox1;
         public UserControls.PanelToggle ptInputPanel;
+        protected System.Windows.Forms.Panel pnlQuickSearch;
     }
 }

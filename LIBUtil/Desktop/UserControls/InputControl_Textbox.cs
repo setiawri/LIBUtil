@@ -16,9 +16,9 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region SETTINGS
 
-        private const int ADDITIONALTEXTBOXROWHEIGHT = 14;
-        private const int INITIALTEXTBOXHEIGHT = 20;
-        private const int INITIALFORMHEIGHT = 35;
+        private const int ADDITIONALTEXTBOXROWHEIGHT = 15;
+        private const int INITIALTEXTBOXHEIGHT = 21;
+        private const int INITIALFORMHEIGHT = 41;
 
         #endregion SETTINGS
         /*******************************************************************************************************/
@@ -107,6 +107,8 @@ namespace LIBUtil.Desktop.UserControls
                     _rowCount = 1;
                 else
                     _rowCount = value;
+
+                //recalculate heights
                 MultiLine = MultiLine;
             } 
         }
@@ -318,6 +320,18 @@ namespace LIBUtil.Desktop.UserControls
         {
             textbox.Text = string.Empty;
             ValueGuid = null;
+        }
+        
+        public static Form browseForm(Desktop.Forms.MasterData_v1_Form form, ref object sender)
+        {
+            Util.displayForm(null, form);
+            if (form.DialogResult == DialogResult.OK)
+            {
+                Desktop.UserControls.InputControl_Textbox control = (Desktop.UserControls.InputControl_Textbox)sender;
+                control.setValue(form.BrowsedItemSelectionDescription, form.BrowsedItemSelectionId);
+                control.ParentForm.GetNextControl(control, true).Focus();
+            }
+            return form;
         }
 
         #endregion

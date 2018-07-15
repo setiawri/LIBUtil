@@ -184,18 +184,6 @@ namespace LIBUtil
             form.Location = new System.Drawing.Point(x, y);       
         }
 
-        /// <summary><para>Desktop app use only.</para></summary>
-        public static Form browseForm(Desktop.Forms.MasterData_v1_Form form, ref Desktop.UserControls.InputControl_Textbox control)
-        {
-            displayForm(null, form);
-            if (form.DialogResult == DialogResult.OK)
-            {
-                control.setValue(form.BrowsedItemSelectionDescription, form.BrowsedItemSelectionId);
-                control.ParentForm.GetNextControl(control, true).Focus();
-            }
-            return form;
-        }
-
         /// <summary>
         ///     Must be called after a column is frozen (if there is any). Otherwise, calculation to hide header checkbox won't be accurate
         /// </summary>

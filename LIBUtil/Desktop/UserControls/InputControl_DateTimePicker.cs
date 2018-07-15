@@ -103,6 +103,17 @@ namespace LIBUtil.Desktop.UserControls
             }
         }
 
+        public string ValueTimeSpanString
+        {
+            get
+            {
+                if (ValueTimeSpan == null)
+                    return null;
+                else
+                    return ValueTimeSpan.ToString();
+            }
+        }
+
         public DateTime? ValueAsEndDateFilter
         {
             get
@@ -180,6 +191,11 @@ namespace LIBUtil.Desktop.UserControls
         public bool isValidEndDate(InputControl_DateTimePicker startControl)
         {
             return Value > startControl.Value;
+        }
+
+        public bool isValidEndTime(InputControl_DateTimePicker idtp_StartTime)
+        {
+            return ValueTimeSpan > idtp_StartTime.ValueTimeSpan;
         }
 
         #endregion METHODS

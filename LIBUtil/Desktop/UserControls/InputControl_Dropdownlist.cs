@@ -182,11 +182,6 @@ namespace LIBUtil.Desktop.UserControls
             dropdownlist.populate(datatable, "text", columnName, null);
         }
 
-        public bool isValidEndTime(InputControl_Dropdownlist iddl_StartTime)
-        {
-            return TimeSpan.Parse(SelectedValue.ToString()) > TimeSpan.Parse(iddl_StartTime.SelectedValue.ToString());
-        }
-
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS
