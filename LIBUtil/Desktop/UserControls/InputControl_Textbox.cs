@@ -287,7 +287,8 @@ namespace LIBUtil.Desktop.UserControls
         public event EventHandler onTextChanged;
         private void textbox_TextChanged(object sender, EventArgs e)
         {
-
+            if (onTextChanged != null)
+                this.onTextChanged(this, e);
         }
 
         [Description("KeyDown Event"), Category("_Custom")]
@@ -320,6 +321,7 @@ namespace LIBUtil.Desktop.UserControls
         {
             textbox.Text = string.Empty;
             ValueGuid = null;
+            textbox_TextChanged(textbox, EventArgs.Empty);
         }
         
         public static Form browseForm(Desktop.Forms.MasterData_v1_Form form, ref object sender)

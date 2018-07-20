@@ -82,6 +82,13 @@ namespace LIBUtil.Desktop.UserControls
             }
         }
 
+        [Description("Checked"), Category("_Custom")]
+        public bool Checked
+        {
+            get { return datetimepicker.Checked; }
+            set { datetimepicker.Checked = value; }
+        }
+
         public TimeSpan? ValueTimeSpan
         {
             get

@@ -102,8 +102,9 @@ namespace LIBUtil.Desktop.Forms
         protected virtual void btnLog_Click(object sender, EventArgs e) { }
         protected virtual string getSelectedItemDescription(int rowIndex) { return string.Empty; }
         protected virtual void virtual_dgv_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        
-        #endregion 
+        protected virtual void dgv_CellDoubleClick() { }
+
+        #endregion
         /*******************************************************************************************************/
         #region PROTECTED METHODS
 
@@ -142,7 +143,7 @@ namespace LIBUtil.Desktop.Forms
 
         /// <summary><para></para></summary>
         protected DataGridViewColumn addColumn<T>(DataGridView dgv, string columnName, string headerText, string dataPropertyName, 
-            bool isReadOnly, string format, bool addToQuickSearchFields, bool activateWordwrap, int? minimumWidth, DataGridViewContentAlignment textAlign)
+            bool isReadOnly, bool isVisible, string format, bool addToQuickSearchFields, bool activateWordwrap, int? minimumWidth, DataGridViewContentAlignment textAlign)
         {
             DataGridViewColumn column = new DataGridViewColumn();
             column.CellTemplate = (DataGridViewCell)Activator.CreateInstance(typeof(T));
@@ -184,7 +185,13 @@ namespace LIBUtil.Desktop.Forms
             clearInputFields();
 
             if (_startingMode == FormModes.Browse)
+            {
+                scMain.Panel1Collapsed = true;
                 ptInputPanel.Visible = false;
+                col_dgv_Active.Visible = false;
+                col_dgv_Default.Visible = false;
+                col_dgv_Checkbox1.Visible = false;
+            }
 
             setupControlsBasedOnRoles();
         }
@@ -300,8 +307,8 @@ namespace LIBUtil.Desktop.Forms
         {
             if (_currentMode != FormModes.Search)
             {
-                clearInputFields();
                 Mode = FormModes.Search;
+                clearInputFields();
                 txtQuickSearch.Focus();
             }
         }
@@ -312,6 +319,7 @@ namespace LIBUtil.Desktop.Forms
             {
                 Mode = FormModes.Add;
                 clearInputFields();
+                populateGridViewDataSource(true);
                 txtQuickSearch.Focus();
             }
         }
@@ -458,6 +466,7 @@ namespace LIBUtil.Desktop.Forms
             {
                 BrowsedItemSelectionId = selectedRowID();
                 BrowsedItemSelectionDescription = getSelectedItemDescription(e.RowIndex);
+                dgv_CellDoubleClick();
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();

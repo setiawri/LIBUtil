@@ -64,7 +64,7 @@ namespace LIBUtil.Desktop.UserControls
         public decimal Value
         {
             get { return numericUpDown.Value; }
-            set { numericUpDown.Value = value; }
+            set { numericUpDown.Value = value; numericUpDown.Tag = value; }
         }
 
         [Description("Minimum Value"), Category("_Custom")]
@@ -88,10 +88,10 @@ namespace LIBUtil.Desktop.UserControls
             set { numericUpDown.Increment = value; }
         }
         
-        public decimal ValueDecimal { get { return numericUpDown.Value; } }
         public int ValueInt { get { return (int)numericUpDown.Value; } }
         public long ValueLong { get { return (long)numericUpDown.Value; } }
         public bool Checked { get { return checkbox.Checked; } set { checkbox.Checked = value; } }
+        public decimal PreviousValue { get { return (numericUpDown.Tag == null) ? 0 : (decimal)numericUpDown.Tag; } }
 
         private ToolTip _textboxTooltip = new ToolTip();
 
@@ -107,7 +107,7 @@ namespace LIBUtil.Desktop.UserControls
         #endregion CONSTRUCTOR METHODS
         /*******************************************************************************************************/
         #region METHODS
-            
+
         public override void reset()
         {
             numericUpDown.Value = 0;
@@ -136,6 +136,8 @@ namespace LIBUtil.Desktop.UserControls
         {
             if (ValueChanged != null)
                 this.ValueChanged(this, e);
+
+            numericUpDown.Tag = numericUpDown.Value; //saves value to tag for PreviousValue property
         }
         
         [Description("KeyDown Event"), Category("_Custom")]
