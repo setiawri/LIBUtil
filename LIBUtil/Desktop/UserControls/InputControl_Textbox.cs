@@ -331,7 +331,8 @@ namespace LIBUtil.Desktop.UserControls
             {
                 Desktop.UserControls.InputControl_Textbox control = (Desktop.UserControls.InputControl_Textbox)sender;
                 control.setValue(form.BrowsedItemSelectionDescription, form.BrowsedItemSelectionId);
-                control.ParentForm.GetNextControl(control, true).Focus();
+                if(control.ParentForm.GetNextControl(control, true) != null)
+                    control.ParentForm.GetNextControl(control, true).Focus();
             }
             return form;
         }
