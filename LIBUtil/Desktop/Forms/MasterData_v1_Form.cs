@@ -184,15 +184,6 @@ namespace LIBUtil.Desktop.Forms
             
             clearInputFields();
 
-            if (_startingMode == FormModes.Browse)
-            {
-                scMain.Panel1Collapsed = true;
-                ptInputPanel.Visible = false;
-                col_dgv_Active.Visible = false;
-                col_dgv_Default.Visible = false;
-                col_dgv_Checkbox1.Visible = false;
-            }
-
             setupControlsBasedOnRoles();
         }
 
@@ -474,6 +465,18 @@ namespace LIBUtil.Desktop.Forms
             else if (btnLog.Enabled)
             {
                 btnLog.PerformClick();
+            }
+        }
+
+        private void Form_Shown(object sender, EventArgs e)
+        {
+            if (_startingMode == FormModes.Browse)
+            {
+                scMain.Panel1Collapsed = true;
+                ptInputPanel.Visible = false;
+                col_dgv_Active.Visible = false;
+                col_dgv_Default.Visible = false;
+                col_dgv_Checkbox1.Visible = false;
             }
         }
 

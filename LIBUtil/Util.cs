@@ -61,7 +61,6 @@ namespace LIBUtil
             string parameter = "hmm";
             string i = ShowValue(() => methodToPass(parameter));
             Util.displayMessageBox("", i.ToString());
-            return;
         }
         private T ShowValue<T>(Func<T> method)
         {
@@ -1237,6 +1236,21 @@ namespace LIBUtil
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool AnimateWindow(IntPtr handle, int msec, int flags);
+
+        #endregion
+        /*******************************************************************************************************/
+        #region RADIO BUTTON
+
+        public static object getActiveRadioButton(Panel panel)
+        {
+            return panel.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+        }
+
+        public static DayOfWeek getDayOfWeekFromActiveRadioButtonTag(Panel panel)
+        {
+            RadioButton rb = (RadioButton)getActiveRadioButton(panel);
+            return (DayOfWeek)rb.Tag;
+        }
 
         #endregion
         /*******************************************************************************************************/

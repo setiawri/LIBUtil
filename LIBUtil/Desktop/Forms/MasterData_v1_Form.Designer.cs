@@ -408,6 +408,7 @@
             this.Name = "MasterData_v1_Form";
             this.Text = "MasterData_v1_Form";
             this.Load += new System.EventHandler(this.Form_Load);
+            this.Shown += new System.EventHandler(this.Form_Shown);
             this.scMain.Panel1.ResumeLayout(false);
             this.scMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();

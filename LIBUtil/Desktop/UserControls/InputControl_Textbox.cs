@@ -324,12 +324,12 @@ namespace LIBUtil.Desktop.UserControls
             textbox_TextChanged(textbox, EventArgs.Empty);
         }
         
-        public static Form browseForm(Desktop.Forms.MasterData_v1_Form form, ref object sender)
+        public static Form browseForm(Forms.MasterData_v1_Form form, ref object sender)
         {
             Util.displayForm(null, form);
             if (form.DialogResult == DialogResult.OK)
             {
-                Desktop.UserControls.InputControl_Textbox control = (Desktop.UserControls.InputControl_Textbox)sender;
+                InputControl_Textbox control = (InputControl_Textbox)sender;
                 control.setValue(form.BrowsedItemSelectionDescription, form.BrowsedItemSelectionId);
                 if(control.ParentForm.GetNextControl(control, true) != null)
                     control.ParentForm.GetNextControl(control, true).Focus();
