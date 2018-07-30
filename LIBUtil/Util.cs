@@ -52,7 +52,6 @@ namespace LIBUtil
 
         //placeholder for MDI parent.
         public static Form MDIParent; 
-        public static Control MDIParentChildrenContainer;
 
         /*******************************************************************************************************/
         //Experiment to pass a method (has a parameter) as a parameter
@@ -115,12 +114,11 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static void setAsMDIParent(Form form, Control container)
+        public static void setAsMDIParent(Form form)
         {
             form.WindowState = FormWindowState.Maximized;
             form.IsMdiContainer = true;
             MDIParent = form;
-            MDIParentChildrenContainer = container;
             form.StartPosition = FormStartPosition.CenterScreen;
             form.ShowInTaskbar = true;
             //form.ShowDialog();
@@ -141,7 +139,6 @@ namespace LIBUtil
 
             //display the new form
             form.MdiParent = MDIParent;
-            form.Parent = MDIParentChildrenContainer;
             form.StartPosition = FormStartPosition.CenterParent;
             if (!form.IsDisposed)
             {
