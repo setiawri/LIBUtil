@@ -195,14 +195,20 @@ namespace LIBUtil.Desktop.UserControls
             return new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month), 0, 0, 0, 0);
         }
 
-        public bool isValidEndDate(InputControl_DateTimePicker startControl)
+        public bool isValidEndDate(InputControl_DateTimePicker idtp_StartTime)
         {
-            return Value > startControl.Value;
+            if (datetimepicker.Checked && idtp_StartTime.Checked)
+                return Value > idtp_StartTime.Value;
+            else
+                return true;
         }
 
         public bool isValidEndTime(InputControl_DateTimePicker idtp_StartTime)
         {
-            return ValueTimeSpan > idtp_StartTime.ValueTimeSpan;
+            if (datetimepicker.Checked && idtp_StartTime.Checked)
+                return ValueTimeSpan > idtp_StartTime.ValueTimeSpan;
+            else
+                return true;
         }
 
         #endregion METHODS

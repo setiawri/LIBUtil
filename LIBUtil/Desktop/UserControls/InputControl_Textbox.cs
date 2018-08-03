@@ -326,7 +326,7 @@ namespace LIBUtil.Desktop.UserControls
         
         public static Form browseForm(Forms.MasterData_v1_Form form, ref object sender)
         {
-            Util.displayForm(null, form);
+            Util.displayForm(null, form, false);
             if (form.DialogResult == DialogResult.OK)
             {
                 InputControl_Textbox control = (InputControl_Textbox)sender;
