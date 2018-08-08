@@ -154,6 +154,7 @@ namespace LIBUtil.Desktop.Forms
             column.SortMode = DataGridViewColumnSortMode.Automatic;
             column.DefaultCellStyle.Format = format;
             column.DefaultCellStyle.Alignment = textAlign;
+            column.Visible = isVisible;
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
             dgv.Columns.Add(column);
 
