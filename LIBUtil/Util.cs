@@ -471,7 +471,7 @@ namespace LIBUtil
             else
                 return originalText;
         }
-
+        
         #endregion
         /*******************************************************************************************************/
         #region DESKTOP DATAGRIDVIEW
