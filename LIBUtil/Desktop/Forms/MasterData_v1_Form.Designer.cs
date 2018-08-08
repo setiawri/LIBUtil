@@ -270,6 +270,7 @@
             this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
             this.dgv.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgv_CellMouseDown);
             this.dgv.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgv_DataBindingComplete);
+            this.dgv.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.dgv_PreviewKeyDown);
             // 
             // col_dgv_Id
             // 
@@ -390,6 +391,7 @@
             // 
             // ptInputPanel
             // 
+            this.ptInputPanel.AdjustLocationOnClick = false;
             this.ptInputPanel.BackColor = System.Drawing.Color.White;
             this.ptInputPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.ptInputPanel.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Up;

@@ -1,0 +1,22 @@
+﻿
+==============================================================================================================================================================
+DB is not accessible from remote
+==============================================================================================================================================================
+
+>> MAKE SURE FIREWALL ALLOWS CONNECTION!
+
+https://stackoverflow.com/questions/11278114/enable-remote-connections-for-sql-server-express-2012
+
+-    Run SQL Server Configuration Manager. (Start > Run > SQLServerManager13.msc: 13 might need to be changed to the installed version)
+-    Go to SQL Server Network Configuration > Protocols for SQLEXPRESS.
+-    Make sure TCP/IP is enabled.
+
+So far, so good, and entirely expected. But then:
+
+-    Right-click on TCP/IP and select Properties.
+-    Scroll down to IPAll.
+-    Make sure that TCP Dynamic Ports is blank. (Mine was set to some 5-digit port number.)
+-    Make sure that TCP Port is set to 1433. (Mine was blank.)
+
+
+==============================================================================================================================================================

@@ -282,7 +282,24 @@ namespace LIBUtil.Desktop.Forms
             foreach (T status in Util.GetEnumItems<T>())
                 column.ContextMenuStrip.Items.Add(new ToolStripMenuItem(Util.GetEnumDescription((Enum)(object)status), null, changeStatus_Click));
         }
-        
+
+        private void selectRow(int rowIndex)
+        {
+            if (_startingMode == FormModes.Browse)
+            {
+                BrowsedItemSelectionId = selectedRowID();
+                BrowsedItemSelectionDescription = getSelectedItemDescription(rowIndex);
+                dgv_CellDoubleClick();
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else if (btnLog.Enabled)
+            {
+                btnLog.PerformClick();
+            }
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS
@@ -454,19 +471,7 @@ namespace LIBUtil.Desktop.Forms
 
         private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (_startingMode == FormModes.Browse)
-            {
-                BrowsedItemSelectionId = selectedRowID();
-                BrowsedItemSelectionDescription = getSelectedItemDescription(e.RowIndex);
-                dgv_CellDoubleClick();
-
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
-            else if (btnLog.Enabled)
-            {
-                btnLog.PerformClick();
-            }
+            selectRow(e.RowIndex);
         }
 
         private void Form_Shown(object sender, EventArgs e)
@@ -479,6 +484,14 @@ namespace LIBUtil.Desktop.Forms
                 col_dgv_Default.Visible = false;
                 col_dgv_Checkbox1.Visible = false;
             }
+
+            txtQuickSearch.Focus();
+        }
+
+        private void dgv_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+                selectRow(((DataGridView)sender).CurrentRow.Index);
         }
 
         #endregion EVENT HANDLERS

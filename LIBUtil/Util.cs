@@ -148,13 +148,14 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static bool displayForm(Form parentFormToHide, Form form)
+        public static bool displayForm(Form parentFormToHide, Form form) { return displayForm(parentFormToHide, form, true); }
+        public static bool displayForm(Form parentFormToHide, Form form, bool showInTaskbar)
         {
             if(parentFormToHide != null)
                 parentFormToHide.Hide();
 
             form.StartPosition = FormStartPosition.CenterParent;
-            //form.ShowInTaskbar = showInTaskbar;
+            form.ShowInTaskbar = showInTaskbar;
             form.ShowDialog();
 
             if (parentFormToHide != null && !parentFormToHide.IsDisposed)
@@ -470,7 +471,7 @@ namespace LIBUtil
             else
                 return originalText;
         }
-
+        
         #endregion
         /*******************************************************************************************************/
         #region DESKTOP DATAGRIDVIEW
@@ -492,6 +493,16 @@ namespace LIBUtil
             DataGridViewRow row = ((DataGridView)sender).Rows[e.RowIndex];
             bool value = !getCheckboxValue(row, e.ColumnIndex);
             row.Cells[e.ColumnIndex].Value = value;
+            return value;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
+        public static bool setCheckboxValue(object sender, DataGridViewCellEventArgs e, bool value)
+        {
+            DataGridViewRow row = ((DataGridView)sender).Rows[e.RowIndex];
+            DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex];
+            if (cell.Value != null)
+                cell.Value = value;
             return value;
         }
 
@@ -602,9 +613,9 @@ namespace LIBUtil
         {
             if (grid.Rows.Count > 0 && topRowIndex > -1)
             {
-                if (grid.Rows.Count >= topRowIndex)
+                if (grid.Rows.Count > topRowIndex)
                     grid.FirstDisplayedScrollingRowIndex = topRowIndex;
-                else if (grid.Rows.Count < topRowIndex)
+                else
                     grid.FirstDisplayedScrollingRowIndex = grid.Rows.Count - 1;
             }
 
