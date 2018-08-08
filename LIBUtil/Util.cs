@@ -344,6 +344,10 @@ namespace LIBUtil
                 else
                     return default(T);
             }
+            else if (typeof(T) == typeof(TimeSpan) && val.GetType() == typeof(DateTime))
+            {
+                val = ((DateTime)val).TimeOfDay;
+            }
             else if (typeof(T) == typeof(TimeSpan?))
             {
                 TimeSpan t;
