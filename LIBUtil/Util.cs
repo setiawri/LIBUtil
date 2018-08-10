@@ -475,10 +475,71 @@ namespace LIBUtil
             else
                 return originalText;
         }
-        
+
         #endregion
         /*******************************************************************************************************/
         #region DESKTOP DATAGRIDVIEW
+
+        /// <summary>
+        ///     Must be called after a column is frozen (if there is any). Otherwise, calculation to hide header checkbox won't be accurate
+        /// </summary>
+        public static CheckBox addHeaderCheckbox(DataGridView grid, DataGridViewColumn column, string controlName, EventHandler checkedChangedHandler)
+        {
+            CheckBox checkboxHeader = new CheckBox();
+            checkboxHeader.Name = controlName;
+            //datagridview[0, 0].ToolTipText = "sdfsdf";
+            checkboxHeader.Size = new Size(18, 18);
+            checkboxHeader.BackColor = Color.Transparent;
+
+            setHeaderCheckboxLocation(grid, column, checkboxHeader);
+
+            checkboxHeader.CheckedChanged += new EventHandler(checkedChangedHandler);
+
+            //reposition checkbox if column width is changed
+            grid.Controls.Add(checkboxHeader);
+            grid.ColumnWidthChanged += (sender, e) => grid_ColumnWidthChanged(sender, e, column, checkboxHeader);
+
+            //reposition checkbox if horizontal scrollbar is scrolled and hide if checkbox is positioned behind frozen columns
+            grid.Scroll += (sender, e) => grid_Scroll_RepositionHeaderCheckboxLocation(sender, e, grid, column, checkboxHeader);
+
+            return checkboxHeader;
+        }
+
+        public static void setHeaderCheckboxLocation(DataGridView grid, DataGridViewColumn column, CheckBox checkboxHeader)
+        {
+            Rectangle rect = grid.GetCellDisplayRectangle(column.DisplayIndex, -1, false);
+            // set checkbox header to center of header cell. +1 pixel to position 
+            rect.Y = rect.Location.Y + (rect.Height - checkboxHeader.Height) / 2 + 1;
+            rect.X = rect.Location.X + (rect.Width - checkboxHeader.Width) / 2 + 2;
+            checkboxHeader.Location = rect.Location;
+        }
+
+        public static void grid_Scroll_RepositionHeaderCheckboxLocation(object sender, ScrollEventArgs e, DataGridView grid, DataGridViewColumn column, CheckBox checkboxHeader)
+        {
+            if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+            {
+                if (checkboxHeader.Location.X < 0)
+                    checkboxHeader.Visible = false;
+                else
+                    checkboxHeader.Visible = true;
+
+                Util.setHeaderCheckboxLocation(grid, column, checkboxHeader);
+            }
+        }
+
+        public static void toggleCheckboxColumn(DataGridView grid, DataGridViewColumn column, CheckBox headerCheckbox)
+        {
+            int idx = -1;
+            if (grid.SelectedRows.Count > 0)
+                idx = grid.SelectedRows[0].Index;
+            grid.CurrentCell = null; //fix problem where previously manually toggled checkbox doesn't display new value when programmatically changed using header checkbox
+            if (idx > -1)
+                grid.Rows[idx].Selected = true;
+
+            foreach (DataGridViewRow row in grid.Rows)
+                row.Cells[column.Name].Value = headerCheckbox.Checked;
+
+        }
 
         /// <summary><para>Desktop app use only.</para></summary>
         public static void displayContextMenu(object sender, DataGridViewCellMouseEventArgs e)
