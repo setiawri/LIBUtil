@@ -92,7 +92,7 @@ namespace LIBUtil.Desktop.UserControls
 
         public object SelectedValue { get { return dropdownlist.SelectedValue; } set { dropdownlist.SelectedValue = value; } }
         public object SelectedItem { get { return dropdownlist.SelectedItem; } set { dropdownlist.SelectedItem = value; } }
-        public object SelectedItemText { get { return dropdownlist.SelectedItemText; } }
+        public string SelectedItemText { get { return dropdownlist.SelectedItemText; } set { dropdownlist.SelectedItemText = value; } }
 
         public bool SelectedValueError(string message) { return dropdownlist.SelectedValueError(message); }
 

@@ -445,10 +445,8 @@ namespace LIBUtil.Desktop.Forms
                 populateGridViewDataSource(true);
                 if (Mode == FormModes.Update) btnUpdate.PerformClick();
             }
-            else
-            {
-                virtual_dgv_CellContentClick(sender, e);
-            }
+
+            virtual_dgv_CellContentClick(sender, e);
         }
 
         protected void dgv_SelectionChanged(object sender, EventArgs e)

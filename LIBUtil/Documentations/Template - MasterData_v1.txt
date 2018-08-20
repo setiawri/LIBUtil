@@ -115,6 +115,11 @@ namespace iSpeakWindows.UserAccounts
         protected override void updateDefaultRow(Guid id) { }
 
         protected override void updateCheckbox1Column(Guid id, Boolean newValue) { }
+		
+        protected override void virtual_dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
 
         #endregion METHODS
         /*******************************************************************************************************/

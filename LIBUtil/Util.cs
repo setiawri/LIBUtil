@@ -148,7 +148,7 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static bool displayForm(Form parentFormToHide, Form form) { return displayForm(parentFormToHide, form, true); }
+        public static bool displayForm(Form parentFormToHide, Form form) { return displayForm(parentFormToHide, form, false); }
         public static bool displayForm(Form parentFormToHide, Form form, bool showInTaskbar)
         {
             if(parentFormToHide != null)
@@ -597,6 +597,7 @@ namespace LIBUtil
         
         /// <summary><para>Desktop app use only.</para></summary>
         public static Guid getSelectedRowID(DataGridView grid, DataGridViewColumn IdColumn) { return (Guid)getSelectedRowValue(grid, IdColumn); }
+        public static object getSelectedRowValue(object sender, DataGridViewColumn column) { return getSelectedRowValue((DataGridView)sender, column); }
         public static object getSelectedRowValue(DataGridView grid, DataGridViewColumn column)
         {
             return grid.SelectedRows[0].Cells[column.Name].Value;
