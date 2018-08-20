@@ -28,21 +28,19 @@ namespace LIBUtil.Desktop.UserControls
             {
                 _showTextboxOnly = value;
                 label.Visible = !value;
-                ShowDecimalCheckbox = !value;
                 if (value)
+                {
+                    chkAllowDecimal.Visible = ShowAllowDecimalCheckbox;
                     this.Height = numericUpDown.Height;
+                }
                 else
+                {
+                    chkAllowDecimal.Visible = false;
                     this.Height = numericUpDown.Height + label.Height;
+                }
             }
         }
         private bool _showTextboxOnly;
-
-        [Description("Show Decimal Checkbox"), Category("_Custom")]
-        public bool ShowDecimalCheckbox
-        {
-            get { return chkShowDecimal.Visible; }
-            set { chkShowDecimal.Visible = value; }
-        }
 
         [Description("Hide Up Down"), Category("_Custom")]
         public bool HideUpDown
@@ -56,6 +54,13 @@ namespace LIBUtil.Desktop.UserControls
         {
             get { return checkbox.Visible; }
             set { checkbox.Visible = value; numericUpDown.Enabled = !checkbox.Checked; }
+        }
+
+        [Description("Show Allow Decimal Checkbox"), Category("_Custom")]
+        public bool ShowAllowDecimalCheckbox
+        {
+            get { return chkAllowDecimal.Visible; }
+            set { chkAllowDecimal.Visible = value; }
         }
 
         [Description("Label Text"), Category("_Custom")]
@@ -168,7 +173,7 @@ namespace LIBUtil.Desktop.UserControls
 
         private void chkShowDecimal_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkShowDecimal.Checked)
+            if (chkAllowDecimal.Checked)
                 numericUpDown.DecimalPlaces = 2;
             else
                 numericUpDown.DecimalPlaces = 0;

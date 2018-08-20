@@ -33,7 +33,7 @@
             this.lblHideUpDownArrow = new System.Windows.Forms.Label();
             this.checkbox = new System.Windows.Forms.CheckBox();
             this.pnlNumericUpDown = new System.Windows.Forms.Panel();
-            this.chkShowDecimal = new System.Windows.Forms.CheckBox();
+            this.chkAllowDecimal = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).BeginInit();
             this.pnlNumericUpDown.SuspendLayout();
             this.SuspendLayout();
@@ -97,22 +97,23 @@
             this.pnlNumericUpDown.Size = new System.Drawing.Size(165, 22);
             this.pnlNumericUpDown.TabIndex = 1003;
             // 
-            // chkShowDecimal
+            // chkAllowDecimal
             // 
-            this.chkShowDecimal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkShowDecimal.AutoSize = true;
-            this.chkShowDecimal.Location = new System.Drawing.Point(162, 4);
-            this.chkShowDecimal.Name = "chkShowDecimal";
-            this.chkShowDecimal.Size = new System.Drawing.Size(15, 14);
-            this.chkShowDecimal.TabIndex = 1004;
-            this.chkShowDecimal.UseVisualStyleBackColor = true;
-            this.chkShowDecimal.CheckedChanged += new System.EventHandler(this.chkShowDecimal_CheckedChanged);
+            this.chkAllowDecimal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkAllowDecimal.AutoSize = true;
+            this.chkAllowDecimal.Location = new System.Drawing.Point(167, 4);
+            this.chkAllowDecimal.Name = "chkAllowDecimal";
+            this.chkAllowDecimal.Size = new System.Drawing.Size(15, 14);
+            this.chkAllowDecimal.TabIndex = 1004;
+            this.chkAllowDecimal.UseVisualStyleBackColor = true;
+            this.chkAllowDecimal.Visible = false;
+            this.chkAllowDecimal.CheckedChanged += new System.EventHandler(this.chkShowDecimal_CheckedChanged);
             // 
             // InputControl_Numeric
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.chkShowDecimal);
+            this.Controls.Add(this.chkAllowDecimal);
             this.Controls.Add(this.pnlNumericUpDown);
             this.Controls.Add(this.checkbox);
             this.Controls.Add(this.label);
@@ -132,6 +133,6 @@
         private System.Windows.Forms.Label lblHideUpDownArrow;
         private System.Windows.Forms.CheckBox checkbox;
         private System.Windows.Forms.Panel pnlNumericUpDown;
-        private System.Windows.Forms.CheckBox chkShowDecimal;
+        private System.Windows.Forms.CheckBox chkAllowDecimal;
     }
 }
