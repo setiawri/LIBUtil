@@ -7,12 +7,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using LIBUtil.Desktop.UserControls;
@@ -24,12 +20,13 @@ namespace LIBUtil.Desktop.Forms
         /*******************************************************************************************************/
         #region SETTINGS
 
-        private const string BUTTONTEXT_SUBMIT_SEARCH = "SEARCH";
+        private const string BUTTONTEXT_SUBMIT_SEARCH = "FILTER";
         private const string BUTTONTEXT_SUBMIT_ADD = "SUBMIT";
         private const string BUTTONTEXT_SUBMIT_UPDATE = "UPDATE";
         private Color BUTTONCOLOR_DEFAULT = Color.Black;
         private Color BUTTONCOLOR_ACTIVE = Color.DarkOrange;
         private const int QUICKSEARCH_MAXLENGTH = 10;
+        private string masterDataFormName;
 
         #endregion SETTINGS
         /*******************************************************************************************************/
@@ -64,6 +61,7 @@ namespace LIBUtil.Desktop.Forms
         private FormModes _startingMode;
         private FormModes _currentMode;
         private bool _showDataOnLoad = false;
+        Dictionary<Control, object> filterValues = new Dictionary<Control, object>();
 
         #endregion PRIVATE VARIABLES
         /*******************************************************************************************************/
@@ -75,6 +73,7 @@ namespace LIBUtil.Desktop.Forms
         {
             InitializeComponent();
 
+            masterDataFormName = this.Name;
             _startingMode = startingMode;
             Mode = _startingMode;
             _showDataOnLoad = showDataOnLoad;
@@ -103,6 +102,7 @@ namespace LIBUtil.Desktop.Forms
         protected virtual string getSelectedItemDescription(int rowIndex) { return string.Empty; }
         protected virtual void virtual_dgv_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         protected virtual void dgv_CellDoubleClick() { }
+        protected virtual void updateInputPanelControls() { }
 
         #endregion
         /*******************************************************************************************************/
@@ -217,8 +217,14 @@ namespace LIBUtil.Desktop.Forms
                     break;
             }
 
+            if(isChildFormInitialized()) updateInputPanelControls();
             updateModeButtonsAvailabilityForGridRow();
             txtQuickSearch.Focus();
+        }
+
+        private bool isChildFormInitialized()
+        {
+            return this.Name != masterDataFormName;
         }
 
         private void updateModeButtonsAvailabilityForGridRow()
@@ -266,14 +272,14 @@ namespace LIBUtil.Desktop.Forms
         private void setGridviewDataSource(DataView dvw)
         {
             //detach event handlers to avoid triggering events
-            dgv.CellContentClick -= new System.Windows.Forms.DataGridViewCellEventHandler(dgv_CellContentClick);
-            dgv.SelectionChanged -= new System.EventHandler(dgv_SelectionChanged);
+            dgv.CellContentClick -= new DataGridViewCellEventHandler(dgv_CellContentClick);
+            dgv.SelectionChanged -= new EventHandler(dgv_SelectionChanged);
 
             Util.setGridviewDataSource(dgv, true, true, dvw);
 
             //reattach event handlers
-            dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(dgv_CellContentClick);
-            dgv.SelectionChanged += new System.EventHandler(dgv_SelectionChanged);
+            dgv.CellContentClick += new DataGridViewCellEventHandler(dgv_CellContentClick);
+            dgv.SelectionChanged += new EventHandler(dgv_SelectionChanged);
         }
 
         private void addStatusContextMenu<T>(DataGridViewColumn column)
@@ -289,7 +295,6 @@ namespace LIBUtil.Desktop.Forms
             {
                 BrowsedItemSelectionId = selectedRowID();
                 BrowsedItemSelectionDescription = getSelectedItemDescription(rowIndex);
-                dgv_CellDoubleClick();
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -298,6 +303,130 @@ namespace LIBUtil.Desktop.Forms
             {
                 btnLog.PerformClick();
             }
+        }
+
+        private void saveFilterValues()
+        {
+            processFilterValues(scInputContainer, true);
+        }
+
+        private void reapplyFilterValues()
+        {
+            if(filterValues.Count > 0)
+                processFilterValues(scInputContainer, false);
+        }
+
+        private void processFilterValues(Control panel, bool isSave)
+        {
+            if (panel.GetType() == typeof(SplitContainer))
+            {
+                processFilterValues(((SplitContainer)panel).Panel1, isSave);
+                processFilterValues(((SplitContainer)panel).Panel2, isSave);
+            }
+            else if (panel.GetType() == typeof(Panel))
+                processFilterValues(panel, isSave);
+            else
+            {
+                foreach (Control control in panel.Controls)
+                {
+                    if (control.GetType() == typeof(SplitContainer))
+                    {
+                        processFilterValues(((SplitContainer)control).Panel1, isSave);
+                        processFilterValues(((SplitContainer)control).Panel2, isSave);
+                    }
+                    else if (control.GetType() == typeof(Panel))
+                        processFilterValues(control, isSave);
+                    else if (!isSave && !filterValues.ContainsKey(control))
+                        continue; //do nothing and iterate to the next control
+                    else if (control.GetType() == typeof(InputControl_Textbox))
+                    {
+                        if (isSave && !filterValues.ContainsKey(control))
+                            filterValues.Add(control, ((InputControl_Textbox)control).FilterValues);
+                        else
+                        {
+                            if (isSave)
+                                filterValues[control] = ((InputControl_Textbox)control).FilterValues;
+                            else
+                                ((InputControl_Textbox)control).FilterValues = (FilterValues_InputControl_Textbox)filterValues[control];
+                        }
+                    }
+                    else if (control.GetType() == typeof(InputControl_Numeric))
+                    {
+                        if (isSave && !filterValues.ContainsKey(control))
+                            filterValues.Add(control, ((InputControl_Numeric)control).FilterValues);
+                        else
+                        {
+                            if (isSave)
+                                filterValues[control] = ((InputControl_Numeric)control).FilterValues;
+                            else
+                                ((InputControl_Numeric)control).FilterValues = (FilterValues_InputControl_Numeric)filterValues[control];
+                        }
+                    }
+                    else if (control.GetType() == typeof(InputControl_DateTimePicker))
+                    {
+                        if (isSave && !filterValues.ContainsKey(control))
+                            filterValues.Add(control, ((InputControl_DateTimePicker)control).FilterValues);
+                        else
+                        {
+                            if (isSave)
+                                filterValues[control] = ((InputControl_DateTimePicker)control).FilterValues;
+                            else
+                                ((InputControl_DateTimePicker)control).FilterValues = (FilterValues_InputControl_DateTimePicker)filterValues[control];
+                        }
+                    }
+                    else if (control.GetType() == typeof(InputControl_Dropdownlist))
+                    {
+                        if (isSave && !filterValues.ContainsKey(control))
+                            filterValues.Add(control, ((InputControl_Dropdownlist)control).SelectedValue);
+                        else
+                        {
+                            if (isSave)
+                                filterValues[control] = ((InputControl_Dropdownlist)control).SelectedValue;
+                            else
+                                ((InputControl_Dropdownlist)control).SelectedValue = filterValues[control];
+                        }
+                    }
+                }
+            }
+        }
+        
+        protected T getFilterValue<T>(Control control)
+        {
+            object obj = null;
+
+            if (filterValues.Count > 0)
+            {
+                if (control.GetType() == typeof(InputControl_Textbox))
+                {
+                    if (typeof(T) == typeof(Guid) || typeof(T) == typeof(Guid?))
+                        obj = ((FilterValues_InputControl_Textbox)filterValues[control]).ValueGuid;
+                    else if (typeof(T) == typeof(string))
+                        obj = ((FilterValues_InputControl_Textbox)filterValues[control]).ValueText;
+                }
+                else if (control.GetType() == typeof(InputControl_Numeric))
+                {
+                    FilterValues_InputControl_Numeric item = ((FilterValues_InputControl_Numeric)filterValues[control]);
+                    if (item.ShowCheckBox && item.Checked)
+                    {
+                        obj = ((FilterValues_InputControl_Numeric)filterValues[control]).Value;
+                    }
+                }
+                else if (control.GetType() == typeof(InputControl_DateTimePicker))
+                {
+                    FilterValues_InputControl_DateTimePicker item = ((FilterValues_InputControl_DateTimePicker)filterValues[control]);
+                    if(item.ShowCheckBox && item.Checked)
+                    {
+                        if (typeof(T) == typeof(DateTime) || typeof(T) == typeof(DateTime?))
+                            obj = item.Value;
+                        else if (typeof(T) == typeof(TimeSpan) || typeof(T) == typeof(TimeSpan?))
+                            obj = item.ValueTimespan;
+                    }
+                }
+                else if (control.GetType() == typeof(InputControl_Dropdownlist))
+                    obj = ((InputControl_Dropdownlist)control).SelectedValue;
+            }
+
+            return Util.wrapNullable<T>(obj);
         }
 
         #endregion METHODS
@@ -318,6 +447,7 @@ namespace LIBUtil.Desktop.Forms
             {
                 Mode = FormModes.Search;
                 clearInputFields();
+                reapplyFilterValues();
                 txtQuickSearch.Focus();
             }
         }
@@ -348,6 +478,7 @@ namespace LIBUtil.Desktop.Forms
             switch (Mode)
             {
                 case FormModes.Search:
+                    saveFilterValues();
                     break;
                 case FormModes.Add:
                     if (!isInputFieldsValid())
@@ -376,8 +507,15 @@ namespace LIBUtil.Desktop.Forms
         {
             if (Mode == FormModes.Update)
                 btnUpdate.PerformClick();
-            else
+            else 
+            {
                 clearInputFields();
+                if (Mode == FormModes.Search)
+                {
+                    filterValues.Clear();
+                    saveFilterValues();
+                }
+            }
 
             txtQuickSearch.Focus();
         }

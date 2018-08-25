@@ -10,6 +10,22 @@ using System.Windows.Forms;
 
 namespace LIBUtil.Desktop.UserControls
 {
+    public struct FilterValues_InputControl_DateTimePicker
+    {
+        public DateTime? Value;
+        public TimeSpan? ValueTimespan;
+        public bool ShowCheckBox;
+        public bool Checked;
+
+        public FilterValues_InputControl_DateTimePicker(DateTime? value, TimeSpan? valueTimespan, bool showCheckBox, bool isChecked)
+        {
+            Value = value;
+            ValueTimespan = valueTimespan;
+            ShowCheckBox = showCheckBox;
+            Checked = isChecked;
+        }
+    }
+
     public partial class InputControl_DateTimePicker : InputControl
     {
         /*******************************************************************************************************/
@@ -62,7 +78,7 @@ namespace LIBUtil.Desktop.UserControls
         {
             get
             {
-                if (!datetimepicker.Checked)
+                if (ShowCheckBox && !datetimepicker.Checked)
                     return null;
                 else
                     return datetimepicker.Value;
@@ -93,7 +109,7 @@ namespace LIBUtil.Desktop.UserControls
         {
             get
             {
-                if (!datetimepicker.Checked)
+                if (ShowCheckBox && !datetimepicker.Checked)
                     return null;
                 else
                     return datetimepicker.Value.TimeOfDay;
@@ -150,7 +166,20 @@ namespace LIBUtil.Desktop.UserControls
         }
 
         public bool ValueError(string message) { return Util.inputError<DateTimePicker>(datetimepicker, message); }
+        
+        public FilterValues_InputControl_DateTimePicker FilterValues
+        {
+            get { return new FilterValues_InputControl_DateTimePicker(Value, ValueTimeSpan, ShowCheckBox, Checked); }
+            set
+            {
+                Value = value.Value;
+                ValueTimeSpan = value.ValueTimespan;
+                ShowCheckBox = value.ShowCheckBox;
+                Checked = value.Checked;
+            }
+        }
 
+        public DateTimePicker getDatetimePicker { get { return datetimepicker; } }
 
         #endregion PROPERTIES
         /*******************************************************************************************************/
@@ -170,7 +199,7 @@ namespace LIBUtil.Desktop.UserControls
             if (datetimepicker.ShowUpDown)
                 datetimepicker.Value = datetimepicker.MinDate;
             else
-                datetimepicker.Value = DateTime.Now;
+                datetimepicker.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             datetimepicker.Checked = DefaultCheckedValue;
         }
 

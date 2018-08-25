@@ -10,6 +10,20 @@ using System.Windows.Forms;
 
 namespace LIBUtil.Desktop.UserControls
 {
+    public struct FilterValues_InputControl_Numeric
+    {
+        public decimal Value;
+        public bool ShowCheckBox;
+        public bool Checked;
+
+        public FilterValues_InputControl_Numeric(decimal value, bool showCheckBox, bool isChecked)
+        {
+            Value = value;
+            ShowCheckBox = showCheckBox;
+            Checked = isChecked;
+        }
+    }
+
     [DefaultEvent("isBrowseMode_Clicked")]
     public partial class InputControl_Numeric : InputControl
     {
@@ -53,7 +67,7 @@ namespace LIBUtil.Desktop.UserControls
         public bool ShowCheckbox
         {
             get { return checkbox.Visible; }
-            set { checkbox.Visible = value; numericUpDown.Enabled = !checkbox.Checked; }
+            set { checkbox.Visible = value; numericUpDown.Enabled = !checkbox.Visible; }
         }
 
         [Description("Show Allow Decimal Checkbox"), Category("_Custom")]
@@ -124,6 +138,10 @@ namespace LIBUtil.Desktop.UserControls
         public override void reset()
         {
             numericUpDown.Value = 0;
+            if (!numericUpDown.Enabled)
+                checkbox.Checked = false;
+            else if (ShowCheckbox)
+                checkbox.Checked = false;
         }
 
         public override void focus()
@@ -138,11 +156,22 @@ namespace LIBUtil.Desktop.UserControls
         }
         
         public bool isValueError(string message) { return Util.inputError<NumericUpDown>(numericUpDown, message); }
-        
+
+        public FilterValues_InputControl_Numeric FilterValues
+        {
+            get { return new FilterValues_InputControl_Numeric(Value, ShowCheckbox, checkbox.Checked); }
+            set
+            {
+                Value = value.Value;
+                ShowCheckbox = value.ShowCheckBox;
+                checkbox.Checked = value.Checked;
+            }
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS
-            
+
         [Description("TextChanged Event"), Category("_Custom")]
         public event EventHandler ValueChanged;
         private void numericUpDown_ValueChanged(object sender, EventArgs e)
@@ -168,7 +197,7 @@ namespace LIBUtil.Desktop.UserControls
 
         private void checkbox_CheckedChanged(object sender, EventArgs e)
         {
-            numericUpDown.Enabled = !checkbox.Checked;
+            numericUpDown.Enabled = checkbox.Checked;
         }
 
         private void chkShowDecimal_CheckedChanged(object sender, EventArgs e)

@@ -10,6 +10,18 @@ using System.Windows.Forms;
 
 namespace LIBUtil.Desktop.UserControls
 {
+    public struct FilterValues_InputControl_Textbox
+    {
+        public Guid? ValueGuid;
+        public string ValueText;
+
+        public FilterValues_InputControl_Textbox(Guid? guid, string text)
+        {
+            ValueGuid = guid;
+            ValueText = text;
+        }
+    }
+
     [DefaultEvent("isBrowseMode_Clicked")]
     public partial class InputControl_Textbox : InputControl
     {
@@ -42,12 +54,6 @@ namespace LIBUtil.Desktop.UserControls
 
         [Description("Label Text"), Category("_Custom")]
         public string LabelText { get { return label.Text; } set { label.Text = value; } }
-
-        [Description("Text"), Category("_Custom")]
-        public string ValueText {
-            get { return Util.sanitize(textbox); }
-            set { textbox.Text = Util.sanitize(value); }
-        }
 
         [Description("Max Length"), Category("_Custom")]
         public int MaxLength { get { return textbox.MaxLength; } set { textbox.MaxLength = value; } }
@@ -120,9 +126,26 @@ namespace LIBUtil.Desktop.UserControls
             get { return pnlDelete.Visible; }
             set { pnlDelete.Visible = value; }
         }
-        
+
+        [Description("Text"), Category("_Custom")]
+        public string ValueText
+        {
+            get { return Util.sanitize(textbox); }
+            set { textbox.Text = Util.sanitize(value); }
+        }
+
         public int Length { get { return textbox.TextLength; } }
         public Guid? ValueGuid = null;
+
+        public FilterValues_InputControl_Textbox FilterValues
+        {
+            get { return new FilterValues_InputControl_Textbox(ValueGuid, ValueText); }
+            set
+            {
+                ValueGuid = value.ValueGuid;
+                ValueText = value.ValueText;
+            }
+        }
 
         private ToolTip _textboxTooltip = new ToolTip();
 
@@ -141,14 +164,14 @@ namespace LIBUtil.Desktop.UserControls
 
         public void setValue(string textValue, Guid guidValue)
         {
-            ValueText = textValue;
             ValueGuid = guidValue;
+            ValueText = textValue; //textbox must be set the latest because it triggers ontextchange event
         }
 
         public override void reset()
         {
-            textbox.Text = "";
             ValueGuid = null;
+            textbox.Text = ""; //textbox must be set the latest because it triggers ontextchange event.
         }
 
         public override void focus()
