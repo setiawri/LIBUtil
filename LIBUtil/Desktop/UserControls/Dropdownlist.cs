@@ -41,7 +41,8 @@ namespace LIBUtil.Desktop.UserControls
         public object SelectedValue { get { return combobox.SelectedValue; } set { if (value == null) clearSelection(); else combobox.SelectedValue = value; } }
         public object SelectedItem { get { return combobox.SelectedItem; } set { if (value == null) clearSelection(); else combobox.SelectedItem = value; } }
         public string SelectedItemText { get { return combobox.GetItemText(combobox.SelectedItem); } set { combobox.SelectedIndex = combobox.FindStringExact(value); } }
-        
+        public int SelectedIndex { get { return combobox.SelectedIndex; } set { if (value > combobox.Items.Count-1) clearSelection(); else combobox.SelectedIndex = value; } }
+
         public bool SelectedValueError(string message) { return Util.inputError<ComboBox>(combobox, message); }
 
         #endregion PROPERTIES
