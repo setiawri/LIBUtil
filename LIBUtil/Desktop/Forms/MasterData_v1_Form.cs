@@ -608,6 +608,7 @@ namespace LIBUtil.Desktop.Forms
         private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             selectRow(e.RowIndex);
+            dgv_CellDoubleClick();
         }
 
         private void Form_Shown(object sender, EventArgs e)
@@ -627,7 +628,10 @@ namespace LIBUtil.Desktop.Forms
         private void dgv_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
+            {
                 selectRow(((DataGridView)sender).CurrentRow.Index);
+                dgv_CellDoubleClick();
+            }
         }
 
         #endregion EVENT HANDLERS

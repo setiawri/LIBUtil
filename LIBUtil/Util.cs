@@ -77,7 +77,7 @@ namespace LIBUtil
         public static bool isDBConnectionAvailable(System.Drawing.Icon icon, bool showError, bool showProgressBar)
         {
             var form = new Desktop.Forms.CheckDBConnection_Form(icon, showError, showProgressBar);
-            form.ShowDialog();
+            Util.displayForm(null, form, false);
             return DBConnection.hasDBConnection = form.isDBConnectionAvailable;
         }
 
