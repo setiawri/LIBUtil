@@ -305,7 +305,7 @@ namespace LIBUtil.Desktop.Forms
             }
         }
 
-        private void saveFilterValues()
+        public void saveFilterValues()
         {
             processFilterValues(scInputContainer, true);
         }
@@ -394,7 +394,7 @@ namespace LIBUtil.Desktop.Forms
         {
             object obj = null;
 
-            if (filterValues.Count > 0)
+            if (filterValues.Count > 0 && filterValues.ContainsKey(control))
             {
                 if (control.GetType() == typeof(InputControl_Textbox))
                 {
