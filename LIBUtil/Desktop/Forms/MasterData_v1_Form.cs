@@ -383,7 +383,7 @@ namespace LIBUtil.Desktop.Forms
                             if (isSave)
                                 filterValues[control] = ((InputControl_Dropdownlist)control).SelectedValue;
                             else
-                                ((InputControl_Dropdownlist)control).SelectedValue = filterValues[control];
+                                ((InputControl_Dropdownlist)control).SelectedItem = filterValues[control];
                         }
                     }
                 }
