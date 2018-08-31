@@ -377,11 +377,11 @@ namespace LIBUtil.Desktop.Forms
                     else if (control.GetType() == typeof(InputControl_Dropdownlist))
                     {
                         if (isSave && !filterValues.ContainsKey(control))
-                            filterValues.Add(control, ((InputControl_Dropdownlist)control).SelectedValue);
+                            filterValues.Add(control, ((InputControl_Dropdownlist)control).SelectedItem);
                         else
                         {
                             if (isSave)
-                                filterValues[control] = ((InputControl_Dropdownlist)control).SelectedValue;
+                                filterValues[control] = ((InputControl_Dropdownlist)control).SelectedItem;
                             else
                                 ((InputControl_Dropdownlist)control).SelectedItem = filterValues[control];
                         }
