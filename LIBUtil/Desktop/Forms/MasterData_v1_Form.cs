@@ -111,7 +111,10 @@ namespace LIBUtil.Desktop.Forms
         protected void populateInputFieldsForUpdate()
         {
             if (dgv.SelectedRows.Count > 0)
+            {
+                clearInputFields();
                 populateInputFields();
+            }
         }
 
         protected Guid selectedRowID()

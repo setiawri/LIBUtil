@@ -578,6 +578,7 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
+        public static bool getCheckboxValue(DataGridViewRow row, DataGridViewColumn column) { return getCheckboxValue(row, column.Index); }
         public static bool getCheckboxValue(DataGridViewRow row, int columnIndex)
         {
             bool value = false;

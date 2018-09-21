@@ -118,7 +118,7 @@ namespace LIBUtil.Desktop.UserControls
 
         public void clearItems() { dropdownlist.populate(null, null, null, null); }
 
-        public override void reset() { dropdownlist.clearSelection(); }
+        public override void reset() { dropdownlist.clearSelection(); txtFilter.Text = ""; }
 
         public override void focus() { dropdownlist.Focus(); }
 
