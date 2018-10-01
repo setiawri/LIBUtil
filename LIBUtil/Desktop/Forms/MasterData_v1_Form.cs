@@ -218,6 +218,13 @@ namespace LIBUtil.Desktop.Forms
                     btnUpdate.ForeColor = BUTTONCOLOR_ACTIVE;
                     updateGridviewColumnToDisableOnSearch(true);
                     break;
+                case FormModes.Browse:
+                    scMain.Panel1Collapsed = true;
+                    ptInputPanel.Visible = false;
+                    col_dgv_Active.Visible = false;
+                    col_dgv_Default.Visible = false;
+                    col_dgv_Checkbox1.Visible = false;
+                    break;
             }
 
             if(isChildFormInitialized()) updateInputPanelControls();
