@@ -187,8 +187,6 @@ namespace LIBUtil.Desktop.Forms
             dgv.MultiSelect = false;
             
             clearInputFields();
-
-            setupControlsBasedOnRoles();
         }
 
         private void changeFormMode()
@@ -500,8 +498,11 @@ namespace LIBUtil.Desktop.Forms
                     if (!isInputFieldsValid())
                         return;
                     update();
-                    clearInputFields();
-                    btnAdd.PerformClick();
+                    if(btnAdd.Enabled)
+                    {
+                        clearInputFields();
+                        btnAdd.PerformClick();
+                    }
                     break;
             }
 
@@ -631,6 +632,8 @@ namespace LIBUtil.Desktop.Forms
                 col_dgv_Default.Visible = false;
                 col_dgv_Checkbox1.Visible = false;
             }
+
+            setupControlsBasedOnRoles();
 
             txtQuickSearch.Focus();
         }

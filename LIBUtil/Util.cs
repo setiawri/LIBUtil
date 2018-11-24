@@ -739,6 +739,28 @@ namespace LIBUtil
             ((DataGridView)sender).ClearSelection(); //disable cell color change when user click on it
         }
 
+        public static void updateFontStyle(DataGridViewColumn column, FontStyle fontStyle)
+        {
+            Font font;
+            if (column.DefaultCellStyle.Font != null)
+                font = column.DefaultCellStyle.Font;
+            else
+                font = column.DataGridView.FindForm().Font;
+            
+            column.DefaultCellStyle.Font = new Font(font.FontFamily, font.Size, fontStyle);
+        }
+
+        public static void updateForeColor(DataGridViewColumn column, Color color)
+        {
+            column.DefaultCellStyle.ForeColor = color;
+        }
+
+        public static void updateForeColorAndStyle(DataGridViewColumn column, Color color, FontStyle fontStyle)
+        {
+            updateFontStyle(column, fontStyle);
+            updateForeColor(column, color);
+        }
+
         #endregion
         /*******************************************************************************************************/
         #region ENUMS

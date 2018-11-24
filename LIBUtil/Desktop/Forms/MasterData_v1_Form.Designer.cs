@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.scMain = new System.Windows.Forms.SplitContainer();
             this.scInputContainer = new System.Windows.Forms.SplitContainer();
             this.scInputLeft = new System.Windows.Forms.SplitContainer();
@@ -43,12 +43,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.dgv = new System.Windows.Forms.DataGridView();
-            this.col_dgv_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_dgv_Default = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.col_dgv_StatusName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_dgv_StatusId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_dgv_Active = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.col_dgv_Checkbox1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlQuickSearch = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,6 +50,12 @@
             this.lnkClearQuickSearch = new System.Windows.Forms.LinkLabel();
             this.txtQuickSearch = new System.Windows.Forms.TextBox();
             this.ptInputPanel = new LIBUtil.Desktop.UserControls.PanelToggle();
+            this.col_dgv_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_dgv_Default = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.col_dgv_StatusName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_dgv_StatusId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_dgv_Active = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.col_dgv_Checkbox1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
@@ -242,14 +242,14 @@
             this.dgv.AllowUserToResizeRows = false;
             this.dgv.BackgroundColor = System.Drawing.Color.White;
             this.dgv.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_dgv_Id,
@@ -271,53 +271,6 @@
             this.dgv.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgv_CellMouseDown);
             this.dgv.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgv_DataBindingComplete);
             this.dgv.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.dgv_PreviewKeyDown);
-            // 
-            // col_dgv_Id
-            // 
-            this.col_dgv_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.col_dgv_Id.HeaderText = "Id";
-            this.col_dgv_Id.Name = "col_dgv_Id";
-            this.col_dgv_Id.Visible = false;
-            // 
-            // col_dgv_Default
-            // 
-            this.col_dgv_Default.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.col_dgv_Default.HeaderText = "Default";
-            this.col_dgv_Default.MinimumWidth = 40;
-            this.col_dgv_Default.Name = "col_dgv_Default";
-            this.col_dgv_Default.Visible = false;
-            // 
-            // col_dgv_StatusName
-            // 
-            this.col_dgv_StatusName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.col_dgv_StatusName.HeaderText = "Status";
-            this.col_dgv_StatusName.Name = "col_dgv_StatusName";
-            this.col_dgv_StatusName.Visible = false;
-            // 
-            // col_dgv_StatusId
-            // 
-            this.col_dgv_StatusId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.col_dgv_StatusId.HeaderText = "Status Id";
-            this.col_dgv_StatusId.Name = "col_dgv_StatusId";
-            this.col_dgv_StatusId.Visible = false;
-            // 
-            // col_dgv_Active
-            // 
-            this.col_dgv_Active.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.col_dgv_Active.HeaderText = "Active";
-            this.col_dgv_Active.MinimumWidth = 40;
-            this.col_dgv_Active.Name = "col_dgv_Active";
-            this.col_dgv_Active.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.col_dgv_Active.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.col_dgv_Active.Width = 40;
-            // 
-            // col_dgv_Checkbox1
-            // 
-            this.col_dgv_Checkbox1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.col_dgv_Checkbox1.HeaderText = "Checkbox1";
-            this.col_dgv_Checkbox1.MinimumWidth = 40;
-            this.col_dgv_Checkbox1.Name = "col_dgv_Checkbox1";
-            this.col_dgv_Checkbox1.Visible = false;
             // 
             // panel1
             // 
@@ -401,6 +354,59 @@
             this.ptInputPanel.TabIndex = 96;
             this.ptInputPanel.TogglePanel = this.scMain.Panel1;
             // 
+            // col_dgv_Id
+            // 
+            this.col_dgv_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_dgv_Id.HeaderText = "Id";
+            this.col_dgv_Id.Name = "col_dgv_Id";
+            this.col_dgv_Id.Visible = false;
+            this.col_dgv_Id.Width = 22;
+            // 
+            // col_dgv_Default
+            // 
+            this.col_dgv_Default.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.col_dgv_Default.HeaderText = "Default";
+            this.col_dgv_Default.MinimumWidth = 40;
+            this.col_dgv_Default.Name = "col_dgv_Default";
+            this.col_dgv_Default.Visible = false;
+            this.col_dgv_Default.Width = 40;
+            // 
+            // col_dgv_StatusName
+            // 
+            this.col_dgv_StatusName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_dgv_StatusName.HeaderText = "Status";
+            this.col_dgv_StatusName.Name = "col_dgv_StatusName";
+            this.col_dgv_StatusName.ReadOnly = true;
+            this.col_dgv_StatusName.Visible = false;
+            this.col_dgv_StatusName.Width = 43;
+            // 
+            // col_dgv_StatusId
+            // 
+            this.col_dgv_StatusId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_dgv_StatusId.HeaderText = "Status Id";
+            this.col_dgv_StatusId.Name = "col_dgv_StatusId";
+            this.col_dgv_StatusId.Visible = false;
+            this.col_dgv_StatusId.Width = 55;
+            // 
+            // col_dgv_Active
+            // 
+            this.col_dgv_Active.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.col_dgv_Active.HeaderText = "Active";
+            this.col_dgv_Active.MinimumWidth = 40;
+            this.col_dgv_Active.Name = "col_dgv_Active";
+            this.col_dgv_Active.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.col_dgv_Active.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.col_dgv_Active.Width = 40;
+            // 
+            // col_dgv_Checkbox1
+            // 
+            this.col_dgv_Checkbox1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.col_dgv_Checkbox1.HeaderText = "Checkbox1";
+            this.col_dgv_Checkbox1.MinimumWidth = 40;
+            this.col_dgv_Checkbox1.Name = "col_dgv_Checkbox1";
+            this.col_dgv_Checkbox1.Visible = false;
+            this.col_dgv_Checkbox1.Width = 40;
+            // 
             // MasterData_v1_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,13 +460,13 @@
         protected System.Windows.Forms.Panel pnlButtons;
         protected System.Windows.Forms.SplitContainer scInputContainer;
         protected System.Windows.Forms.Button btnLog;
-        protected System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_Id;
-        protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Default;
-        protected System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_StatusName;
-        protected System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_StatusId;
-        protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Active;
-        protected System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Checkbox1;
         public UserControls.PanelToggle ptInputPanel;
         protected System.Windows.Forms.Panel pnlQuickSearch;
+        public System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_Id;
+        public System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Default;
+        public System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_StatusName;
+        public System.Windows.Forms.DataGridViewTextBoxColumn col_dgv_StatusId;
+        public System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Active;
+        public System.Windows.Forms.DataGridViewCheckBoxColumn col_dgv_Checkbox1;
     }
 }

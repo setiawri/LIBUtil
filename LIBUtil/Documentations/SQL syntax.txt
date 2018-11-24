@@ -106,7 +106,11 @@ ALTER TABLE COLUMN
 	DROP column
 		ALTER TABLE Queues DROP COLUMN CounterAddresses_Id
 
+--------------------------------------------------------------------------------------------------------------------------------------------
 
+ERROR: user,group or role already exists in the current database
+================================================================
+sp_change_users_login 'AUTO_FIX', '[user]'
 
 
 
