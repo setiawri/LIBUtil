@@ -1,0 +1,20 @@
+﻿
+
+Generate machineKey here: https://www.allkeysgenerator.com/Random/ASP-Net-MachineKey-Generator.aspx
+
+Add the following into web.config
+  <system.web>
+    <trust level="Full" />
+    <customErrors mode="Off" />
+    <machineKey validationKey="A5949536EF68DA05A506F7154B3274362BBD077B93B5A04C9D95551BDB6D56F93DD049A953CF535DDA15C78E9C47AB6903312AB6159E1BBCAFD573BD73026A95" decryptionKey="53A63965E274DA2862729EDF0D915E6045C6D07AC6E364EA" validation="SHA1" />
+  </system.web>
+
+Comment out the following section
+  <system.codedom>
+    <!--<compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:6 /nowarn:1659;1699;1701" />
+      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:14 /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" />
+    </compilers>-->
+  </system.codedom>
+
+

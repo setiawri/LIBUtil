@@ -151,10 +151,10 @@ namespace LIBUtil
         public static bool displayForm(Form parentFormToHide, Form form) { return displayForm(parentFormToHide, form, false); }
         public static bool displayForm(Form parentFormToHide, Form form, bool showInTaskbar)
         {
-            if(parentFormToHide != null)
+            if (parentFormToHide != null)
                 parentFormToHide.Hide();
-
-            form.StartPosition = FormStartPosition.CenterParent;
+            
+            form.StartPosition = FormStartPosition.CenterScreen;
             form.ShowInTaskbar = showInTaskbar;
             form.ShowDialog();
 
@@ -914,7 +914,9 @@ namespace LIBUtil
                 if (!string.IsNullOrEmpty(word.Trim()))
                 {
                     foreach (string fieldname in fieldNames)
-                        filter = Util.append(filter, string.Format("CONVERT({0},System.String) LIKE '%{1}%'", fieldname, word), "OR");
+                        filter = Util.append(filter, string.Format("{0} LIKE '%{1}%'", fieldname, word), "OR");
+
+                    //filter = Util.append(filter, string.Format("CONVERT({0},System.String) LIKE '%{1}%'", fieldname, word), "OR");
                 }
             }
             return filter;
@@ -1066,7 +1068,12 @@ namespace LIBUtil
 
         public static string getConfigVariable(string key)
         {
-            return System.Configuration.ConfigurationManager.AppSettings[key];
+            return ConfigurationManager.AppSettings[key];
+        }
+
+        public static bool isMachineNameEqualConfigVariable(string key)
+        {
+            return Environment.MachineName.ToUpper() == Util.getConfigVariable(key).ToUpper();
         }
 
         public static string saveAppData(string filename, string value)
@@ -1147,7 +1154,10 @@ namespace LIBUtil
 
         public static void fitTextToLabel(Label label)
         {
-            fitTextToLabelHeight(label); //fits text vertically
+            if(!string.IsNullOrWhiteSpace(label.Text))
+            {
+                fitTextToLabelHeight(label); //fits text vertically
+            }
 
             //fits text horizontally
             while (TextRenderer.MeasureText(label.Text, new Font(label.Font.FontFamily, label.Font.Size, label.Font.Style)).Width >= label.Width)

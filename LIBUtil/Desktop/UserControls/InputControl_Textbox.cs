@@ -93,10 +93,30 @@ namespace LIBUtil.Desktop.UserControls
                 {
                     textbox.BackColor = Color.White;
                     textbox.ReadOnly = false;
+                    //ShowFilter = false;
                 }
             }
         }
         private bool _isBrowseMode = false;
+
+        [Description("ShowFilter"), Category("_Custom")]
+        public bool ShowFilter
+        {
+            get
+            {
+                return false;
+                //return pnlFilter.Visible;
+            }
+            set
+            {
+                //if (value && _isBrowseMode)
+                //    pnlFilter.Visible = true;
+                //else
+                //    pnlFilter.Visible = false;
+            }
+        }
+
+        public string GetFilterString { get { return txtFilter.Text; } }
 
         [Description("Password Char"), Category("_Custom")]
         public char PasswordChar
@@ -328,6 +348,8 @@ namespace LIBUtil.Desktop.UserControls
         {
             if (FocusEnter != null)
                 this.FocusEnter(this, e);
+            else if (_isBrowseMode)
+                this.isBrowseMode_Clicked(this, e);
         }
 
         private void textbox_MouseLeave(object sender, EventArgs e)

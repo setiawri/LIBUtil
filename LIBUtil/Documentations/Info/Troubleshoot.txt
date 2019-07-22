@@ -18,5 +18,20 @@ So far, so good, and entirely expected. But then:
 -    Make sure that TCP Dynamic Ports is blank. (Mine was set to some 5-digit port number.)
 -    Make sure that TCP Port is set to 1433. (Mine was blank.)
 
+==============================================================================================================================================================
+
+GODADDY
+
+ERROR: Anti forgery token cannot be decrypted
+generate machinekey at https://www.allkeysgenerator.com/Random/ASP-Net-MachineKey-Generator.aspx and place within <system.web> tag
+
+
+ERROR: This program is blocked by group policy
+Remove all the contents inside the system.codedom tag
+
+ERROR: The application attempted to perform an operation not allowed by the security policy.
+place within <system.web> tag:
+    <trust level="Full"/>
+
 
 ==============================================================================================================================================================

@@ -32,8 +32,11 @@
             this.textbox = new System.Windows.Forms.TextBox();
             this.pbDelete = new System.Windows.Forms.PictureBox();
             this.pnlDelete = new System.Windows.Forms.Panel();
+            this.pnlFilter = new System.Windows.Forms.Panel();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbDelete)).BeginInit();
             this.pnlDelete.SuspendLayout();
+            this.pnlFilter.SuspendLayout();
             this.SuspendLayout();
             // 
             // label
@@ -51,10 +54,10 @@
             // 
             this.textbox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.textbox.Location = new System.Drawing.Point(0, 20);
+            this.textbox.Location = new System.Drawing.Point(30, 20);
             this.textbox.Name = "textbox";
-            this.textbox.Size = new System.Drawing.Size(158, 21);
-            this.textbox.TabIndex = 0;
+            this.textbox.Size = new System.Drawing.Size(128, 21);
+            this.textbox.TabIndex = 1;
             this.textbox.Click += new System.EventHandler(this.textbox_isBrowseMode_Clicked);
             this.textbox.TextChanged += new System.EventHandler(this.textbox_TextChanged);
             this.textbox.Enter += new System.EventHandler(this.textbox_FocusEnter);
@@ -84,17 +87,43 @@
             this.pnlDelete.TabIndex = 7;
             this.pnlDelete.Visible = false;
             // 
+            // pnlFilter
+            // 
+            this.pnlFilter.Controls.Add(this.txtFilter);
+            this.pnlFilter.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlFilter.Location = new System.Drawing.Point(0, 19);
+            this.pnlFilter.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlFilter.Name = "pnlFilter";
+            this.pnlFilter.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.pnlFilter.Size = new System.Drawing.Size(30, 22);
+            this.pnlFilter.TabIndex = 0;
+            this.pnlFilter.Visible = false;
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.txtFilter.Location = new System.Drawing.Point(0, 1);
+            this.txtFilter.Margin = new System.Windows.Forms.Padding(0);
+            this.txtFilter.MaxLength = 5;
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(30, 21);
+            this.txtFilter.TabIndex = 1000;
+            // 
             // InputControl_Textbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.textbox);
+            this.Controls.Add(this.pnlFilter);
             this.Controls.Add(this.pnlDelete);
             this.Controls.Add(this.label);
             this.Name = "InputControl_Textbox";
             this.Size = new System.Drawing.Size(180, 41);
             ((System.ComponentModel.ISupportInitialize)(this.pbDelete)).EndInit();
             this.pnlDelete.ResumeLayout(false);
+            this.pnlFilter.ResumeLayout(false);
+            this.pnlFilter.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,5 +135,7 @@
         public System.Windows.Forms.TextBox textbox;
         private System.Windows.Forms.PictureBox pbDelete;
         private System.Windows.Forms.Panel pnlDelete;
+        private System.Windows.Forms.Panel pnlFilter;
+        public System.Windows.Forms.TextBox txtFilter;
     }
 }
