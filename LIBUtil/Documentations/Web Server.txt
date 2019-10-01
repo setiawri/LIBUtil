@@ -4,6 +4,24 @@
 
 ********************************************************************************************************************************************
 
+BACKUP REMOTE SERVER USING MANAGEMENT STUDIO
+
+In Microsoft SQL Server Management Studio you can right-click on the database you wish to backup and click Tasks -> Generate Scripts.
+
+This pops open a wizard where you can set the following in order to perform a decent backup of your database, even on a remote server:
+
+    Select the database you wish to backup and hit next,
+    In the options it presents to you:
+        In 2010: under the Table/View Options, change 'Script Data' and 'Script Indexes' to True and hit next,
+        In 2012: under 'General', change 'Types of data to script' from 'Schema only' to 'Schema and data'
+        In 2014: the option to script the data is now "hidden" in step "Set Scripting Options", you have to click the "Advanced" and set "Types of data to script" to "Schema and data" value
+    In the next four windows, hit 'select all' and then next,
+    Choose to script to a new query window
+
+Once it's done its thing, you'll have a backup script ready in front of you. Create a new local (or remote) database, and change the first 'USE' statement in the script to use your new database. Save the script in a safe place, and go ahead and run it against your new empty database. This should create you a (nearly) duplicate local database you can then backup as you like.
+
+********************************************************************************************************************************************
+
 INSTALL IIS
 	- Open Windows Features
 	- Checkmark IIS

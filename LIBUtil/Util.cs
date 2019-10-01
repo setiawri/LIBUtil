@@ -24,7 +24,8 @@ namespace LIBUtil
         Top,
         Right,
         Bottom,
-        Left
+        Left,
+        None
     }
 
     public enum Days
@@ -572,6 +573,15 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
+        public static bool setCheckboxValue(DataGridViewRow row, DataGridViewCheckBoxColumn column, bool value)
+        {
+            DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)row.Cells[column.Index];
+            if (cell.Value != null)
+                cell.Value = value;
+            return value;
+        }
+
+        /// <summary><para>Desktop app use only.</para></summary>
         public static bool getCheckboxValue(object sender, DataGridViewCellEventArgs e)
         {
             return getCheckboxValue(((DataGridView)sender).Rows[e.RowIndex], e.ColumnIndex);
@@ -602,6 +612,11 @@ namespace LIBUtil
         public static object getSelectedRowValue(DataGridView grid, DataGridViewColumn column)
         {
             return grid.SelectedRows[0].Cells[column.Name].Value;
+        }
+
+        public static object getRowValue(DataGridViewRow row, DataGridViewColumn column)
+        {
+            return row.Cells[column.Name].Value;
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
@@ -692,7 +707,12 @@ namespace LIBUtil
                 if (selectedRowIndex < grid.Rows.Count)
                     grid.Rows[selectedRowIndex].Selected = true;
                 else
-                    grid.Rows[topRowIndex].Selected = true;
+                {
+                    if (topRowIndex < grid.Rows.Count)
+                        grid.Rows[topRowIndex].Selected = true;
+                    else
+                        grid.Rows[grid.Rows.Count - 1].Selected = true;
+                }
             }
         }
         

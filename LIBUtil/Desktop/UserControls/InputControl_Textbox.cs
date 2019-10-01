@@ -182,7 +182,7 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region METHODS
 
-        public void setValue(string textValue, Guid guidValue)
+        public void setValue(string textValue, Guid? guidValue)
         {
             ValueGuid = guidValue;
             ValueText = textValue; //textbox must be set the latest because it triggers ontextchange event

@@ -1,10 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.ComponentModel;
 
 namespace LIBUtil
 {
+    public enum ConnectionPorts
+    {
+        None = 0,
+        [Description("1433")]
+        port1433 = 1433,
+        [Description("1434")]
+        port1434 = 1434,
+        [Description("1435")]
+        port1435 = 1435,
+    };
+
     public struct SqlQueryParameter
     {
         public string ColumnName;
@@ -250,6 +261,11 @@ namespace LIBUtil
             ConnectionString_Username = username;
             ConnectionString_Password = password;
             ConnectionString = getConnectionString();
+        }
+        
+        public static void populatePorts(Desktop.UserControls.InputControl_Dropdownlist iddl)
+        {
+            iddl.populate(typeof(ConnectionPorts));
         }
 
         #endregion

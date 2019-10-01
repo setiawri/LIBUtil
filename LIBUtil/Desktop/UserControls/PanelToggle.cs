@@ -59,7 +59,7 @@ namespace LIBUtil.Desktop.UserControls
             }
         }
         private Panel _togglePanel;
-        
+
         [Description("Initial Arrow Direction"), Category("_Custom")]
         public ArrowDirection InitialArrowDirection
         {
@@ -71,10 +71,45 @@ namespace LIBUtil.Desktop.UserControls
         }
         private ArrowDirection _initialArrowDirection = ArrowDirection.Left;
 
+        public Position InitialPositionRelativeToPanel
+        {
+            get {
+
+                if (_initialPositionRelativeToPanel == Position.None)
+                {
+                    if (ArrowOrientation == Orientation.Horizontal)
+                    {
+                        if (this.Location.X >= TogglePanel.Location.X + TogglePanel.Width)
+                            _initialPositionRelativeToPanel = Position.Right;
+                        else
+                            _initialPositionRelativeToPanel = Position.Left;
+                    }
+                    else
+                    {
+                        if (this.Location.Y < TogglePanel.Location.Y)
+                            _initialPositionRelativeToPanel = Position.Top;
+                        else
+                            _initialPositionRelativeToPanel = Position.Bottom;
+                    }
+                }
+                return _initialPositionRelativeToPanel;
+            }
+        }
+        private Position _initialPositionRelativeToPanel = Position.None;
+
         [Description("Adjust Location On Click"), Category("_Custom")]
         public bool AdjustLocationOnClick { get; set; }
 
-        public Orientation ArrowOrientation { get { return getOrientation(); } }
+        public Orientation ArrowOrientation
+        {
+            get
+            {
+                if (InitialArrowDirection == ArrowDirection.Left || InitialArrowDirection == ArrowDirection.Right)
+                    return Orientation.Horizontal;
+                else
+                    return Orientation.Vertical;
+            }
+        }
 
         #endregion PROPERTIES
         /*******************************************************************************************************/
@@ -141,17 +176,32 @@ namespace LIBUtil.Desktop.UserControls
             else if (pictureBox.BackgroundImage == _ArrowUp)
                 setDirection(ArrowDirection.Down);
             else
-                setDirection(ArrowDirection.Up);            
+                setDirection(ArrowDirection.Up);
         }
 
         public void setNewLocationBasedOnOrientation(Panel panel)
         {
-            if(AdjustLocationOnClick)
+            if (AdjustLocationOnClick)
             {
-                if (getOrientation() == Orientation.Horizontal)
+                if (ArrowOrientation == Orientation.Horizontal)
                     this.Location = new Point(panel.Location.X + panel.Width * Convert.ToInt16(panel.Visible), this.Location.Y);
                 else
-                    this.Location = new Point(this.Location.X, panel.Location.Y + panel.Height);
+                {
+                    if (InitialPositionRelativeToPanel == Position.Top)
+                    {
+                        if (panel.Visible)
+                            this.Location = new Point(this.Location.X, this.Location.Y - panel.Height);
+                        else
+                            this.Location = new Point(this.Location.X, this.Location.Y + panel.Height);
+                    }
+                    else
+                    {
+                        if (panel.Visible)
+                            this.Location = new Point(this.Location.X, this.Location.Y + panel.Height);
+                        else
+                            this.Location = new Point(this.Location.X, this.Location.Y - panel.Height);
+                    }
+                }
             }
         }
 
@@ -176,13 +226,13 @@ namespace LIBUtil.Desktop.UserControls
             _ArrowRight = right;
             _ArrowDown = down;
         }
-        
+
         private void setDirection(ArrowDirection direction)
         {
             _initialArrowDirection = direction;
             if (direction == ArrowDirection.Left)
                 pictureBox.BackgroundImage = _ArrowLeft;
-            else if(direction == ArrowDirection.Up)
+            else if (direction == ArrowDirection.Up)
                 pictureBox.BackgroundImage = _ArrowUp;
             else if (direction == ArrowDirection.Right)
                 pictureBox.BackgroundImage = _ArrowRight;
@@ -192,14 +242,18 @@ namespace LIBUtil.Desktop.UserControls
 
         private Orientation getOrientation()
         {
-            Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
-            Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
-
-            if (toggleButtonLoc.Y >= togglePanelLoc.Y 
-                    && toggleButtonLoc.Y <= togglePanelLoc.Y + _togglePanel.Height * Convert.ToInt16(_togglePanel.Visible))
+            if (InitialArrowDirection == ArrowDirection.Left || InitialArrowDirection == ArrowDirection.Right)
                 return Orientation.Horizontal;
             else
                 return Orientation.Vertical;
+            //Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
+            //Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
+
+            //if (toggleButtonLoc.Y >= togglePanelLoc.Y 
+            //        && toggleButtonLoc.Y <= togglePanelLoc.Y + _togglePanel.Height * Convert.ToInt16(_togglePanel.Visible))
+            //    return Orientation.Horizontal;
+            //else
+            //    return Orientation.Vertical;
         }
 
         public void PerformClick()
@@ -217,9 +271,13 @@ namespace LIBUtil.Desktop.UserControls
             populateData();
         }
 
+        [Description("Click Event"), Category("_Custom")]
+        public event EventHandler pictureBox_ClickEvent;
         private void pictureBox_Click(object sender, EventArgs e)
         {
             toggle();
+            if (this.pictureBox_ClickEvent != null)
+                this.pictureBox_ClickEvent(this, e);
         }
 
         #endregion EVENT HANDLERS

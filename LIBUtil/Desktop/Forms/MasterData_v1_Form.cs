@@ -178,8 +178,6 @@ namespace LIBUtil.Desktop.Forms
 
         private void setupControls()
         {
-            //this.Text += DBUtil.appendTitleWithInfo();
-
             //make sure child forms show toggle panel properly
             //ptInputPanel.Location = new System.Drawing.Point(0, -1);
 
@@ -244,7 +242,7 @@ namespace LIBUtil.Desktop.Forms
             if (dgv.Rows.Count > 0 && dgv.SelectedRows.Count > 0)
             {
                 btnLog.Enabled = true;
-                //if (GlobalData.UserAccount.role == Roles.User)
+                //if (GlobalData.UserAccount.role != Roles.Super)
                 //    btnUpdate.Enabled = false;
                 //else
                 btnUpdate.Enabled = true;
