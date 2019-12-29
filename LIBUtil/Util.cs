@@ -49,7 +49,7 @@ namespace LIBUtil
         public const string TYPE_ARRAY_STR = "value_str";
         public const string TYPE_ARRAY_INT = "value_int";
 
-        public static List<string> sanitizeList = new List<string> { ";" };
+        public static List<string> sanitizeList = new List<string> { ";", "|", "<", ">" };
 
         //placeholder for MDI parent.
         public static Form MDIParent; 
@@ -293,6 +293,8 @@ namespace LIBUtil
         public static object wrapNullable(object value)
         {
             if (value != null && value.GetType() == typeof(string) && string.IsNullOrEmpty((string)value))
+                return DBNull.Value;
+            else if (value != null && value.GetType() == typeof(Guid) && value.ToString() == (new Guid()).ToString())
                 return DBNull.Value;
             else
                 return value ?? DBNull.Value;
@@ -624,6 +626,9 @@ namespace LIBUtil
         {
             return grid.SelectedRows[0].Cells[column.Name].Value = value;
         }
+
+        /// <summary><para>Desktop app use only.</para></summary>er, e, column.Index); }
+        public static object getClickedCellValue(object sender, DataGridViewCellEventArgs e) { return ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex].Value; }
 
         /// <summary><para>Desktop app use only.</para></summary>
         public static void disableSort(DataGridView grid)

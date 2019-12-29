@@ -1,0 +1,28 @@
+﻿
+WINDOWS 10
+
+================================================================
+Run a program on non-admin account using administrator privilege
+================================================================
+Example: Adobe Illustrator
+
+Enable built in Administrator account: 
+- open administrator command prompt and run "net user administrator /active:yes"
+- go into the account and set password
+
+Create shortcut to the program
+- On desktop, right click and create shortcut
+- Enter command: runas /user:[computername]\Administrator /savecred "[path to program]"
+	[computername]: name of the computer
+	[path to program]: trace the path to the application executable and copy the path
+- right click on the original executable icon and open properties
+- click Change Icon button and copy the path to the icon
+- right click on the shortcut and open properties 
+- click Change Icon button and paste the path to the icon and select the icon
+
+Apply password
+- double click the shortcut
+- enter the Administrator password (this is one time. next time it will not ask for password again)
+
+
+

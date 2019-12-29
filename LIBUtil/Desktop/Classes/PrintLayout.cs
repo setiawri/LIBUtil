@@ -102,6 +102,7 @@ namespace LIBUtil.Desktop.Classes
         public static void update(SqlConnection sqlConnection, Guid id, bool hide, string text, int fontSize, int textAlign)
         {
             SqlQueryResult result = DBConnection.query(
+                false,
                 sqlConnection,
                 QueryTypes.ExecuteNonQuery,
                 "PrintLayout_update",
@@ -110,7 +111,7 @@ namespace LIBUtil.Desktop.Classes
                 new SqlQueryParameter(COL_DB_Text, SqlDbType.NVarChar, Util.wrapNullable(text)),
                 new SqlQueryParameter(COL_DB_FontSize, SqlDbType.Int, fontSize),
                 new SqlQueryParameter(COL_DB_TextAlign_enumid, SqlDbType.Int, textAlign)
-            );
+            ) ;
         }
         
         public static string delete(Guid id)

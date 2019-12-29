@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace LIBUtil
 {
@@ -52,6 +53,39 @@ namespace LIBUtil
         }
     }
 
+    public struct SqlQuery
+    {
+        public SqlConnection sqlConnection;
+        public QueryTypes querytype;
+        public bool hasReturnValueString;
+        public bool hasReturnValueInt;
+        public bool hasReturnValueDecimal;
+        public bool hasReturnValueBoolean;
+        public bool hasReturnValueGuid;
+        public string storedprocedurename;
+        public SqlQueryTableParameter[] tableparameters;
+        public SqlQueryParameter[] parameters;
+
+        public SqlQueryResult result;
+               
+        public bool isQueryCompleted;
+        
+        public void execute()
+        {
+            isQueryCompleted = false;
+
+            if (sqlConnection != null)
+                result = DBConnection.executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, tableparameters, parameters);
+            else
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
+                    result = DBConnection.executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, tableparameters, parameters);
+            }
+
+            isQueryCompleted = true;
+        }
+    }
+
     public struct SqlQueryResult
     {
         public DataTable Datatable;
@@ -95,27 +129,73 @@ namespace LIBUtil
             return parameters;
         }
 
-        public static SqlQueryResult query(SqlConnection sqlConnection, QueryTypes querytype, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(sqlConnection, querytype, false, false, false, false, false, storedprocedurename, null, parameters); }
-        public static SqlQueryResult query(SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, null, parameters); }
-        public static SqlQueryResult query(SqlConnection sqlConnection, QueryTypes querytype, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters) { return query(sqlConnection, querytype, false, false, false, false, false, storedprocedurename, tableparameters, parameters); }
-        public static SqlQueryResult query(SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, false, false, false, false, false, storedprocedurename, null, parameters); }
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, null, parameters); }
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, false, false, false, false, false, storedprocedurename, tableparameters, parameters); }
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
         {
-            return executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, tableparameters, parameters);
+            _sqlQuery = new SqlQuery()
+            {
+                sqlConnection = sqlConnection,
+                querytype = querytype,
+                hasReturnValueString = hasReturnValueString,
+                hasReturnValueInt = hasReturnValueInt,
+                hasReturnValueDecimal = hasReturnValueDecimal,
+                hasReturnValueBoolean = hasReturnValueBoolean,
+                hasReturnValueGuid = hasReturnValueGuid,
+                storedprocedurename = storedprocedurename,
+                tableparameters = tableparameters,
+                parameters = parameters
+            };
+
+            if (!showProgressBar)
+            {
+                _sqlQuery.execute();
+            }
+            else
+            {
+                _timer = new Timer();
+                _timer.Tick += new System.EventHandler(timer_Tick);
+                _timer.Interval = 100;
+
+                BackgroundWorker queryBackgroundWorker = new BackgroundWorker();
+                queryBackgroundWorker.DoWork += new DoWorkEventHandler(queryBackgroundWorker_DoWork);
+
+                _sqlQuery.isQueryCompleted = false;
+                _timer.Start();
+                queryBackgroundWorker.RunWorkerAsync();
+
+                Util.displayForm(null, _progressBarForm, false);
+
+            }
+
+            return _sqlQuery.result;
         }
 
-        public static SqlQueryResult query(QueryTypes querytype, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(querytype, false, false, false, false, false, storedprocedurename, null, parameters); }
-        public static SqlQueryResult query(QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, null, parameters); }
-        public static SqlQueryResult query(QueryTypes querytype, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters) { return query(querytype, false, false, false, false, false, storedprocedurename, tableparameters, parameters); }
-        public static SqlQueryResult query(QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
+        private static Timer _timer;
+        private const int TIMERTIMOUT = 100;
+        private static LIBUtil.Desktop.Forms.ProgressBar_Form _progressBarForm = new Desktop.Forms.ProgressBar_Form();
+        private static SqlQuery _sqlQuery;
+        private static void queryBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            SqlQueryResult result;
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-                result = executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, tableparameters, parameters);
-
-            return result;
+            _sqlQuery.execute();
         }
 
-        private static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
+        private static void timer_Tick(object sender, EventArgs e)
+        {
+            if (_sqlQuery.isQueryCompleted)
+            {
+                _timer.Stop();
+                _progressBarForm.Close();
+            }
+
+            //apply TIME OUT HERE
+            //_timer.Stop();
+            //_progressBarForm.Close();
+            //Util.displayMessageBoxError("TIMEOUT. Please try again");
+        }
+
+        public static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
         {
             SqlQueryResult result = new SqlQueryResult();
             SqlParameter returnValueString = null;
