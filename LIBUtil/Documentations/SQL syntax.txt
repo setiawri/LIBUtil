@@ -110,6 +110,9 @@ ALTER TABLE COLUMN
 
 ERROR: user,group or role already exists in the current database
 ================================================================
+ALTER USER [username] WITH Login = [username];
+
+<DEPRECATED>
 sp_change_users_login 'AUTO_FIX', '[user]'
 
 --------------------------------------------------------------------------------------------------------------------------------------------

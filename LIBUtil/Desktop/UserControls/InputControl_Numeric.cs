@@ -91,7 +91,14 @@ namespace LIBUtil.Desktop.UserControls
         public decimal Value
         {
             get { return numericUpDown.Value; }
-            set { numericUpDown.Value = value; numericUpDown.Tag = value; }
+            set {
+                if (value < numericUpDown.Minimum)
+                    Util.displayMessageBoxError("Cannot be less than " + numericUpDown.Minimum);
+                else if (value > numericUpDown.Maximum)
+                    Util.displayMessageBoxError("Cannot be more than " + numericUpDown.Maximum);
+                else
+                    numericUpDown.Value = value; numericUpDown.Tag = value;
+            }
         }
 
         [Description("Minimum Value"), Category("_Custom")]

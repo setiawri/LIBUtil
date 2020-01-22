@@ -38,18 +38,22 @@ namespace LIBUtil
     }
     public class SqlQueryTableParameterGuid: SqlQueryTableParameter
     {
-        public SqlQueryTableParameterGuid(string columnName, Guid?[] values)
+        public SqlQueryTableParameterGuid(string columnName, Guid?[] values) : this(columnName, Util.copyValuesToArrayTable(values)) { }
+
+        public SqlQueryTableParameterGuid(string columnName, DataTable values)
         {
             ColumnName = columnName;
-            Values = Util.copyValuesToArrayTable(values);
+            Values = values;
         }
     }
     public class SqlQueryTableParameterInt : SqlQueryTableParameter
     {
-        public SqlQueryTableParameterInt(string columnName, int[] values)
+        public SqlQueryTableParameterInt(string columnName, int[] values) : this(columnName, Util.copyIntToArrayTable(values)) { }
+
+        public SqlQueryTableParameterInt(string columnName, DataTable values)
         {
             ColumnName = columnName;
-            Values = Util.copyIntToArrayTable(values);
+            Values = values;
         }
     }
 
@@ -69,7 +73,7 @@ namespace LIBUtil
         public SqlQueryResult result;
                
         public bool isQueryCompleted;
-        
+
         public void execute()
         {
             isQueryCompleted = false;
@@ -176,6 +180,7 @@ namespace LIBUtil
         private const int TIMERTIMOUT = 100;
         private static LIBUtil.Desktop.Forms.ProgressBar_Form _progressBarForm = new Desktop.Forms.ProgressBar_Form();
         private static SqlQuery _sqlQuery;
+        public static Timer SqlConnectionTimer;
         private static void queryBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             _sqlQuery.execute();
@@ -346,6 +351,47 @@ namespace LIBUtil
         public static void populatePorts(Desktop.UserControls.InputControl_Dropdownlist iddl)
         {
             iddl.populate(typeof(ConnectionPorts));
+        }
+
+        public static SqlConnection ActiveSqlConnection
+        {
+            get
+            {
+                if (_ActiveSqlConnection == null)
+                    _ActiveSqlConnection = new SqlConnection(getConnectionString());
+
+                if (_ActiveSqlConnection.State == ConnectionState.Closed)
+                    _ActiveSqlConnection.Open();
+
+                if (SqlConnectionTimer == null)
+                {
+                    SqlConnectionTimer = new Timer();
+                    SqlConnectionTimer.Tick += new EventHandler(SqlConnectionTimer_Ticked);
+                    SqlConnectionTimer.Interval = 2000;
+                    SqlConnectionTimer.Start();
+                }
+
+                _LastSqlConnectionUsed = DateTime.Now;
+
+                return _ActiveSqlConnection;
+            }
+        }
+        private static SqlConnection _ActiveSqlConnection;
+        private static DateTime _LastSqlConnectionUsed;
+
+        private static void SqlConnectionTimer_Ticked(Object myObject, EventArgs myEventArgs)
+        {
+            terminateActiveSqlConnection();
+        }
+        private static TimeSpan _ActiveSqlConnectionOpenTime = new TimeSpan(0, 0, 3);
+
+        public static void terminateActiveSqlConnection()
+        {
+            if (_ActiveSqlConnection != null && _ActiveSqlConnection.State == ConnectionState.Open && DateTime.Now - _LastSqlConnectionUsed > _ActiveSqlConnectionOpenTime)
+                _ActiveSqlConnection.Close();
+
+            if (_ActiveSqlConnection == null || _ActiveSqlConnection.State == ConnectionState.Closed)
+                SqlConnectionTimer.Stop();
         }
 
         #endregion
