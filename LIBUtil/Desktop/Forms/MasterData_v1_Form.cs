@@ -53,6 +53,7 @@ namespace LIBUtil.Desktop.Forms
         protected List<string> FieldnamesForQuickSearch = new List<string>();
         protected List<InputControl> InputToDisableOnSearch = new List<InputControl>();
         protected List<InputControl> InputToDisableOnUpdate = new List<InputControl>();
+        protected List<InputControl> InputToDisablePermanently = new List<InputControl>();
         protected bool DoNotClearInputAfterSubmission = false;
 
         #endregion PROTECTED VARIABLES
@@ -201,22 +202,22 @@ namespace LIBUtil.Desktop.Forms
                     btnSubmit.Text = BUTTONTEXT_SUBMIT_SEARCH;
                     btnCancel.Visible = false;
                     btnSearch.ForeColor = BUTTONCOLOR_ACTIVE;
-                    updateGridviewColumnToDisable(InputToDisableOnUpdate, true, false);
-                    updateGridviewColumnToDisable(InputToDisableOnSearch, false, true);
+                    updateInputControls(InputToDisableOnUpdate, true, false);
+                    updateInputControls(InputToDisableOnSearch, false, true);
                     break;
                 case FormModes.Add:
                     btnSubmit.Text = BUTTONTEXT_SUBMIT_ADD;
                     btnCancel.Visible = true;
                     btnAdd.ForeColor = BUTTONCOLOR_ACTIVE;
-                    updateGridviewColumnToDisable(InputToDisableOnSearch, true, false);
-                    updateGridviewColumnToDisable(InputToDisableOnUpdate, true, false);
+                    updateInputControls(InputToDisableOnSearch, true, false);
+                    updateInputControls(InputToDisableOnUpdate, true, false);
                     break;
                 case FormModes.Update:
                     btnSubmit.Text = BUTTONTEXT_SUBMIT_UPDATE;
                     btnCancel.Visible = true;
                     btnUpdate.ForeColor = BUTTONCOLOR_ACTIVE;
-                    updateGridviewColumnToDisable(InputToDisableOnSearch, true, false);
-                    updateGridviewColumnToDisable(InputToDisableOnUpdate, false, false);
+                    updateInputControls(InputToDisableOnSearch, true, false);
+                    updateInputControls(InputToDisableOnUpdate, false, false);
                     break;
                 case FormModes.Browse:
                     scMain.Panel1Collapsed = true;
@@ -254,11 +255,13 @@ namespace LIBUtil.Desktop.Forms
             }
         }
 
-        private void updateGridviewColumnToDisable(List<InputControl> inputToDisable, bool enabled, bool reset)
+        private void updateInputControls(List<InputControl> inputToDisable, bool enabled, bool reset)
         {
             foreach (InputControl input in inputToDisable)
             {
-                input.Enabled = enabled;
+                if(inputToDisable == InputToDisablePermanently || !InputToDisablePermanently.Contains(input))
+                    input.Enabled = enabled;
+
                 if (reset)
                     input.reset();
             }
@@ -640,6 +643,7 @@ namespace LIBUtil.Desktop.Forms
             }
 
             setupControlsBasedOnRoles();
+            updateInputControls(InputToDisablePermanently, false, false);
 
             txtQuickSearch.Focus();
         }

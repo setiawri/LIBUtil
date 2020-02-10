@@ -232,6 +232,13 @@ namespace LIBUtil
                 if (gridview.SelectedRows.Contains(gridview.Rows[i]))
                     gridview.Rows.RemoveAt(i);
         }
+        
+        public static void enableControls(bool value, params Panel[] panels)
+        {
+            foreach (Panel panel in panels)
+                foreach (Control control in panel.Controls)
+                    control.Enabled = value;
+        }
 
         #endregion
         /*******************************************************************************************************/
@@ -1025,6 +1032,26 @@ namespace LIBUtil
         {
             decimal output;
             return Decimal.TryParse(str, out output);
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region BOOLEANS
+
+        public static bool convertToBool(int value)
+        {
+            if (value == 0)
+                return false;
+            else
+                return true;
+        }
+
+        public static int convertToInt(bool value)
+        {
+            if (value)
+                return 1;
+            else
+                return 0;
         }
 
         #endregion

@@ -62,12 +62,12 @@ namespace LIBUtil.Desktop.Classes
         /*******************************************************************************************************/
         #region CLASS METHODS
             
-        public static void print(int printAreaWidth, string callNo)
+        public static void print(int printAreaWidth, string callNo, int printQty)
         {
-            new ReceiptPrinter(printAreaWidth).print(callNo, PrintLayout.get(null));
+            new ReceiptPrinter(printAreaWidth).print(callNo, PrintLayout.get(null), printQty);
         }
 
-        private void print(string callNo, DataTable printLayout)
+        private void print(string callNo, DataTable printLayout, int printQty)
         {
             _printDocument.PrintController = new System.Drawing.Printing.StandardPrintController();
             _printDocument.PrintPage += delegate (object sender, System.Drawing.Printing.PrintPageEventArgs e)
@@ -86,7 +86,8 @@ namespace LIBUtil.Desktop.Classes
                 }
             };
 
-            print();
+            for(int i= printQty; i>0; i--)
+                print();
         }
 
         private StringFormat getTextAlign(int textAlign)

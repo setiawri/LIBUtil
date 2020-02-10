@@ -88,16 +88,27 @@ namespace LIBUtil.Desktop.UserControls
         }
 
         [Description("Value"), Category("_Custom")]
-        public decimal Value
+        public decimal? Value
         {
-            get { return numericUpDown.Value; }
+            get {
+                if (ShowCheckbox && !checkbox.Checked)
+                    return null;
+                else
+                    return numericUpDown.Value;
+            }
             set {
+                if (ShowCheckbox)
+                    checkbox.Checked = numericUpDown.Enabled = (value != null);
+
                 if (value < numericUpDown.Minimum)
                     Util.displayMessageBoxError("Cannot be less than " + numericUpDown.Minimum);
                 else if (value > numericUpDown.Maximum)
                     Util.displayMessageBoxError("Cannot be more than " + numericUpDown.Maximum);
                 else
-                    numericUpDown.Value = value; numericUpDown.Tag = value;
+                {
+                    numericUpDown.Value = Util.zeroNonNumericString(value);
+                    numericUpDown.Tag = value;
+                }
             }
         }
 
@@ -121,7 +132,8 @@ namespace LIBUtil.Desktop.UserControls
             get { return numericUpDown.Increment; }
             set { numericUpDown.Increment = value; }
         }
-        
+
+        public decimal ValueDecimal { get { return numericUpDown.Value; } }
         public int ValueInt { get { return (int)numericUpDown.Value; } }
         public long ValueLong { get { return (long)numericUpDown.Value; } }
         public bool Checked { get { return checkbox.Checked; } set { checkbox.Checked = value; } }
@@ -166,7 +178,7 @@ namespace LIBUtil.Desktop.UserControls
 
         public FilterValues_InputControl_Numeric FilterValues
         {
-            get { return new FilterValues_InputControl_Numeric(Value, ShowCheckbox, checkbox.Checked); }
+            get { return new FilterValues_InputControl_Numeric(Util.zeroNonNumericString(Value), ShowCheckbox, checkbox.Checked); }
             set
             {
                 Value = value.Value;
