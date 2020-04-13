@@ -1,137 +1,129 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 using LIBUtil;
-using LOGIN;
 
-namespace iSpeakWindows.UserAccounts
+namespace BinaMitraTextile
 {
-    public partial class MasterData_v1_UserAccounts_Form : LIBUtil.Desktop.Forms.MasterData_v1_Form
+    public class FakturPajak
     {
         /*******************************************************************************************************/
-        #region SETTINGS
+        #region PUBLIC VARIABLES
 
-        private const bool FORM_SHOWDATAONLOAD = true;
+        public Guid Id;
+        public string No;
+        public DateTime Timestamp;
+        public decimal DPP;
+        public decimal PPN;
+        public string Notes = "";
 
-        #endregion SETTINGS
+        #endregion PUBLIC VARIABLES
         /*******************************************************************************************************/
-        #region PRIVATE VARIABLES
+        #region DATABASE FIELDS
 
-        private DataGridViewColumn col_dgv_Username;
+        public const string COL_DB_Id = "Id";
+        public const string COL_DB_No = "No";
+        public const string COL_DB_Timestamp = "Timestamp";
+        public const string COL_DB_DPP = "DPP";
+        public const string COL_DB_PPN = "PPN";
+        public const string COL_DB_Notes = "Notes";
 
-        #endregion PRIVATE VARIABLES
+        #endregion PUBLIC VARIABLES
         /*******************************************************************************************************/
         #region CONSTRUCTOR METHODS
 
-        public MasterData_v1_UserAccounts_Form() : this(FormModes.Add) { }
-        public MasterData_v1_UserAccounts_Form(FormModes startingMode) : base(startingMode, FORM_SHOWDATAONLOAD) { InitializeComponent(); }
-        
+        public FakturPajak(Guid id)
+        {
+            DataRow row = Util.getFirstRow(get(id));
+            Id = id;
+            No = Util.wrapNullable<string>(row, COL_DB_No);
+            Timestamp = Util.wrapNullable<DateTime>(row, COL_DB_Timestamp);
+            DPP = Util.wrapNullable<decimal>(row, COL_DB_DPP);
+            PPN = Util.wrapNullable<decimal>(row, COL_DB_PPN);
+            Notes = Util.wrapNullable<string>(row, COL_DB_Notes);
+        }
+
+        public FakturPajak() { }
+
         #endregion CONSTRUCTOR METHODS
         /*******************************************************************************************************/
-        #region METHODS
+        #region DATABASE METHODS
 
-        #endregion
+        public static Guid add(DateTime Timestamp, string No, decimal DPP, decimal PPN, string Notes)
+        {
+            Guid Id = Guid.NewGuid();
+            SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
+                QueryTypes.ExecuteNonQuery,
+                "FakturPajaks_add",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Id),
+                new SqlQueryParameter(COL_DB_Timestamp, SqlDbType.DateTime, Util.getAsStartDate(Timestamp)),
+                new SqlQueryParameter(COL_DB_No, SqlDbType.VarChar, No),
+                new SqlQueryParameter(COL_DB_DPP, SqlDbType.UniqueIdentifier, DPP),
+                new SqlQueryParameter(COL_DB_PPN, SqlDbType.UniqueIdentifier, PPN),
+                new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(Notes))
+            );
+
+            if (result.IsSuccessful)
+                ActivityLog.submit(Id, "Added");
+
+            return Id;
+        }
+
+        public static DataTable get(Guid? Id)
+        {
+            SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
+                QueryTypes.FillByAdapter,
+                "FakturPajaks_get",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Util.wrapNullable(Id))
+                );
+            return result.Datatable;
+        }
+
+        public static void update(Guid Id, DateTime Timestamp, string No, decimal DPP, decimal PPN, string Notes)
+        {
+            FakturPajak objOld = new FakturPajak(Id);
+            string log = "";
+            log = Util.appendChange(log, objOld.No, No, "No: '{0}' to '{1}'");
+            log = Util.appendChange(log, objOld.Timestamp, Timestamp, "Date: '{0:dd/MM/yy}' to '{1:dd/MM/yy}'");
+            log = Util.appendChange(log, objOld.DPP, DPP, "DPP: '{0}' to '{1}'");
+            log = Util.appendChange(log, objOld.PPN, PPN, "PPN: '{0}' to '{1}'");
+            log = Util.appendChange(log, objOld.Notes, Notes, "Notes: '{0}' to '{1}'");
+
+            if (string.IsNullOrEmpty(log))
+                Util.displayMessageBoxError("No changes to record");
+            else
+            {
+                SqlQueryResult result = DBConnection.query(
+                    false,
+                    DBConnection.ActiveSqlConnection,
+                    QueryTypes.ExecuteNonQuery,
+                    "FakturPajaks_update",
+                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Id),
+                    new SqlQueryParameter(COL_DB_Timestamp, SqlDbType.DateTime, Timestamp),
+                    new SqlQueryParameter(COL_DB_No, SqlDbType.VarChar, No),
+                    new SqlQueryParameter(COL_DB_DPP, SqlDbType.UniqueIdentifier, DPP),
+                    new SqlQueryParameter(COL_DB_PPN, SqlDbType.UniqueIdentifier, PPN),
+                    new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(Notes))
+                );
+
+                if (result.IsSuccessful)
+                    ActivityLog.submit(Id, String.Format("Updated: {0}", log));
+
+                //notify supervisor role
+                //if (new UserAccount(userAccountID).UserRole != UserAccountRoles.Supervisor)
+                //  add row to Notifications table
+            }
+        }
+
+        #endregion DATABASE METHODS
         /*******************************************************************************************************/
-        #region OVERRIDE METHODS
-		
-        protected override void setupFields()
-        {
-            //setColumnsDataPropertyNames(UserAccount.COL_DB_Id, UserAccount.COL_DB_Active, null, null, null, null);
+        #region CLASS METHODS
 
-            //col_dgv_Username = base.addColumn<DataGridViewTextBoxCell>(dgv, "col_dgv_Username", itxt_Username.LabelText, UserAccount.COL_DB_Username, true, "", true);
-            
-        }
-		
-        protected override void setupControlsBasedOnRoles() 
-        {
-            //Helper.hideIfNoAccess(GlobalData.UserAccount, btnRoles, UserAccountAccessEnum.UserAccountRoles_AddUpdate);
-        }
-
-        protected override void additionalSettings()
-        {
-        }
-
-        protected override void clearInputFields()
-        {
-        }
-
-        protected override bool isValidToPopulateGridViewDataSource()
-        {
-            return true; 
-        }
-
-        //protected override System.Data.DataView loadGridviewDataSource()
-        //{
-        //    return UserAccount.get(DBConnection.ConnectionString, chkIncludeInactive.Checked, null, itxt_Username.ValueText, itxt_Notes.ValueText).DefaultView;
-        //}
-        
-        //protected override void populateInputFields()
-        //{
-        //    UserAccount obj = new UserAccount(DBConnection.ConnectionString, selectedRowID());
-        //    itxt_Username.ValueText = obj.Name;
-        //}
-
-        //protected override void update()
-        //{
-        //    UserAccount.update(DBConnection.ConnectionString, GlobalData.UserAccount.Id, selectedRowID(), itxt_Username.ValueText, itxt_Notes.ValueText);
-        //}
-
-        //protected override void add()
-        //{
-        //    UserAccount.add(DBConnection.ConnectionString, GlobalData.UserAccount.Id, itxt_Username.ValueText, itxt_Notes.ValueText);
-        //}
-
-        protected override Boolean isInputFieldsValid()
-        {
-            //if (string.IsNullOrEmpty(itxt_Username.Text))
-            //    return itxt_Username.isValueError("Please provide name");
-            //else if ((Mode != FormMode.Update && City.isNameExist(_inputTxtName.ValueText, null))
-            //    || (Mode == FormMode.Update && City.isNameExist(_inputTxtName.ValueText, selectedRowID())))
-            //    return _inputTxtName.TextError("Name is already in the list");
-            //else if (_inputDDLStates.SelectedValue == null)
-            //    return _inputDDLStates.SelectedValueError("Please select a state listed in the drop down list");
-
-            return true;
-        }
-
-        protected override void updateActiveStatus(Guid id, Boolean activeStatus)
-        {
-            UserAccount.updateActiveStatus(DBConnection.ConnectionString, GlobalData.UserAccount.Id, id, activeStatus);
-        }
-		
-        protected override void btnLog_Click(object sender, EventArgs e)
-        {
-            Util.displayForm(null, new SharedForms.ActivityLogs_Form(selectedRowID()));
-            txtQuickSearch.Focus();
-        }
-
-        protected override void updateDefaultRow(Guid id) { }
-
-        protected override void updateCheckbox1Column(Guid id, Boolean newValue) { }
-		
-        protected override void virtual_dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        #endregion METHODS
-        /*******************************************************************************************************/
-        #region EVENT HANDLERS
-
-        //private void lnkUpdateStates_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        //{
-        //    Tools.displayForm(new MasterData.States_Form(FormMode.New));
-        //    State.populateDropDownList(_inputDDLStates.Dropdownlist, false, true);
-        //}
-
-        #endregion EVENT HANDLERS
+        #endregion CLASS METHODS
         /*******************************************************************************************************/
     }
 }
+

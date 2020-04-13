@@ -45,7 +45,7 @@ namespace LIBUtil.Desktop.UserControls
                 if (value)
                 {
                     chkAllowDecimal.Visible = ShowAllowDecimalCheckbox;
-                    this.Height = numericUpDown.Height;
+                    this.Height = numericUpDown.Height + 3;
                 }
                 else
                 {

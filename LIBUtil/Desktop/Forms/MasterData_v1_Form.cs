@@ -53,6 +53,7 @@ namespace LIBUtil.Desktop.Forms
         protected List<string> FieldnamesForQuickSearch = new List<string>();
         protected List<InputControl> InputToDisableOnSearch = new List<InputControl>();
         protected List<InputControl> InputToDisableOnUpdate = new List<InputControl>();
+        protected List<InputControl> InputToDisableOnAdd = new List<InputControl>();
         protected List<InputControl> InputToDisablePermanently = new List<InputControl>();
         protected bool DoNotClearInputAfterSubmission = false;
 
@@ -77,7 +78,6 @@ namespace LIBUtil.Desktop.Forms
 
             masterDataFormName = this.Name;
             _startingMode = startingMode;
-            Mode = _startingMode;
             _showDataOnLoad = showDataOnLoad;
             this.ShowIcon = false;
         }
@@ -124,11 +124,12 @@ namespace LIBUtil.Desktop.Forms
             return Util.wrapFirstSelectedRowValueNullable<Guid>(col_dgv_Id);
         }
 
-        protected void disableFieldActive()
-        {
-            col_dgv_Active.Visible = false;
-            chkIncludeInactive.Visible = false;
-        }
+        //remove - added in setColumnsDataPropertyNames if col_Active is null, then disable
+        //protected void disableFieldActive()
+        //{
+        //    col_dgv_Active.Visible = false;
+        //    chkIncludeInactive.Visible = false;
+        //}
 
         protected void enableFieldStatus<T>()
         {
@@ -139,11 +140,21 @@ namespace LIBUtil.Desktop.Forms
         protected void setColumnsDataPropertyNames(string col_Id, string col_Active, string col_StatusName, string col_StatusId, string col_Default, string col_Checkbox1)
         {
             col_dgv_Id.DataPropertyName = col_Id;
-            col_dgv_Active.DataPropertyName = col_Active;
             col_dgv_StatusName.DataPropertyName = col_StatusName;
             col_dgv_StatusId.DataPropertyName = col_StatusId;
             col_dgv_Default.DataPropertyName = col_Default;
+
             col_dgv_Checkbox1.DataPropertyName = col_Checkbox1;
+            if (col_Checkbox1 != null)
+                col_dgv_Checkbox1.Visible = true;
+
+            if (col_Active != null)
+                col_dgv_Active.DataPropertyName = col_Active;
+            else
+            {
+                col_dgv_Active.Visible = false;
+                chkIncludeInactive.Visible = false;
+            }
         }
 
         /// <summary><para></para></summary>
@@ -171,6 +182,14 @@ namespace LIBUtil.Desktop.Forms
             if (addToQuickSearchFields) FieldnamesForQuickSearch.Add(dataPropertyName); //add field name to quick search list
 
             return column;
+        }
+
+        //This method must be called on FormShown to work properly. Otherwise, panel toggle would show on the wrong location.
+        protected void showRowInfo()
+        {
+            pnlRowInfo.Visible = true;
+            ptRowInfo.setContainerPanelOriginalSize(); //set here to get the correct panel size after panel is rendered
+            ptRowInfo.PerformClick();
         }
 
         #endregion
@@ -202,6 +221,7 @@ namespace LIBUtil.Desktop.Forms
                     btnSubmit.Text = BUTTONTEXT_SUBMIT_SEARCH;
                     btnCancel.Visible = false;
                     btnSearch.ForeColor = BUTTONCOLOR_ACTIVE;
+                    updateInputControls(InputToDisableOnAdd, true, false);
                     updateInputControls(InputToDisableOnUpdate, true, false);
                     updateInputControls(InputToDisableOnSearch, false, true);
                     break;
@@ -211,11 +231,13 @@ namespace LIBUtil.Desktop.Forms
                     btnAdd.ForeColor = BUTTONCOLOR_ACTIVE;
                     updateInputControls(InputToDisableOnSearch, true, false);
                     updateInputControls(InputToDisableOnUpdate, true, false);
+                    updateInputControls(InputToDisableOnAdd, false, false);
                     break;
                 case FormModes.Update:
                     btnSubmit.Text = BUTTONTEXT_SUBMIT_UPDATE;
                     btnCancel.Visible = true;
                     btnUpdate.ForeColor = BUTTONCOLOR_ACTIVE;
+                    updateInputControls(InputToDisableOnAdd, true, false);
                     updateInputControls(InputToDisableOnSearch, true, false);
                     updateInputControls(InputToDisableOnUpdate, false, false);
                     break;
@@ -316,10 +338,11 @@ namespace LIBUtil.Desktop.Forms
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
-            else if (btnLog.Enabled)
-            {
-                btnLog.PerformClick();
-            }
+            //double clicking is reserved for other operation now
+            //else if (btnLog.Enabled)
+            //{
+            //    btnLog.PerformClick();
+            //}
         }
 
         public void saveFilterValues()
@@ -582,7 +605,7 @@ namespace LIBUtil.Desktop.Forms
             if (Util.isColumnMatch(sender, e, col_dgv_Active))
             {
                 DataGridViewRow row = dgv.Rows[e.RowIndex];
-                updateActiveStatus((Guid)row.Cells[col_dgv_Id.Name].Value, !(bool)((DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex]).Value);
+                updateActiveStatus(selectedRowID(), !Util.getCheckboxValue(sender, e));
                 clearInputFields();
                 populateGridViewDataSource(true);
                 if (Mode == FormModes.Update) btnUpdate.PerformClick();
@@ -598,7 +621,7 @@ namespace LIBUtil.Desktop.Forms
             else if (Util.isColumnMatch(sender, e, col_dgv_Checkbox1))
             {
                 DataGridViewRow row = dgv.Rows[e.RowIndex];
-                updateCheckbox1Column((Guid)row.Cells[col_dgv_Id.Name].Value, !(bool)((DataGridViewCheckBoxCell)row.Cells[e.ColumnIndex]).Value);
+                updateCheckbox1Column(selectedRowID(), !Util.getCheckboxValue(sender, e));
                 clearInputFields();
                 populateGridViewDataSource(true);
                 if (Mode == FormModes.Update) btnUpdate.PerformClick();
@@ -643,6 +666,7 @@ namespace LIBUtil.Desktop.Forms
             }
 
             setupControlsBasedOnRoles();
+            Mode = _startingMode;
             updateInputControls(InputToDisablePermanently, false, false);
 
             txtQuickSearch.Focus();

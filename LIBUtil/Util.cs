@@ -7,6 +7,10 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.IO;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace LIBUtil
 {
@@ -486,6 +490,13 @@ namespace LIBUtil
                 return originalText;
         }
 
+        public static string reverse(string value)
+        {
+            char[] charArray = value.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
         #endregion
         /*******************************************************************************************************/
         #region DESKTOP DATAGRIDVIEW
@@ -617,6 +628,7 @@ namespace LIBUtil
         
         /// <summary><para>Desktop app use only.</para></summary>
         public static Guid getSelectedRowID(DataGridView grid, DataGridViewColumn IdColumn) { return (Guid)getSelectedRowValue(grid, IdColumn); }
+        public static Guid getSelectedRowID(object sender, DataGridViewColumn IdColumn) { return (Guid)getSelectedRowValue(sender, IdColumn); }
         public static object getSelectedRowValue(object sender, DataGridViewColumn column) { return getSelectedRowValue((DataGridView)sender, column); }
         public static object getSelectedRowValue(DataGridView grid, DataGridViewColumn column)
         {
@@ -1077,7 +1089,7 @@ namespace LIBUtil
 
         #endregion
         /*******************************************************************************************************/
-        #region APPLICATION
+        #region NETWORKING
 
         public static bool isValidIPv4(string ipString)
         {
@@ -1092,6 +1104,15 @@ namespace LIBUtil
         {
             System.Net.IPAddress[] addresses = Array.FindAll(System.Net.Dns.GetHostEntry(string.Empty).AddressList, a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
             return addresses[0].ToString();
+        }
+
+        public static string getMACAddress()
+        {
+            return NetworkInterface
+                .GetAllNetworkInterfaces()
+                .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                .Select(nic => nic.GetPhysicalAddress().ToString())
+                .FirstOrDefault();
         }
 
         #endregion
@@ -1130,18 +1151,24 @@ namespace LIBUtil
 
         public static string saveAppData(string filename, string value)
         {
-            string filepath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+            string filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
             System.IO.File.WriteAllText(filepath, value);
             return value;
         }
 
         public static string getAppData(string filename)
         {
-            string filepath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
-            if (System.IO.File.Exists(filepath))
-                return System.IO.File.ReadAllText(filepath);
+            string filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+            if (File.Exists(filepath))
+                return File.ReadAllText(filepath);
             else
                 return null;
+        }
+
+        public static void removeAppData(string filename)
+        {
+            string filepath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+            System.IO.File.Delete(filepath);
         }
 
         #endregion
@@ -1358,6 +1385,26 @@ namespace LIBUtil
             return newDate;
         }
 
+        public static DateTime? getAsStartDate(DateTime? dt)
+        {
+            if (dt != null)
+            {
+                DateTime date = (DateTime)dt;
+                dt = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            }
+            return dt;
+        }
+
+        public static DateTime? getAsEndDate(DateTime? dt)
+        {
+            if (dt != null)
+            {
+                DateTime date = (DateTime)dt;
+                dt = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            }
+            return dt;
+        }
+
         #endregion
         /*******************************************************************************************************/
         #region CONTROL LOCATION
@@ -1409,6 +1456,83 @@ namespace LIBUtil
         {
             RadioButton rb = (RadioButton)getActiveRadioButton(panel);
             return (DayOfWeek)rb.Tag;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region FONT SIZE MANIPULATION
+
+        public static Font updateFontSize(Font font, int difference)
+        {
+            return new Font(font.FontFamily, font.Size + difference, font.Style);
+        }
+
+        public static Label fitLabelFontSizeIntoContainer(Label label, Control container)
+        {
+            label.Height = container.Height; //set the height to match the container
+            //resize font size to fit container
+            int textheight = TextRenderer.MeasureText(label.Text, label.Font).Height;
+            if (textheight > label.Height)
+            {
+                while (textheight > label.Height)
+                {
+                    label.Font = LIBUtil.Util.updateFontSize(label.Font, -2);
+                    textheight = TextRenderer.MeasureText(label.Text, label.Font).Height;
+                }
+            }
+            else if (textheight < label.Height)
+            {
+                while (textheight < label.Height)
+                {
+                    label.Font = LIBUtil.Util.updateFontSize(label.Font, 2);
+                    textheight = TextRenderer.MeasureText(label.Text, label.Font).Height;
+                }
+                //make font smaller than container
+                label.Font = LIBUtil.Util.updateFontSize(label.Font, -2);
+                textheight = TextRenderer.MeasureText(label.Text, label.Font).Height;
+            }
+
+            return label;
+        }
+
+        #endregion
+        /*******************************************************************************************************/
+        #region HASHING
+
+        private const int SALT_LENGTH = 10;
+
+        public bool compare(string nonHashedValue, string hashedValue)
+        {
+            return hashedValue == hashString(nonHashedValue, hashedValue.Substring(hashedValue.Length - SALT_LENGTH, SALT_LENGTH));
+        }
+
+        public static string hashString(string Value)
+        {
+            string salt = createSalt();
+            return hashString(Value, salt);
+        }
+
+        public static string hashString(string Value, string Salt)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(Value + Salt);
+            byte[] inArray = HashAlgorithm.Create("SHA1").ComputeHash(bytes);
+
+            return Convert.ToBase64String(inArray) + Salt; //produces 28 characters in addition to length of salt
+        }
+
+        public static string createSalt()
+        {
+            string salt = "";
+            while (salt.Length < SALT_LENGTH)
+                salt += new Guid();
+            return salt.Substring(0, SALT_LENGTH);
+        }
+
+        public static string hashStringWithoutSalt(string Value)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(Value);
+            byte[] inArray = HashAlgorithm.Create("SHA1").ComputeHash(bytes);
+            return Convert.ToBase64String(inArray);
         }
 
         #endregion

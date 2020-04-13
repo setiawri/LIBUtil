@@ -24,5 +24,8 @@ Apply password
 - double click the shortcut
 - enter the Administrator password (this is one time. next time it will not ask for password again)
 
-
+=======================================
+SETTING BACKUP SCRIPT IN TASK SCHEDULER
+=======================================
+- user account that runs the task must be the administrator of the pc where the task is being set up (NOT THE ADMINISTRATOR OF THE DESTINATION PC).
 

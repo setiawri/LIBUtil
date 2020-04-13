@@ -30,35 +30,12 @@ namespace LIBUtil.Desktop.UserControls
         #region PROPERTIES
 
         [Description("Toggle Panel"), Category("_Custom")]
-        public Panel TogglePanel
-        {
-            get { return _togglePanel; }
-            set {
-                _togglePanel = value;
+        public Panel TogglePanel { get; set; }
 
-                //if(_togglePanel != null && _togglePanel.FindForm() != null)
-                //{
-                //    Point togglePanelLoc = Util.getLocationRelativeToForm(_togglePanel);
-                //    Point toggleButtonLoc = Util.getLocationRelativeToForm(this);
+        [Description("Container Panel"), Category("_Custom")]
+        public Panel ContainerPanel { get; set; }
 
-                //    if (ArrowOrientation == Orientation.Horizontal)
-                //    {
-                //        if (toggleButtonLoc.X > togglePanelLoc.X)
-                //            setDirection(ArrowDirection.Left);
-                //        else
-                //            setDirection(ArrowDirection.Right);
-                //    }
-                //    else
-                //    {
-                //        if (toggleButtonLoc.Y > togglePanelLoc.Y)
-                //            setDirection(ArrowDirection.Up);
-                //        else
-                //            setDirection(ArrowDirection.Down);
-                //    }
-                //}
-            }
-        }
-        private Panel _togglePanel;
+        public Size ContainerPanelOriginalSize { get; set; }
 
         [Description("Initial Arrow Direction"), Category("_Custom")]
         public ArrowDirection InitialArrowDirection
@@ -148,7 +125,24 @@ namespace LIBUtil.Desktop.UserControls
 
         public void toggle()
         {
-            if (TogglePanel.GetType() == typeof(SplitterPanel))
+            if(ContainerPanel != null)
+            {
+                if (ArrowOrientation == Orientation.Horizontal)
+                {
+                    if(ContainerPanel.Width != this.Width)
+                        ContainerPanel.Width = this.Width;
+                    else
+                        ContainerPanel.Width = this.Width + ContainerPanelOriginalSize.Width;
+                }
+                else
+                {
+                    if (ContainerPanel.Height != this.Height)
+                        ContainerPanel.Height = this.Height;
+                    else
+                        ContainerPanel.Height = this.Height + ContainerPanelOriginalSize.Height;
+                }
+            }
+            else if (TogglePanel.GetType() == typeof(SplitterPanel))
             {
                 SplitContainer parent = (SplitContainer)TogglePanel.Parent;
                 if (parent.Panel1 == TogglePanel)
@@ -207,7 +201,14 @@ namespace LIBUtil.Desktop.UserControls
 
         public bool isTogglePanelVisible()
         {
-            if (TogglePanel.GetType() == typeof(SplitterPanel))
+            if(ContainerPanel != null)
+            {
+                if (ArrowOrientation == Orientation.Horizontal)
+                    return ContainerPanel.Width != this.Width;
+                else
+                    return ContainerPanel.Height != this.Height;
+            }
+            else if (TogglePanel.GetType() == typeof(SplitterPanel))
             {
                 SplitContainer parent = (SplitContainer)TogglePanel.Parent;
                 if (parent.Panel1 == TogglePanel)
@@ -259,6 +260,11 @@ namespace LIBUtil.Desktop.UserControls
         public void PerformClick()
         {
             toggle();
+        }
+
+        public void setContainerPanelOriginalSize()
+        {
+            ContainerPanelOriginalSize = ContainerPanel.Size; 
         }
 
         #endregion METHODS

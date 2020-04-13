@@ -39,98 +39,106 @@ namespace NamespaceName
         /*******************************************************************************************************/
         #region DATABASE METHODS
 
-        public static Guid add(Guid userAccountID, string notes)
+        public static Guid add(string Notes)
         {
-            Guid id = Guid.NewGuid();
-            using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
-            {
-                SqlQueryResult result = DBConnection.query(
-                    sqlConnection,
-                    QueryTypes.ExecuteNonQuery,
-                    "xxx_add",
-                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id),
-                    new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(notes))
-                );
+            Guid Id = Guid.NewGuid();
+            SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
+                QueryTypes.ExecuteNonQuery,
+                "xxx_add",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Id),
+                new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(Notes))
+            );
 
-                if(result.IsSuccessful)
-                    LOGGING.ActivityLog.add(sqlConnection, userAccountID, id, "Added");
-            }
+            if(result.IsSuccessful)
+                LOGGING.ActivityLog.add(DBConnection.ActiveSqlConnection, userAccountID, id, "Added");
             
-            return id;
+            return Id;
         }
 
-        public static DataTable get(Guid? id, string notes)
+        public static DataTable get(Guid? Id, string Notes)
         {		
             SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
                 QueryTypes.FillByAdapter, 
                 "xxx_get",
-                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Util.wrapNullable(id)),
-                new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(notes))
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Util.wrapNullable(Id)),
+                new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(Notes))
                 );
             return result.Datatable;
         }
 
-        public static void update(Guid userAccountID, Guid id, string notes)
+        public static void update(Guid Id, string Notes)
         {
-            ClassName objOld = new ClassName(id);
+            ClassName objOld = new ClassName(Id);
             string log = "";
-            log = Util.appendChange(log, objOld.Notes, notes, "Notes: '{0}' to '{1}'");
+            log = Util.appendChange(log, objOld.Notes, Notes, "Notes: '{0}' to '{1}'");
 
             if (string.IsNullOrEmpty(log))
                 Util.displayMessageBoxError("No changes to record");
             else
             {
-                using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
-                {
-                    SqlQueryResult result = DBConnection.query(
-                        sqlConnection,
-                        QueryTypes.ExecuteNonQuery,
-                        "xxx_update",
-                        new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id),
-                        new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(notes))
-                    );
+                SqlQueryResult result = DBConnection.query(
+	                false,
+                    DBConnection.ActiveSqlConnection,
+                    QueryTypes.ExecuteNonQuery,
+                    "xxx_update",
+                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Id),
+                    new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(Notes))
+                );
 
-                    if(result.IsSuccessful)
-						LOGGING.ActivityLog.add(sqlConnection, userAccountID, id, String.Format("Updated: {0}", log));
+                if(result.IsSuccessful)
+					LOGGING.ActivityLog.add(DBConnection.ActiveSqlConnection, userAccountID, id, String.Format("Updated: {0}", log));
 					
-					//notify supervisor role
-					//if (new UserAccount(userAccountID).UserRole != UserAccountRoles.Supervisor)
-					//  add row to Notifications table
-                }
+				//notify supervisor role
+				//if (new UserAccount(userAccountID).UserRole != UserAccountRoles.Supervisor)
+				//  add row to Notifications table
             }
         }
 
-        public static void updateActiveStatus(Guid userAccountID, Guid id, bool value)
+        public static void updateActiveStatus(Guid Id, bool Value)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
-            {
-                SqlQueryResult result = DBConnection.query(
-                    sqlConnection,
-                    QueryTypes.ExecuteNonQuery,
-                    "xxx_update_Active",
-                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id),
-                    new SqlQueryParameter(COL_DB_Active, SqlDbType.Bit, value)
-                );
+            SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
+                QueryTypes.ExecuteNonQuery,
+                "xxx_update_Active",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Id),
+                new SqlQueryParameter(COL_DB_Active, SqlDbType.Bit, Value)
+            );
 
-                if(result.IsSuccessful)
-                    LOGGING.ActivityLog.add(sqlConnection, userAccountID, id, "Update Active Status to " + value);
-            }
+            if(result.IsSuccessful)
+                LOGGING.ActivityLog.add(DBConnection.ActiveSqlConnection, userAccountID, Id, "Update Active Status to " + Value);
         }
 
-        public static void delete(Guid userAccountID, Guid id)
+        public static void delete(Guid Id)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
-            {
-                SqlQueryResult result = DBConnection.query(
-                    sqlConnection,
-                    QueryTypes.ExecuteNonQuery,
-                    "xxx_delete",
-                    new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id)
-                );
+            SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
+                QueryTypes.ExecuteNonQuery,
+                "xxx_delete",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, id)
+            );
 
-                if(result.IsSuccessful)
-                    LOGGING.ActivityLog.add(sqlConnection, userAccountID, id, "Deleted");
-            }
+            if(result.IsSuccessful)
+                LOGGING.ActivityLog.add(DBConnection.ActiveSqlConnection, userAccountID, Id, "Deleted");
+        }
+		
+        public static bool isNameExist(Guid? Id, string Name)
+        {
+            SqlQueryResult result = DBConnection.query(
+                false,
+                DBConnection.ActiveSqlConnection,
+                QueryTypes.ExecuteNonQuery,
+                false, false, false, true, false,
+                "xxx_isExist_Name",
+                new SqlQueryParameter(COL_DB_Id, SqlDbType.UniqueIdentifier, Util.wrapNullable(Id)),
+                new SqlQueryParameter(COL_DB_No, SqlDbType.NVarChar, Name)
+                );
+            return result.ValueBoolean;
         }
 
         #endregion DATABASE METHODS

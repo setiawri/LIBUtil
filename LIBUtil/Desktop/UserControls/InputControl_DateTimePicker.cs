@@ -141,13 +141,7 @@ namespace LIBUtil.Desktop.UserControls
         {
             get
             {
-                DateTime? dt = Value;
-                if(dt != null)
-                {
-                    DateTime date = (DateTime)dt;
-                    dt = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-                }
-                return dt;
+                return Util.getAsEndDate(Value);
             }
         }
 
@@ -155,13 +149,7 @@ namespace LIBUtil.Desktop.UserControls
         {
             get
             {
-                DateTime? dt = Value;
-                if (dt != null)
-                {
-                    DateTime date = (DateTime)dt;
-                    dt = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-                }
-                return dt;
+                return Util.getAsStartDate(Value);
             }
         }
 
@@ -178,6 +166,22 @@ namespace LIBUtil.Desktop.UserControls
                 Checked = value.Checked;
             }
         }
+
+        [Description("Show DateTimePicker only"), Category("_Custom")]
+        public bool ShowDateTimePickerOnly
+        {
+            get { return _ShowDateTimePickerOnly; }
+            set
+            {
+                _ShowDateTimePickerOnly = value;
+                label.Visible = !value;
+                if (value)
+                    this.Height = datetimepicker.Height;
+                else
+                    this.Height = datetimepicker.Height + label.Height;
+            }
+        }
+        private bool _ShowDateTimePickerOnly = false;
 
         public DateTimePicker getDatetimePicker { get { return datetimepicker; } }
 

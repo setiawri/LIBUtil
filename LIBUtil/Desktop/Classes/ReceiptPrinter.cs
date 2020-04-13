@@ -64,10 +64,11 @@ namespace LIBUtil.Desktop.Classes
             
         public static void print(int printAreaWidth, string callNo, int printQty)
         {
-            new ReceiptPrinter(printAreaWidth).print(callNo, PrintLayout.get(null), printQty);
+            for (int i = printQty; i > 0; i--)
+                new ReceiptPrinter(printAreaWidth).print(callNo, PrintLayout.get(null));
         }
 
-        private void print(string callNo, DataTable printLayout, int printQty)
+        private void print(string callNo, DataTable printLayout)
         {
             _printDocument.PrintController = new System.Drawing.Printing.StandardPrintController();
             _printDocument.PrintPage += delegate (object sender, System.Drawing.Printing.PrintPageEventArgs e)
@@ -86,8 +87,7 @@ namespace LIBUtil.Desktop.Classes
                 }
             };
 
-            for(int i= printQty; i>0; i--)
-                print();
+            print();
         }
 
         private StringFormat getTextAlign(int textAlign)
