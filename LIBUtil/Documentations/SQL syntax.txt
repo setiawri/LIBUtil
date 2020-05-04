@@ -21,15 +21,6 @@ select into temp table and iterate through rows
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-query text in all stored procedures
-	DECLARE @keystring varchar(MAX) = 'x'
-
-	SELECT ROUTINE_NAME, ROUTINE_DEFINITION
-	FROM INFORMATION_SCHEMA.ROUTINES
-	WHERE ROUTINE_TYPE='PROCEDURE' AND ROUTINE_DEFINITION LIKE '%' + @keystring + '%'
-
---------------------------------------------------------------------------------------------------------------------------------------------
-
 return value as output
 
 	code behind query to database
@@ -67,6 +58,15 @@ get date with time at 00:00:00
 	
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+=================
+STORED PROCEDURES
+=================
+
+DELETE STORED PROCEDURE
+	IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[YourProcedure]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	DROP PROCEDURE [dbo].[YourProcedure]
+	GO
+
 execute stored procedure
 	
 	DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
@@ -86,8 +86,17 @@ execute stored procedure
 		SET @NewHex_String = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 	END
 
+	
+query text in all stored procedures
+	DECLARE @keystring varchar(MAX) = 'x'
+
+	SELECT ROUTINE_NAME, ROUTINE_DEFINITION
+	FROM INFORMATION_SCHEMA.ROUTINES
+	WHERE ROUTINE_TYPE='PROCEDURE' AND ROUTINE_DEFINITION LIKE '%' + @keystring + '%'
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+==================
 ALTER TABLE COLUMN
 ==================
 
@@ -112,6 +121,7 @@ ALTER TABLE COLUMN
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+================================================================
 ERROR: user,group or role already exists in the current database
 ================================================================
 ALTER USER [username] WITH Login = [username];
@@ -121,6 +131,7 @@ sp_change_users_login 'AUTO_FIX', '[user]'
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+==========
 CONVERSION
 ==========
 
@@ -131,6 +142,7 @@ CONVERSION
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+=================
 DELETE ALL TABLES
 =================
 
@@ -140,5 +152,14 @@ EXEC sp_MSforeachtable @command1 = "DROP TABLE ?"
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------
+
+==================
+SERVER PERFORMANCE
+==================
+
+	Wen the database's statistics and/or query plan cache are incorrect, it would cause the database to use a sub-optimal query plan. 
+	It can be resolved by clearing the statistics. Do this only when server is not under heavy load.
+		
+		EXEC sp_updatestats
 
 

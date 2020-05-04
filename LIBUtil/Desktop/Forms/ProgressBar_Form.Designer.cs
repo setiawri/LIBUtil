@@ -73,6 +73,7 @@
             this.Name = "ProgressBar_Form";
             this.Text = "ProgressBar";
             this.Load += new System.EventHandler(this.Form_Load);
+            this.Shown += new System.EventHandler(this.Form_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

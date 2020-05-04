@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundProcess.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="Desktop\Classes\PrintLayout.cs" />
     <Compile Include="Desktop\Classes\ReceiptPrinter.cs" />

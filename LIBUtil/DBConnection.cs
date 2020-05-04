@@ -170,7 +170,6 @@ namespace LIBUtil
                 queryBackgroundWorker.RunWorkerAsync();
 
                 Util.displayForm(null, _progressBarForm, false);
-
             }
 
             return _sqlQuery.result;

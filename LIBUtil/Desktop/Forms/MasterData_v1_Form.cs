@@ -41,7 +41,7 @@ namespace LIBUtil.Desktop.Forms
                 changeFormMode();
             }
         }
-        
+
         public Guid BrowsedItemSelectionId;
         public string BrowsedItemSelectionDescription;
 
@@ -64,21 +64,25 @@ namespace LIBUtil.Desktop.Forms
         private FormModes _startingMode;
         private FormModes _currentMode;
         private bool _showDataOnLoad = false;
+        private bool _showProgressBarOnPopulate = false;
+        private int _timerTimeoutSeconds = 0;
         Dictionary<Control, object> filterValues = new Dictionary<Control, object>();
 
         #endregion PRIVATE VARIABLES
         /*******************************************************************************************************/
         #region CONSTRUCTOR METHODS
 
-        public MasterData_v1_Form() : this(FormModes.Add, true) { }
-
-        public MasterData_v1_Form(FormModes startingMode, bool showDataOnLoad)
+        public MasterData_v1_Form() : this(FormModes.Add, true, false, 0) { }
+        public MasterData_v1_Form(FormModes startingMode, bool showDataOnLoad) : this(startingMode, showDataOnLoad, false, 0) { }
+        public MasterData_v1_Form(FormModes startingMode, bool showDataOnLoad, bool showProgressBarOnPopulate, int timerTimeoutSeconds)
         {
             InitializeComponent();
 
             masterDataFormName = this.Name;
             _startingMode = startingMode;
             _showDataOnLoad = showDataOnLoad;
+            _showProgressBarOnPopulate = showProgressBarOnPopulate;
+            _timerTimeoutSeconds = timerTimeoutSeconds;
             this.ShowIcon = false;
         }
 
@@ -189,7 +193,6 @@ namespace LIBUtil.Desktop.Forms
         {
             pnlRowInfo.Visible = true;
             ptRowInfo.setContainerPanelOriginalSize(); //set here to get the correct panel size after panel is rendered
-            ptRowInfo.PerformClick();
         }
 
         #endregion
@@ -314,7 +317,7 @@ namespace LIBUtil.Desktop.Forms
             dgv.CellContentClick -= new DataGridViewCellEventHandler(dgv_CellContentClick);
             dgv.SelectionChanged -= new EventHandler(dgv_SelectionChanged);
 
-            Util.setGridviewDataSource(dgv, true, true, dvw);
+            Util.setGridviewDataSource(_showProgressBarOnPopulate, _timerTimeoutSeconds, dgv, true, true, dvw);
 
             //reattach event handlers
             dgv.CellContentClick += new DataGridViewCellEventHandler(dgv_CellContentClick);
@@ -477,7 +480,6 @@ namespace LIBUtil.Desktop.Forms
         {
             setupControls();
             setupFields();
-            populateGridViewDataSource(true);
             additionalSettings();
         }
 
@@ -668,6 +670,8 @@ namespace LIBUtil.Desktop.Forms
             setupControlsBasedOnRoles();
             Mode = _startingMode;
             updateInputControls(InputToDisablePermanently, false, false);
+
+            populateGridViewDataSource(true);
 
             txtQuickSearch.Focus();
         }

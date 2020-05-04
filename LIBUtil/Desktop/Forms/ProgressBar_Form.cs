@@ -66,6 +66,10 @@ namespace LIBUtil.Desktop.Forms
         private void Form_Load(object sender, EventArgs e)
         {
             setupControls();
+        }
+
+        private void Form_Shown(object sender, EventArgs e)
+        {
             populateData();
         }
 

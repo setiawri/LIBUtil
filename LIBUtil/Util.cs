@@ -153,6 +153,7 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayForm(Form form) { return displayForm(null, form, false); }
         public static bool displayForm(Form parentFormToHide, Form form) { return displayForm(parentFormToHide, form, false); }
         public static bool displayForm(Form parentFormToHide, Form form, bool showInTaskbar)
         {
@@ -635,6 +636,11 @@ namespace LIBUtil
             return grid.SelectedRows[0].Cells[column.Name].Value;
         }
 
+        public static bool selectedItemIsNotNull(DataGridView dgv, DataGridViewColumn column)
+        {
+            return Util.getSelectedRowValue(dgv, column) != null;
+        }
+
         public static object getRowValue(DataGridViewRow row, DataGridViewColumn column)
         {
             return row.Cells[column.Name].Value;
@@ -686,32 +692,6 @@ namespace LIBUtil
                 default:
                     return ListSortDirection.Ascending;
             }
-        }
-
-        /// <summary><para></para></summary>
-        public static void setGridviewDataSource(DataGridView grid, bool rememberRowPosition, bool reapplySort, object data)
-        {
-            //save top row index
-            int topRowIndex = grid.FirstDisplayedScrollingRowIndex;
-            int selectedRowIndex = -1;
-            if (grid.Rows.Count > 0 && grid.SelectedRows.Count > 0)
-                selectedRowIndex = grid.SelectedRows[0].Index;
-
-            //save sorting
-            DataGridViewColumn sortColumn = grid.SortedColumn;
-            ListSortDirection sortOrder = ListSortDirection.Ascending;
-            if (grid.SortOrder == SortOrder.Descending) sortOrder = ListSortDirection.Descending;
-
-            //update datasource 
-            grid.DataSource = data;
-
-            //reapply sorting
-            if (reapplySort && sortColumn != null)
-                grid.Sort(sortColumn, sortOrder);
-
-            //display top row index 
-            if (rememberRowPosition)
-                Util.setFirstDisplayedScrollingRowIndex(grid, topRowIndex, selectedRowIndex);
         }
 
         /// <summary><para></para></summary>
@@ -797,12 +777,48 @@ namespace LIBUtil
         public static void updateForeColor(DataGridViewColumn column, Color color)
         {
             column.DefaultCellStyle.ForeColor = color;
+            column.DefaultCellStyle.SelectionForeColor = color;
         }
 
         public static void updateForeColorAndStyle(DataGridViewColumn column, Color color, FontStyle fontStyle)
         {
             updateFontStyle(column, fontStyle);
             updateForeColor(column, color);
+        }
+
+        public static void setGridviewDataSource(DataGridView grid, bool rememberRowPosition, bool reapplySort, object data)
+        {
+            setGridviewDataSource(false, 0, grid, rememberRowPosition, reapplySort, data);
+        }
+        /// <summary><para></para></summary>
+        public static void setGridviewDataSource(bool showProgressBar, int TimeoutSeconds, DataGridView grid, bool rememberRowPosition, bool reapplySort, object data)
+        {
+            //save top row index
+            int topRowIndex = grid.FirstDisplayedScrollingRowIndex;
+            int selectedRowIndex = -1;
+            if (grid.Rows.Count > 0 && grid.SelectedRows.Count > 0)
+                selectedRowIndex = grid.SelectedRows[0].Index;
+
+            //save sorting
+            DataGridViewColumn sortColumn = grid.SortedColumn;
+            ListSortDirection sortOrder = ListSortDirection.Ascending;
+            if (grid.SortOrder == SortOrder.Descending) sortOrder = ListSortDirection.Descending;
+
+            //update datasource 
+            if (!showProgressBar)
+                grid.DataSource = data;
+            else
+            {
+                new BackgroundProcess(TimeoutSeconds, grid, data).run();
+            }
+
+            //reapply sorting
+            if (reapplySort && sortColumn != null)
+                grid.Sort(sortColumn, sortOrder);
+
+            //display top row index 
+            if (rememberRowPosition)
+                Util.setFirstDisplayedScrollingRowIndex(grid, topRowIndex, selectedRowIndex);
         }
 
         #endregion
@@ -1536,6 +1552,6 @@ namespace LIBUtil
         }
 
         #endregion
-        /*******************************************************************************************************/
+        /*******************************************************************************************************/        
     }
 }
