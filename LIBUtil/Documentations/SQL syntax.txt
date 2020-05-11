@@ -8,6 +8,7 @@ select into temp table and iterate through rows
 		
 	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM @ARRAY_UserAccountAccessEnum) AS x
 	
+	DECLARE @UserAccountAccess_EnumId int
 	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
 	BEGIN
 		SELECT TOP 1 @UserAccountAccess_EnumId = value_int FROM #TEMP_INPUTARRAY
@@ -93,6 +94,18 @@ query text in all stored procedures
 	SELECT ROUTINE_NAME, ROUTINE_DEFINITION
 	FROM INFORMATION_SCHEMA.ROUTINES
 	WHERE ROUTINE_TYPE='PROCEDURE' AND ROUTINE_DEFINITION LIKE '%' + @keystring + '%'
+
+
+ARRAYS
+------
+
+	Create user defined table type
+	
+		CREATE TYPE [dbo].[Array] AS TABLE(
+			[value_str] [nvarchar](max) NULL,
+			[value_int] [int] NULL
+		)
+		GO
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

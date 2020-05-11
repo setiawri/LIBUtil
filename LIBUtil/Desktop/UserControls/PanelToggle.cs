@@ -127,19 +127,22 @@ namespace LIBUtil.Desktop.UserControls
         {
             if(ContainerPanel != null)
             {
+                if(ContainerPanelOriginalSize.Width == 0 || ContainerPanelOriginalSize.Height == 0)
+                    setContainerPanelOriginalSize();
+
                 if (ArrowOrientation == Orientation.Horizontal)
                 {
                     if(ContainerPanel.Width != this.Width)
                         ContainerPanel.Width = this.Width;
                     else
-                        ContainerPanel.Width = this.Width + ContainerPanelOriginalSize.Width;
+                        ContainerPanel.Width = ContainerPanelOriginalSize.Width;
                 }
                 else
                 {
                     if (ContainerPanel.Height != this.Height)
                         ContainerPanel.Height = this.Height;
                     else
-                        ContainerPanel.Height = this.Height + ContainerPanelOriginalSize.Height;
+                        ContainerPanel.Height = ContainerPanelOriginalSize.Height;
                 }
             }
             else if (TogglePanel.GetType() == typeof(SplitterPanel))

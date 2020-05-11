@@ -188,13 +188,6 @@ namespace LIBUtil.Desktop.Forms
             return column;
         }
 
-        //This method must be called on FormShown to work properly. Otherwise, panel toggle would show on the wrong location.
-        protected void showRowInfo()
-        {
-            pnlRowInfo.Visible = true;
-            ptRowInfo.setContainerPanelOriginalSize(); //set here to get the correct panel size after panel is rendered
-        }
-
         #endregion
         /*******************************************************************************************************/
         #region PRIVATE METHODS
@@ -578,17 +571,6 @@ namespace LIBUtil.Desktop.Forms
             populateGridViewDataSource(true);
         }
 
-        protected void txtQuickSearch_TextChanged(object sender, EventArgs e)
-        {
-            if (Mode == FormModes.Update)
-            {
-                btnAdd.PerformClick();
-                txtQuickSearch.Focus();
-            }
-
-            populateGridViewDataSource(false);
-        }
-
         protected void lnkClearQuickSearch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             txtQuickSearch.Text = "";
@@ -682,6 +664,20 @@ namespace LIBUtil.Desktop.Forms
             {
                 selectRow(((DataGridView)sender).CurrentRow.Index);
                 dgv_CellDoubleClick();
+            }
+        }
+
+        private void TxtQuickSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                if (Mode == FormModes.Update)
+                {
+                    btnAdd.PerformClick();
+                    txtQuickSearch.Focus();
+                }
+
+                populateGridViewDataSource(false);
             }
         }
 

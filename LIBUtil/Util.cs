@@ -169,7 +169,7 @@ namespace LIBUtil
 
             return form.DialogResult == DialogResult.OK;
         }
-
+        
         /// <summary><para>Desktop app use only.</para></summary>
         public static void setPosition(Form form, Position vertical, Position horizontal)
         {
@@ -253,10 +253,10 @@ namespace LIBUtil
         public static bool displayMessageBoxYesNo(string message) { return MessageBox.Show(message, "", MessageBoxButtons.YesNo) == DialogResult.Yes; }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static bool displayMessageBoxSuccess(string message) { return displayMessageBox("SUCCESS:", message); }
+        public static bool displayMessageBoxSuccess(string message) { displayMessageBox("SUCCESS:", message); return true; }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static bool displayMessageBoxError(string message) { return displayMessageBox("ERROR:", message); }
+        public static bool displayMessageBoxError(string message) { displayMessageBox("ERROR:", message); return false; }
 
         /// <summary><para>Desktop app use only.</para></summary>
         public static bool displayMessageBox(string prefix, string message)
@@ -480,15 +480,23 @@ namespace LIBUtil
         //}
         public static string appendChange(string originalText, object oldValue, object newValue, string format)
         {
-            string oldV = "";
-            string newV = "";
-            if (oldValue != null) oldV = oldValue.ToString();
-            if (newValue != null) newV = newValue.ToString();
-
-            if (oldV != newV)
-                return LIBUtil.Util.append(originalText, String.Format(format, oldV, newV), Environment.NewLine);
+            if (oldValue != null & newValue != null && oldValue.GetType() == typeof(decimal) && newValue.GetType() == typeof(decimal))
+            {
+                if ((decimal)oldValue != (decimal)newValue)
+                    return append(originalText, String.Format(format, oldValue, newValue), Environment.NewLine);
+            }
             else
-                return originalText;
+            {
+                string oldV = "";
+                string newV = "";
+                if (oldValue != null) oldV = oldValue.ToString();
+                if (newValue != null) newV = newValue.ToString();
+
+                if (oldV != newV)
+                    return append(originalText, String.Format(format, oldV, newV), Environment.NewLine);
+            }
+
+            return originalText;
         }
 
         public static string reverse(string value)
@@ -646,6 +654,12 @@ namespace LIBUtil
             return row.Cells[column.Name].Value;
         }
 
+        public static void setRowValue(object sender, DataGridViewCellEventArgs e, DataGridViewColumn column, object value) { setRowValue(((DataGridView)sender).Rows[e.RowIndex], column, value); }
+        public static void setRowValue(DataGridViewRow row, DataGridViewColumn column, object value)
+        {
+            row.Cells[column.Name].Value = value;
+        }
+
         /// <summary><para>Desktop app use only.</para></summary>
         public static object setSelectedRowValue(DataGridView grid, DataGridViewColumn column, object value)
         {
@@ -654,6 +668,9 @@ namespace LIBUtil
 
         /// <summary><para>Desktop app use only.</para></summary>er, e, column.Index); }
         public static object getClickedCellValue(object sender, DataGridViewCellEventArgs e) { return ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex].Value; }
+
+        /// <summary><para>Desktop app use only.</para></summary>er, e, column.Index); }
+        public static void selectClickedCellContent(object sender, DataGridViewCellEventArgs e) { ((DataGridView)sender).BeginEdit(true); }
 
         /// <summary><para>Desktop app use only.</para></summary>
         public static void disableSort(DataGridView grid)
