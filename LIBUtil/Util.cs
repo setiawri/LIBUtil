@@ -130,7 +130,7 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
-        public static void displayMDIChild(Form form)
+        public static Form displayMDIChild(Form form)
         {
             //check existing forms
             Type type = form.GetType();
@@ -139,7 +139,7 @@ namespace LIBUtil
                 {
                     child.BringToFront();
                     child.Focus();
-                    return;
+                    return child;
                 }
 
             //display the new form
@@ -149,7 +149,10 @@ namespace LIBUtil
             {
                 form.Show();
                 form.BringToFront();
+                return form;
             }
+
+            return null;
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
@@ -628,6 +631,7 @@ namespace LIBUtil
         }
 
         /// <summary><para>Desktop app use only.</para></summary>
+        public static T getClickedRowValue<T>(object sender, DataGridViewCellEventArgs e, DataGridViewColumn column) { return Util.wrapNullable<T>(getClickedRowValue(sender, e, column.Index)); }
         public static object getClickedRowValue(object sender, DataGridViewCellEventArgs e, DataGridViewColumn column) { return getClickedRowValue(sender, e, column.Index); }
         public static object getClickedRowValue(object sender, DataGridViewCellEventArgs e) { return getClickedRowValue(sender, e, e.ColumnIndex); }
         public static object getClickedRowValue(object sender, DataGridViewCellEventArgs e, int columnIndex)
