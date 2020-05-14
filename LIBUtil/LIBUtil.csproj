@@ -71,6 +71,13 @@
     <Compile Include="Desktop\Forms\ProgressBar_Form.Designer.cs">
       <DependentUpon>ProgressBar_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Desktop\Forms\Template_Class.cs" />
+    <Compile Include="Desktop\Forms\Template_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Desktop\Forms\Template_Form.Designer.cs">
+      <DependentUpon>Template_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Desktop\UserControls\DatagridviewPaging.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -156,6 +163,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Desktop\Forms\ProgressBar_Form.resx">
       <DependentUpon>ProgressBar_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\Forms\Template_Form.resx">
+      <DependentUpon>Template_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Desktop\UserControls\DatagridviewPaging.resx">
       <DependentUpon>DatagridviewPaging.cs</DependentUpon>

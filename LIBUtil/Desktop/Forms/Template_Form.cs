@@ -19,7 +19,7 @@ namespace BinaMitraTextile
         #endregion PROPERTIES
         /*******************************************************************************************************/
         #region PRIVATE VARIABLES
-        
+
         private bool _isFormShown = false;
 
         #endregion PRIVATE VARIABLES
@@ -40,7 +40,7 @@ namespace BinaMitraTextile
 
         private void setupControls()
         {
-            Settings.setGeneralSettings(this);
+            //Settings.setGeneralSettings(this);
 
             //grid.AutoGenerateColumns = false;
             //grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;

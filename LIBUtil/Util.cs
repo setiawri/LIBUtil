@@ -650,7 +650,8 @@ namespace LIBUtil
 
         public static bool selectedItemIsNotNull(DataGridView dgv, DataGridViewColumn column)
         {
-            return Util.getSelectedRowValue(dgv, column) != null;
+            object value = Util.getSelectedRowValue(dgv, column);
+            return value != null && value != DBNull.Value;
         }
 
         public static object getRowValue(DataGridViewRow row, DataGridViewColumn column)
