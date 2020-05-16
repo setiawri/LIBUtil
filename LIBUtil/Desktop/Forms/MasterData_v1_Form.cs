@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 using LIBUtil.Desktop.UserControls;
@@ -672,12 +673,10 @@ namespace LIBUtil.Desktop.Forms
             if (e.KeyData == Keys.Enter)
             {
                 if (Mode == FormModes.Update)
-                {
                     btnAdd.PerformClick();
-                    txtQuickSearch.Focus();
-                }
 
                 populateGridViewDataSource(false);
+                txtQuickSearch.Focus();
             }
         }
 

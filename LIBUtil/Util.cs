@@ -826,13 +826,27 @@ namespace LIBUtil
             ListSortDirection sortOrder = ListSortDirection.Ascending;
             if (grid.SortOrder == SortOrder.Descending) sortOrder = ListSortDirection.Descending;
 
+            //improve performance while binding datasource
+            DataGridViewRowHeadersWidthSizeMode dataGridViewRowHeadersWidthSizeMode = grid.RowHeadersWidthSizeMode;
+            DataGridViewAutoSizeRowsMode dataGridViewAutoSizeRowsMode = grid.AutoSizeRowsMode;
+            DataGridViewAutoSizeColumnsMode dataGridViewAutoSizeColumnsMode = grid.AutoSizeColumnsMode;
+            DataGridViewColumnHeadersHeightSizeMode dataGridViewColumnHeadersHeightSizeMode = grid.ColumnHeadersHeightSizeMode;
+            grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing; 
+            grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
             //update datasource 
             if (!showProgressBar)
                 grid.DataSource = data;
             else
-            {
                 new BackgroundProcess(TimeoutSeconds, grid, data).run();
-            }
+
+            //reapply original settings
+            grid.RowHeadersWidthSizeMode = dataGridViewRowHeadersWidthSizeMode;
+            grid.AutoSizeRowsMode = dataGridViewAutoSizeRowsMode;
+            grid.AutoSizeColumnsMode = dataGridViewAutoSizeColumnsMode;
+            grid.ColumnHeadersHeightSizeMode = dataGridViewColumnHeadersHeightSizeMode;
 
             //reapply sorting
             if (reapplySort && sortColumn != null)

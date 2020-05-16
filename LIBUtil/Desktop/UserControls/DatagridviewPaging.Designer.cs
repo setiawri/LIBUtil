@@ -28,106 +28,123 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.numericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).BeginInit();
+            this.btnFirstPage = new System.Windows.Forms.Button();
+            this.btnPrevious = new System.Windows.Forms.Button();
+            this.btnLastPage = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.lblPageNo = new System.Windows.Forms.Label();
+            this.in_PageSize = new LIBUtil.Desktop.UserControls.InputControl_Numeric();
             this.SuspendLayout();
             // 
-            // numericUpDown
+            // btnFirstPage
             // 
-            this.numericUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.numericUpDown.Location = new System.Drawing.Point(0, 0);
-            this.numericUpDown.Maximum = new decimal(new int[] {
-            999,
+            this.btnFirstPage.Location = new System.Drawing.Point(55, 0);
+            this.btnFirstPage.Name = "btnFirstPage";
+            this.btnFirstPage.Size = new System.Drawing.Size(28, 23);
+            this.btnFirstPage.TabIndex = 1;
+            this.btnFirstPage.Text = "<<";
+            this.btnFirstPage.UseVisualStyleBackColor = true;
+            this.btnFirstPage.Click += new System.EventHandler(this.button_Click);
+            // 
+            // btnPrevious
+            // 
+            this.btnPrevious.Location = new System.Drawing.Point(82, 0);
+            this.btnPrevious.Name = "btnPrevious";
+            this.btnPrevious.Size = new System.Drawing.Size(23, 23);
+            this.btnPrevious.TabIndex = 2;
+            this.btnPrevious.Text = "<";
+            this.btnPrevious.UseVisualStyleBackColor = true;
+            this.btnPrevious.Click += new System.EventHandler(this.button_Click);
+            // 
+            // btnLastPage
+            // 
+            this.btnLastPage.Location = new System.Drawing.Point(162, 0);
+            this.btnLastPage.Name = "btnLastPage";
+            this.btnLastPage.Size = new System.Drawing.Size(28, 23);
+            this.btnLastPage.TabIndex = 4;
+            this.btnLastPage.Text = ">>";
+            this.btnLastPage.UseVisualStyleBackColor = true;
+            this.btnLastPage.Click += new System.EventHandler(this.button_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(140, 0);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(23, 23);
+            this.btnNext.TabIndex = 3;
+            this.btnNext.Text = ">";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.button_Click);
+            // 
+            // lblPageNo
+            // 
+            this.lblPageNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblPageNo.Location = new System.Drawing.Point(105, -1);
+            this.lblPageNo.Name = "lblPageNo";
+            this.lblPageNo.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.lblPageNo.Size = new System.Drawing.Size(35, 22);
+            this.lblPageNo.TabIndex = 5;
+            this.lblPageNo.Text = "1/1";
+            this.lblPageNo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // in_PageSize
+            // 
+            this.in_PageSize.Checked = false;
+            this.in_PageSize.DecimalPlaces = 0;
+            this.in_PageSize.Dock = System.Windows.Forms.DockStyle.Left;
+            this.in_PageSize.HideUpDown = false;
+            this.in_PageSize.Increment = new decimal(new int[] {
+            50,
             0,
             0,
             0});
-            this.numericUpDown.Name = "numericUpDown";
-            this.numericUpDown.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.numericUpDown.Size = new System.Drawing.Size(42, 21);
-            this.numericUpDown.TabIndex = 0;
-            this.numericUpDown.Value = new decimal(new int[] {
+            this.in_PageSize.LabelText = "numeric";
+            this.in_PageSize.Location = new System.Drawing.Point(0, 0);
+            this.in_PageSize.MaximumValue = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.in_PageSize.MinimumValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.in_PageSize.Name = "in_PageSize";
+            this.in_PageSize.ShowAllowDecimalCheckbox = false;
+            this.in_PageSize.ShowCheckbox = false;
+            this.in_PageSize.ShowTextboxOnly = true;
+            this.in_PageSize.Size = new System.Drawing.Size(55, 23);
+            this.in_PageSize.TabIndex = 0;
+            this.in_PageSize.Value = new decimal(new int[] {
             50,
             0,
             0,
             0});
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(43, -1);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(28, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "<<";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(71, -1);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(23, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "<";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(152, -1);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(28, 23);
-            this.button3.TabIndex = 4;
-            this.button3.Text = ">>";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(129, -1);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(23, 23);
-            this.button4.TabIndex = 3;
-            this.button4.Text = ">";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.label1.Location = new System.Drawing.Point(94, 0);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.label1.Size = new System.Drawing.Size(35, 22);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "label1";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // DatagridviewPaging
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.numericUpDown);
+            this.Controls.Add(this.in_PageSize);
+            this.Controls.Add(this.lblPageNo);
+            this.Controls.Add(this.btnLastPage);
+            this.Controls.Add(this.btnNext);
+            this.Controls.Add(this.btnPrevious);
+            this.Controls.Add(this.btnFirstPage);
             this.Name = "DatagridviewPaging";
-            this.Size = new System.Drawing.Size(179, 21);
+            this.Size = new System.Drawing.Size(190, 23);
             this.Load += new System.EventHandler(this.Form_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.NumericUpDown numericUpDown;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnFirstPage;
+        private System.Windows.Forms.Button btnPrevious;
+        private System.Windows.Forms.Button btnLastPage;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Label lblPageNo;
+        private InputControl_Numeric in_PageSize;
     }
 }
