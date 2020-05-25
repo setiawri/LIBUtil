@@ -16,7 +16,7 @@ using LIBUtil.Desktop.UserControls;
 
 namespace LIBUtil.Desktop.Forms
 {
-    public partial class MasterData_v1_Form : Form
+    public partial class MasterData_v2_Form : Form
     {
         /*******************************************************************************************************/
         #region SETTINGS
@@ -73,9 +73,9 @@ namespace LIBUtil.Desktop.Forms
         /*******************************************************************************************************/
         #region CONSTRUCTOR METHODS
 
-        public MasterData_v1_Form() : this(FormModes.Add, true, false, 0) { }
-        public MasterData_v1_Form(FormModes startingMode, bool showDataOnLoad) : this(startingMode, showDataOnLoad, false, 0) { }
-        public MasterData_v1_Form(FormModes startingMode, bool showDataOnLoad, bool showProgressBarOnPopulate, int timerTimeoutSeconds)
+        public MasterData_v2_Form() : this(FormModes.Add, true, false, 0) { }
+        public MasterData_v2_Form(FormModes startingMode, bool showDataOnLoad) : this(startingMode, showDataOnLoad, false, 0) { }
+        public MasterData_v2_Form(FormModes startingMode, bool showDataOnLoad, bool showProgressBarOnPopulate, int timerTimeoutSeconds)
         {
             InitializeComponent();
 
@@ -195,8 +195,7 @@ namespace LIBUtil.Desktop.Forms
 
         private void setupControls()
         {
-            //make sure child forms show toggle panel properly
-            //ptInputPanel.Location = new System.Drawing.Point(0, -1);
+            scContent.SplitterWidth = 1; //for some reason child forms doesn't apply this without explicitly use this line
 
             dgv.AutoGenerateColumns = false;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;

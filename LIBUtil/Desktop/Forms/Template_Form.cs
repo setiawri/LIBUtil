@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LIBUtil;
 
 namespace BinaMitraTextile
 {
@@ -65,6 +66,17 @@ namespace BinaMitraTextile
         {
             _isFormShown = true;
             populatePageData();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.C))
+            {
+                if (Util.copyContentToClipboardifGridview(this, true, true))
+                    return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         #endregion EVENT HANDLERS

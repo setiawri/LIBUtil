@@ -130,19 +130,62 @@ namespace LIBUtil.Desktop.UserControls
                 if(ContainerPanelOriginalSize.Width == 0 || ContainerPanelOriginalSize.Height == 0)
                     setContainerPanelOriginalSize();
 
-                if (ArrowOrientation == Orientation.Horizontal)
+                if (ContainerPanel.GetType() == typeof(SplitterPanel))
                 {
-                    if(ContainerPanel.Width != this.Width)
-                        ContainerPanel.Width = this.Width;
+                    SplitContainer parent = (SplitContainer)ContainerPanel.Parent;
+                    if (parent.Panel1 == ContainerPanel)
+                    {
+                        if (ArrowOrientation == Orientation.Horizontal)
+                        {
+                            if (parent.SplitterDistance != this.Width)
+                                parent.SplitterDistance = this.Width;
+                            else
+                                parent.SplitterDistance = ContainerPanelOriginalSize.Width;
+                        }
+                        else
+                        {
+                            if (parent.SplitterDistance != this.Height)
+                                parent.SplitterDistance = this.Height;
+                            else
+                                parent.SplitterDistance = ContainerPanelOriginalSize.Height;
+                        }
+                    }
                     else
-                        ContainerPanel.Width = ContainerPanelOriginalSize.Width;
+                    {
+                        if (ArrowOrientation == Orientation.Horizontal)
+                        {
+                            if (parent.SplitterDistance != (parent.Width - this.Width))
+                                parent.SplitterDistance = parent.Width - this.Width;
+                            else
+                                parent.SplitterDistance = ContainerPanelOriginalSize.Width;
+                        }
+                        else
+                        {
+                            if (parent.SplitterDistance != (parent.Height - this.Height))
+                            {
+                                parent.SplitterDistance = parent.Height - this.Height;
+                            }
+                            else
+                                parent.SplitterDistance = ContainerPanelOriginalSize.Height;
+                        }
+                    }
                 }
                 else
                 {
-                    if (ContainerPanel.Height != this.Height)
-                        ContainerPanel.Height = this.Height;
+                    if (ArrowOrientation == Orientation.Horizontal)
+                    {
+                        if (ContainerPanel.Width != this.Width)
+                            ContainerPanel.Width = this.Width;
+                        else
+                            ContainerPanel.Width = ContainerPanelOriginalSize.Width;
+                    }
                     else
-                        ContainerPanel.Height = ContainerPanelOriginalSize.Height;
+                    {
+                        if (ContainerPanel.Height != this.Height)
+                            ContainerPanel.Height = this.Height;
+                        else
+                            ContainerPanel.Height = ContainerPanelOriginalSize.Height;
+                    }
                 }
             }
             else if (TogglePanel.GetType() == typeof(SplitterPanel))
@@ -267,7 +310,13 @@ namespace LIBUtil.Desktop.UserControls
 
         public void setContainerPanelOriginalSize()
         {
-            ContainerPanelOriginalSize = ContainerPanel.Size; 
+            if (ContainerPanel.GetType() == typeof(SplitterPanel))
+            {
+                SplitContainer parent = (SplitContainer)ContainerPanel.Parent;
+                ContainerPanelOriginalSize = new Size(parent.SplitterDistance, parent.SplitterDistance);
+            }
+            else
+                ContainerPanelOriginalSize = ContainerPanel.Size; 
         }
 
         #endregion METHODS

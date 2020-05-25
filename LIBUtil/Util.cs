@@ -262,6 +262,7 @@ namespace LIBUtil
         public static bool displayMessageBoxError(string message) { displayMessageBox("ERROR:", message); return false; }
 
         /// <summary><para>Desktop app use only.</para></summary>
+        public static bool displayMessageBox(string message) { return displayMessageBox("", message); }
         public static bool displayMessageBox(string prefix, string message)
         {
             if (string.IsNullOrEmpty(message))
@@ -513,6 +514,56 @@ namespace LIBUtil
         /*******************************************************************************************************/
         #region DESKTOP DATAGRIDVIEW
 
+        public static DataGridView getFocusedDataGridView(Form form)
+        {
+            Control control = getFocusedControl(form);
+            if (control.GetType() == typeof(DataGridView))
+                return (DataGridView)control;
+            else
+                return null;
+        }
+
+        public static bool copyContentToClipboardIfGridview(Form form) { return copyContentToClipboardifGridview(form, true, true); }
+        public static bool copyContentToClipboardifGridview(Form form, bool includeHeaders, bool copyAllRows)
+        {
+            DataGridView datagridview = Util.getFocusedDataGridView(form);
+            if (datagridview == null)
+                return false;
+            else
+            {
+                DataGridViewClipboardCopyMode copyMode = datagridview.ClipboardCopyMode;
+                if (includeHeaders)
+                    datagridview.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+                else
+                    datagridview.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+
+                DataGridViewSelectedRowCollection selectedRows = datagridview.SelectedRows; //save selection
+                bool isMultiSelect = datagridview.MultiSelect;
+                if (copyAllRows)
+                {
+                    datagridview.MultiSelect = true;
+                    datagridview.SelectAll();
+                }
+
+                DataObject obj = datagridview.GetClipboardContent();
+                if (obj != null)
+                    Clipboard.SetDataObject(obj);
+
+                if (copyAllRows)
+                {
+                    datagridview.MultiSelect = isMultiSelect;
+
+                    //reapply selections
+                    datagridview.ClearSelection();
+                    foreach (DataGridViewRow row in selectedRows)
+                        row.Selected = true;
+                }
+                datagridview.ClipboardCopyMode = copyMode;
+
+                return true;
+            }
+        }
+
         /// <summary>
         ///     Must be called after a column is frozen (if there is any). Otherwise, calculation to hide header checkbox won't be accurate
         /// </summary>
@@ -743,14 +794,13 @@ namespace LIBUtil
         }
         
         /// <summary><para></para></summary>
-        public static bool isColumnMatch(object sender, DataGridViewCellEventArgs e, DataGridViewColumn column)
+        public static bool isColumnMatch(object sender, DataGridViewCellEventArgs e, params DataGridViewColumn[] column)
         {
             var senderGrid = (DataGridView)sender;
-            if (e.RowIndex > -1 && senderGrid.Columns[e.ColumnIndex].GetType() == column.GetType())
-                if (senderGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn == column)
-                    return true;
-
-            return false;
+            if (e.RowIndex > -1 && senderGrid.Columns[e.ColumnIndex].GetType() == column[0].GetType() && column.Contains(senderGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn))
+                return true;
+            else
+                return false;
         }
 
         /// <summary><para></para></summary>
@@ -808,12 +858,9 @@ namespace LIBUtil
             updateForeColor(column, color);
         }
 
-        public static void setGridviewDataSource(DataGridView grid, bool rememberRowPosition, bool reapplySort, object data)
-        {
-            setGridviewDataSource(false, 0, grid, rememberRowPosition, reapplySort, data);
-        }
-        /// <summary><para></para></summary>
-        public static void setGridviewDataSource(bool showProgressBar, int TimeoutSeconds, DataGridView grid, bool rememberRowPosition, bool reapplySort, object data)
+        public static void setGridviewDataSource(DataGridView grid, object data) { setGridviewDataSource(grid, data, false, 0, true, true); }
+        public static void setGridviewDataSource(DataGridView grid, bool rememberRowPosition, bool reapplySort, object data) { setGridviewDataSource(grid, data, false, 0, rememberRowPosition, reapplySort); }        
+        public static void setGridviewDataSource(DataGridView grid, object data, bool showProgressBar, int TimeoutSeconds, bool rememberRowPosition, bool reapplySort)
         {
             //save top row index
             int topRowIndex = grid.FirstDisplayedScrollingRowIndex;
@@ -1293,6 +1340,17 @@ namespace LIBUtil
             //fits text horizontally
             while (TextRenderer.MeasureText(label.Text, new Font(label.Font.FontFamily, label.Font.Size, label.Font.Style)).Width >= label.Width)
                 label.Font = new Font(label.Font.FontFamily, label.Font.Size - 0.5f, label.Font.Style);
+        }
+
+        public static Control getFocusedControl(Control control)
+        {
+            var container = control as IContainerControl;
+            while (container != null)
+            {
+                control = container.ActiveControl;
+                container = control as IContainerControl;
+            }
+            return control;
         }
 
         #endregion
