@@ -53,13 +53,13 @@
             this.pnlRowInfoContent = new System.Windows.Forms.Panel();
             this.pnlRowInfoHeaderContainer = new System.Windows.Forms.Panel();
             this.pnlRowInfoHeader = new System.Windows.Forms.Panel();
+            this.ptRowInfo = new LIBUtil.Desktop.UserControls.PanelToggle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlQuickSearch = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.chkIncludeInactive = new System.Windows.Forms.CheckBox();
             this.lnkClearQuickSearch = new System.Windows.Forms.LinkLabel();
             this.txtQuickSearch = new System.Windows.Forms.TextBox();
-            this.ptRowInfo = new LIBUtil.Desktop.UserControls.PanelToggle();
             this.ptInputPanel = new LIBUtil.Desktop.UserControls.PanelToggle();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
@@ -264,9 +264,10 @@
             this.scContent.Panel2.Controls.Add(this.pnlRowInfoHeaderContainer);
             this.scContent.Panel2MinSize = 1;
             this.scContent.Size = new System.Drawing.Size(1005, 262);
-            this.scContent.SplitterDistance = 146;
+            this.scContent.SplitterDistance = 31;
             this.scContent.SplitterWidth = 1;
             this.scContent.TabIndex = 5;
+            this.scContent.SizeChanged += new System.EventHandler(this.scContent_SizeChanged);
             // 
             // dgv
             // 
@@ -297,7 +298,7 @@
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(1005, 146);
+            this.dgv.Size = new System.Drawing.Size(1005, 31);
             this.dgv.TabIndex = 3;
             this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
             this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
@@ -311,7 +312,6 @@
             this.col_dgv_Id.HeaderText = "Id";
             this.col_dgv_Id.Name = "col_dgv_Id";
             this.col_dgv_Id.Visible = false;
-            this.col_dgv_Id.Width = 22;
             // 
             // col_dgv_Default
             // 
@@ -320,7 +320,6 @@
             this.col_dgv_Default.MinimumWidth = 40;
             this.col_dgv_Default.Name = "col_dgv_Default";
             this.col_dgv_Default.Visible = false;
-            this.col_dgv_Default.Width = 40;
             // 
             // col_dgv_StatusName
             // 
@@ -329,7 +328,6 @@
             this.col_dgv_StatusName.Name = "col_dgv_StatusName";
             this.col_dgv_StatusName.ReadOnly = true;
             this.col_dgv_StatusName.Visible = false;
-            this.col_dgv_StatusName.Width = 43;
             // 
             // col_dgv_StatusId
             // 
@@ -337,7 +335,6 @@
             this.col_dgv_StatusId.HeaderText = "Status Id";
             this.col_dgv_StatusId.Name = "col_dgv_StatusId";
             this.col_dgv_StatusId.Visible = false;
-            this.col_dgv_StatusId.Width = 55;
             // 
             // col_dgv_Active
             // 
@@ -356,14 +353,13 @@
             this.col_dgv_Checkbox1.MinimumWidth = 40;
             this.col_dgv_Checkbox1.Name = "col_dgv_Checkbox1";
             this.col_dgv_Checkbox1.Visible = false;
-            this.col_dgv_Checkbox1.Width = 40;
             // 
             // pnlRowInfoContent
             // 
             this.pnlRowInfoContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRowInfoContent.Location = new System.Drawing.Point(0, 21);
             this.pnlRowInfoContent.Name = "pnlRowInfoContent";
-            this.pnlRowInfoContent.Size = new System.Drawing.Size(1005, 94);
+            this.pnlRowInfoContent.Size = new System.Drawing.Size(1005, 209);
             this.pnlRowInfoContent.TabIndex = 1;
             // 
             // pnlRowInfoHeaderContainer
@@ -385,6 +381,20 @@
             this.pnlRowInfoHeader.Name = "pnlRowInfoHeader";
             this.pnlRowInfoHeader.Size = new System.Drawing.Size(985, 21);
             this.pnlRowInfoHeader.TabIndex = 6;
+            // 
+            // ptRowInfo
+            // 
+            this.ptRowInfo.AdjustLocationOnClick = true;
+            this.ptRowInfo.BackColor = System.Drawing.Color.White;
+            this.ptRowInfo.ContainerPanel = this.scContent.Panel2;
+            this.ptRowInfo.ContainerPanelOriginalSize = new System.Drawing.Size(0, 0);
+            this.ptRowInfo.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ptRowInfo.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Down;
+            this.ptRowInfo.Location = new System.Drawing.Point(0, 0);
+            this.ptRowInfo.Name = "ptRowInfo";
+            this.ptRowInfo.Size = new System.Drawing.Size(20, 21);
+            this.ptRowInfo.TabIndex = 5;
+            this.ptRowInfo.TogglePanel = null;
             // 
             // panel1
             // 
@@ -455,20 +465,6 @@
             this.txtQuickSearch.Size = new System.Drawing.Size(100, 20);
             this.txtQuickSearch.TabIndex = 0;
             this.txtQuickSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtQuickSearch_KeyDown);
-            // 
-            // ptRowInfo
-            // 
-            this.ptRowInfo.AdjustLocationOnClick = true;
-            this.ptRowInfo.BackColor = System.Drawing.Color.White;
-            this.ptRowInfo.ContainerPanel = this.scContent.Panel2;
-            this.ptRowInfo.ContainerPanelOriginalSize = new System.Drawing.Size(0, 0);
-            this.ptRowInfo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ptRowInfo.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Down;
-            this.ptRowInfo.Location = new System.Drawing.Point(0, 0);
-            this.ptRowInfo.Name = "ptRowInfo";
-            this.ptRowInfo.Size = new System.Drawing.Size(20, 21);
-            this.ptRowInfo.TabIndex = 5;
-            this.ptRowInfo.TogglePanel = null;
             // 
             // ptInputPanel
             // 

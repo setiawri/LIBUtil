@@ -18,14 +18,16 @@ namespace LIBUtil.Desktop.UserControls
 
         #endregion SETTINGS
         /*******************************************************************************************************/
-        #region PUBLIC VARIABLES
+        #region VARIABLES
 
         private Image _ArrowLeft = Properties.Resources.arrow_left;
         private Image _ArrowUp = Properties.Resources.arrow_up;
         private Image _ArrowRight = Properties.Resources.arrow_right;
         private Image _ArrowDown = Properties.Resources.arrow_down;
 
-        #endregion PUBLIC VARIABLES
+        public bool isPanelOpen = true;
+
+        #endregion VARIABLES
         /*******************************************************************************************************/
         #region PROPERTIES
 
@@ -34,6 +36,10 @@ namespace LIBUtil.Desktop.UserControls
 
         [Description("Container Panel"), Category("_Custom")]
         public Panel ContainerPanel { get; set; }
+
+        [Description("Minimum Splitter Distance"), Category("_Custom")]
+        public int MinimumSplitterDistance { get { return _minimumSplitterDistance; } set { _minimumSplitterDistance = value; } }
+        private int _minimumSplitterDistance = 100;
 
         public Size ContainerPanelOriginalSize { get; set; }
 
@@ -123,9 +129,56 @@ namespace LIBUtil.Desktop.UserControls
 
         }
 
+        public void recalculateSplitContainerSplitterDistance()
+        {
+            SplitContainer parent = (SplitContainer)ContainerPanel.Parent;
+            if (parent.Panel1 == ContainerPanel)
+            {
+                if (ArrowOrientation == Orientation.Horizontal)
+                {
+                    if (!isPanelOpen)
+                        parent.SplitterDistance = this.Width;
+                    else
+                        parent.SplitterDistance = ContainerPanelOriginalSize.Width;
+                }
+                else
+                {
+                    if (!isPanelOpen)
+                        parent.SplitterDistance = this.Height;
+                    else
+                        parent.SplitterDistance = ContainerPanelOriginalSize.Height;
+                }
+            }
+            else
+            {
+                if (ArrowOrientation == Orientation.Horizontal)
+                {
+                    if (!isPanelOpen)
+                        parent.SplitterDistance = parent.Width - this.Width;
+                    else
+                    {
+                        int splitterDistance = parent.Width - ContainerPanelOriginalSize.Width;
+                        if (splitterDistance < 0) splitterDistance = MinimumSplitterDistance;
+                        parent.SplitterDistance = splitterDistance;
+                    }
+                }
+                else
+                {
+                    if (!isPanelOpen)
+                        parent.SplitterDistance = parent.Height - this.Height;
+                    else
+                    {
+                        int splitterDistance = parent.Height - ContainerPanelOriginalSize.Height;
+                        if (splitterDistance < 0) splitterDistance = MinimumSplitterDistance;
+                        parent.SplitterDistance = splitterDistance;
+                    }
+                }
+            }
+        }
+
         public void toggle()
         {
-            if(ContainerPanel != null)
+            if (ContainerPanel != null)
             {
                 if(ContainerPanelOriginalSize.Width == 0 || ContainerPanelOriginalSize.Height == 0)
                     setContainerPanelOriginalSize();
@@ -137,14 +190,14 @@ namespace LIBUtil.Desktop.UserControls
                     {
                         if (ArrowOrientation == Orientation.Horizontal)
                         {
-                            if (parent.SplitterDistance != this.Width)
+                            if (isPanelOpen)
                                 parent.SplitterDistance = this.Width;
                             else
                                 parent.SplitterDistance = ContainerPanelOriginalSize.Width;
                         }
                         else
                         {
-                            if (parent.SplitterDistance != this.Height)
+                            if (isPanelOpen)
                                 parent.SplitterDistance = this.Height;
                             else
                                 parent.SplitterDistance = ContainerPanelOriginalSize.Height;
@@ -154,19 +207,25 @@ namespace LIBUtil.Desktop.UserControls
                     {
                         if (ArrowOrientation == Orientation.Horizontal)
                         {
-                            if (parent.SplitterDistance != (parent.Width - this.Width))
+                            if (isPanelOpen)
                                 parent.SplitterDistance = parent.Width - this.Width;
                             else
-                                parent.SplitterDistance = ContainerPanelOriginalSize.Width;
+                            {
+                                int splitterDistance = parent.Width - ContainerPanelOriginalSize.Width;
+                                if (splitterDistance < 0) splitterDistance = MinimumSplitterDistance;
+                                parent.SplitterDistance = splitterDistance;
+                            }
                         }
                         else
                         {
-                            if (parent.SplitterDistance != (parent.Height - this.Height))
-                            {
+                            if (isPanelOpen)
                                 parent.SplitterDistance = parent.Height - this.Height;
-                            }
                             else
-                                parent.SplitterDistance = ContainerPanelOriginalSize.Height;
+                            {
+                                int splitterDistance = parent.Height - ContainerPanelOriginalSize.Height;
+                                if (splitterDistance < 0) splitterDistance = MinimumSplitterDistance;
+                                parent.SplitterDistance = splitterDistance;
+                            }
                         }
                     }
                 }
@@ -174,14 +233,14 @@ namespace LIBUtil.Desktop.UserControls
                 {
                     if (ArrowOrientation == Orientation.Horizontal)
                     {
-                        if (ContainerPanel.Width != this.Width)
+                        if (isPanelOpen)
                             ContainerPanel.Width = this.Width;
                         else
                             ContainerPanel.Width = ContainerPanelOriginalSize.Width;
                     }
                     else
                     {
-                        if (ContainerPanel.Height != this.Height)
+                        if (isPanelOpen)
                             ContainerPanel.Height = this.Height;
                         else
                             ContainerPanel.Height = ContainerPanelOriginalSize.Height;
@@ -207,6 +266,8 @@ namespace LIBUtil.Desktop.UserControls
                 TogglePanel.Visible = !TogglePanel.Visible;
                 setNewLocationBasedOnOrientation(TogglePanel);
             }
+
+            isPanelOpen = !isPanelOpen;
 
             //set arrow image
             if (pictureBox.BackgroundImage == _ArrowLeft)
@@ -245,14 +306,35 @@ namespace LIBUtil.Desktop.UserControls
             }
         }
 
-        public bool isTogglePanelVisible()
+        public bool isPanelVisible()
         {
             if(ContainerPanel != null)
             {
-                if (ArrowOrientation == Orientation.Horizontal)
-                    return ContainerPanel.Width != this.Width;
+                if (ContainerPanel.GetType() == typeof(SplitterPanel))
+                {
+                    SplitContainer parent = (SplitContainer)ContainerPanel.Parent;
+                    if (parent.Panel1 == ContainerPanel)
+                    {
+                        if (ArrowOrientation == Orientation.Horizontal)
+                            return parent.SplitterDistance != this.Width;
+                        else
+                            return parent.SplitterDistance != this.Height;
+                    }
+                    else
+                    {
+                        if (ArrowOrientation == Orientation.Horizontal)
+                            return parent.SplitterDistance != (parent.Width - this.Width);
+                        else
+                            return parent.SplitterDistance != (parent.Height - this.Height);
+                    }
+                }
                 else
-                    return ContainerPanel.Height != this.Height;
+                {
+                    if (ArrowOrientation == Orientation.Horizontal)
+                        return ContainerPanel.Width != this.Width;
+                    else
+                        return ContainerPanel.Height != this.Height;
+                }
             }
             else if (TogglePanel.GetType() == typeof(SplitterPanel))
             {
@@ -313,7 +395,10 @@ namespace LIBUtil.Desktop.UserControls
             if (ContainerPanel.GetType() == typeof(SplitterPanel))
             {
                 SplitContainer parent = (SplitContainer)ContainerPanel.Parent;
-                ContainerPanelOriginalSize = new Size(parent.SplitterDistance, parent.SplitterDistance);
+                if (parent.Panel1 == ContainerPanel)
+                    ContainerPanelOriginalSize = new Size(parent.SplitterDistance, parent.SplitterDistance);
+                else
+                    ContainerPanelOriginalSize = new Size(parent.Width - parent.SplitterDistance, parent.Height - parent.SplitterDistance);
             }
             else
                 ContainerPanelOriginalSize = ContainerPanel.Size; 

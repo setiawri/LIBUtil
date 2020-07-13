@@ -309,7 +309,6 @@ namespace LIBUtil
         /// </summary>
         public static void update(Desktop.UserControls.InputControl_Textbox serverName, Desktop.UserControls.InputControl_Textbox databaseName)
         {
-            Util.sanitize(serverName, databaseName);
             DBConnection.update(serverName.ValueText, databaseName.ValueText);
         }
 

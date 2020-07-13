@@ -8,13 +8,15 @@ select into temp table and iterate through rows
 		
 	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM @ARRAY_UserAccountAccessEnum) AS x
 	
-	DECLARE @UserAccountAccess_EnumId int
+	DECLARE @Iteration_Id int
 	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
 	BEGIN
-		SELECT TOP 1 @UserAccountAccess_EnumId = value_int FROM #TEMP_INPUTARRAY
+		SELECT TOP 1 @Iteration_Id = value_int FROM #TEMP_INPUTARRAY
+
+		-- add operation here
 		
 		-- remove row to iterate to the next row
-		DELETE #TEMP_INPUTARRAY WHERE value_int = @UserAccountAccess_EnumId
+		DELETE #TEMP_INPUTARRAY WHERE value_int = @Iteration_Id
 	END
 	
 	-- clean up

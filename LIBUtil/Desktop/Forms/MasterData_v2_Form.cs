@@ -189,6 +189,14 @@ namespace LIBUtil.Desktop.Forms
             return column;
         }
 
+        public void showRowInfo(int defaultRowInfoSize)
+        {
+            scContent.Panel2Collapsed = false;
+            scContent.Panel2MinSize = 1; //to allow panel to be closed. This is needed because in designer, panel cannot be viewed unless it is set to bigger number
+            scContent.SplitterDistance = scContent.Height - defaultRowInfoSize; 
+            ptRowInfo.PerformClick(); //by default close the panel
+        }
+
         #endregion
         /*******************************************************************************************************/
         #region PRIVATE METHODS
@@ -677,6 +685,11 @@ namespace LIBUtil.Desktop.Forms
                 populateGridViewDataSource(false);
                 txtQuickSearch.Focus();
             }
+        }
+
+        private void scContent_SizeChanged(object sender, EventArgs e)
+        {
+            ptRowInfo.recalculateSplitContainerSplitterDistance();
         }
 
         #endregion EVENT HANDLERS
