@@ -326,13 +326,14 @@ namespace LIBUtil
         {
             SqlConnectionStringBuilder builder = ConnectionStringBuilder;
             if (string.IsNullOrEmpty(builder.ConnectionString))
-                return Util.saveAppData(DBConnection.APPGUID, ConnectionString_DefaultParams);
-            else
             {
-                builder.UserID = ConnectionString_Username;
-                builder.Password = ConnectionString_Password;
-                return builder.ConnectionString;
+                Util.saveAppData(DBConnection.APPGUID, ConnectionString_DefaultParams);
+                builder = ConnectionStringBuilder;
             }
+
+            builder.UserID = ConnectionString_Username;
+            builder.Password = ConnectionString_Password;
+            return builder.ConnectionString;
         }
 
         public static void initialize(string defaultParams, string username, string password)
