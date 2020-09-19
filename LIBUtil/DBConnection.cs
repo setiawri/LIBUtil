@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace LIBUtil
 {
@@ -125,6 +126,9 @@ namespace LIBUtil
 
     public class DBConnection
     {
+        public static bool DBConnectionTestCompleted;
+        private static bool _MultipleSQLConnectionUse = true;
+
         /*******************************************************************************************************/
         #region EXECUTE QUERY
 
@@ -158,7 +162,7 @@ namespace LIBUtil
             }
             else
             {
-                _timer = new Timer();
+                _timer = new System.Windows.Forms.Timer();
                 _timer.Tick += new System.EventHandler(timer_Tick);
                 _timer.Interval = 100;
 
@@ -175,11 +179,11 @@ namespace LIBUtil
             return _sqlQuery.result;
         }
 
-        private static Timer _timer;
+        private static System.Windows.Forms.Timer _timer;
         private const int TIMERTIMOUT = 100;
-        private static LIBUtil.Desktop.Forms.ProgressBar_Form _progressBarForm = new Desktop.Forms.ProgressBar_Form();
+        private static Desktop.Forms.ProgressBar_Form _progressBarForm = new Desktop.Forms.ProgressBar_Form();
         private static SqlQuery _sqlQuery;
-        public static Timer SqlConnectionTimer;
+        public static System.Windows.Forms.Timer SqlConnectionTimer;
         private static void queryBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             _sqlQuery.execute();
@@ -275,9 +279,12 @@ namespace LIBUtil
                             result.ValueGuid = (Guid)returnValueGuid.Value;
 
                     result.IsSuccessful = true;
+
+                    if (!_MultipleSQLConnectionUse)
+                        sqlConnection.Close();
                 }
             }
-            catch (System.Exception ex) { result.IsSuccessful = false; Util.displayMessageBoxError(ex.Message); }
+            catch (Exception ex) { result.IsSuccessful = false; Util.displayMessageBoxError(ex.Message); }
 
             return result;
         }
@@ -336,10 +343,23 @@ namespace LIBUtil
             return builder.ConnectionString;
         }
 
-        public static void initialize(string defaultParams, string username, string password)
+        public static string ConnectionInfo
+        {
+            get
+            {
+                string connectionInfo = getConnectionString();
+                if (connectionInfo.IndexOf(';') > 0)
+                    connectionInfo = connectionInfo.Substring(0, connectionInfo.IndexOf(';'));
+                return connectionInfo;
+            }
+        }
+
+        public static void initialize(bool multipleSQLConnectionUse, string defaultParams, string username, string password)
         {
             //get App Guid from entry assembly (Set in project's assembly information)
             APPGUID = ((System.Runtime.InteropServices.GuidAttribute)System.Reflection.Assembly.GetEntryAssembly().GetCustomAttributes(typeof(System.Runtime.InteropServices.GuidAttribute), false).GetValue(0)).Value.ToString();
+
+            _MultipleSQLConnectionUse = multipleSQLConnectionUse;
 
             ConnectionString_DefaultParams = defaultParams;
             ConnectionString_Username = username;
@@ -356,23 +376,31 @@ namespace LIBUtil
         {
             get
             {
-                if (_ActiveSqlConnection == null)
-                    _ActiveSqlConnection = new SqlConnection(getConnectionString());
-
-                if (_ActiveSqlConnection.State == ConnectionState.Closed)
-                    _ActiveSqlConnection.Open();
-
-                if (SqlConnectionTimer == null)
+                if(!_MultipleSQLConnectionUse)
                 {
-                    SqlConnectionTimer = new Timer();
-                    SqlConnectionTimer.Tick += new EventHandler(SqlConnectionTimer_Ticked);
-                    SqlConnectionTimer.Interval = 2000;
-                    SqlConnectionTimer.Start();
+                    //temporary fix for error: “There is already an open DataReader associated with this Command which must be closed first"
+                    return new SqlConnection(getConnectionString());
                 }
+                else
+                {
+                    if (_ActiveSqlConnection == null)
+                        _ActiveSqlConnection = new SqlConnection(getConnectionString());
 
-                _LastSqlConnectionUsed = DateTime.Now;
+                    if (_ActiveSqlConnection.State == ConnectionState.Closed)
+                        _ActiveSqlConnection.Open();
 
-                return _ActiveSqlConnection;
+                    if (SqlConnectionTimer == null)
+                    {
+                        SqlConnectionTimer = new System.Windows.Forms.Timer();
+                        SqlConnectionTimer.Tick += new EventHandler(SqlConnectionTimer_Ticked);
+                        SqlConnectionTimer.Interval = 2000;
+                        SqlConnectionTimer.Start();
+                    }
+
+                    _LastSqlConnectionUsed = DateTime.Now;
+
+                    return _ActiveSqlConnection;
+                }
             }
         }
         private static SqlConnection _ActiveSqlConnection;
@@ -389,8 +417,25 @@ namespace LIBUtil
             if (_ActiveSqlConnection != null && _ActiveSqlConnection.State == ConnectionState.Open && DateTime.Now - _LastSqlConnectionUsed > _ActiveSqlConnectionOpenTime)
                 _ActiveSqlConnection.Close();
 
-            if (_ActiveSqlConnection == null || _ActiveSqlConnection.State == ConnectionState.Closed)
+            if (SqlConnectionTimer != null && (_ActiveSqlConnection == null || _ActiveSqlConnection.State == ConnectionState.Closed))
                 SqlConnectionTimer.Stop();
+        }
+
+        /// <summary><para></para></summary>
+        public static bool isDBConnectionAvailable(System.Drawing.Icon icon, bool showError, bool showProgressBar)
+        {
+            var form = new Desktop.Forms.CheckDBConnection_Form(icon, showError, showProgressBar);
+            Util.displayForm(null, form, false);
+            return hasDBConnection = form.isDBConnectionAvailable;
+        }
+
+        /// <summary><para></para></summary>
+        public static void testDBConnection()
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+            }
         }
 
         #endregion

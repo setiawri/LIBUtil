@@ -87,12 +87,12 @@ namespace LIBUtil.Desktop.Forms
         {
             try
             {
-                Util.testDBConnection();
-                Util.DBConnectionTestCompleted = true;
+                DBConnection.testDBConnection();
+                DBConnection.DBConnectionTestCompleted = true;
             }
             catch
             {
-                Util.DBConnectionTestCompleted = false;
+                DBConnection.DBConnectionTestCompleted = false;
             }
         }
 
@@ -102,7 +102,7 @@ namespace LIBUtil.Desktop.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (Util.DBConnectionTestCompleted)
+            if (DBConnection.DBConnectionTestCompleted)
             {
                 timer1.Stop();
                 isDBConnectionAvailable = true;
@@ -132,7 +132,7 @@ namespace LIBUtil.Desktop.Forms
             setupControls();
             populateData();
 
-            Util.DBConnectionTestCompleted = false;
+            DBConnection.DBConnectionTestCompleted = false;
             
             timer1.Start();
             backgroundWorker1.RunWorkerAsync();

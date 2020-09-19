@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LIBUtil.Desktop.UserControls
@@ -28,9 +22,11 @@ namespace LIBUtil.Desktop.UserControls
 
     public partial class InputControl_DateTimePicker : InputControl
     {
+        public DateTime ResetValue;
+
         /*******************************************************************************************************/
         #region PROPERTIES
-            
+
         [Description("Label Text"), Category("_Custom")]
         public string LabelText
         {
@@ -91,7 +87,7 @@ namespace LIBUtil.Desktop.UserControls
                 {
                     datetimepicker.Checked = true;
                     if(((DateTime)value).Year < datetimepicker.MinDate.Year)
-                        datetimepicker.Value = ((DateTime)value).AddYears(datetimepicker.MinDate.Year-((DateTime)value).Year);
+                        datetimepicker.Value = ResetValue;
                     else
                        datetimepicker.Value = (DateTime)value;
                 }
@@ -121,7 +117,7 @@ namespace LIBUtil.Desktop.UserControls
                 else
                 {
                     datetimepicker.Checked = true;
-                    datetimepicker.Value = datetimepicker.MinDate.Add((TimeSpan)value);
+                    datetimepicker.Value = datetimepicker.Value.Date.Add((TimeSpan)value);
                 }
             }
         }
@@ -192,18 +188,20 @@ namespace LIBUtil.Desktop.UserControls
         public InputControl_DateTimePicker()
         {
             InitializeComponent();
+
+            if (datetimepicker.ShowUpDown)
+                ResetValue = datetimepicker.MinDate;
+            else
+                ResetValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
         }
-        
+
         #endregion CONSTRUCTOR METHODS
         /*******************************************************************************************************/
         #region METHODS
 
         public override void reset()
         {
-            if (datetimepicker.ShowUpDown)
-                datetimepicker.Value = datetimepicker.MinDate;
-            else
-                datetimepicker.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            datetimepicker.Value = ResetValue;
             datetimepicker.Checked = DefaultCheckedValue;
         }
 
@@ -216,16 +214,16 @@ namespace LIBUtil.Desktop.UserControls
         }
 
 
-        public DateTime getFirstDayOfSelectedMonth() { return getFirstDayOfSelectedMonth((DateTime)Value); }
+        public DateTime? getFirstDayOfSelectedMonth() { return Value == null ? Value : getFirstDayOfSelectedMonth((DateTime)Value); }
         public static DateTime getFirstDayOfSelectedMonth(DateTime dt)
         {
             return new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, 0);
         }
 
-        public DateTime getLastDayOfSelectedMonth() { return getLastDayOfSelectedMonth((DateTime)Value); }
+        public DateTime? getLastDayOfSelectedMonth() { return Value == null ? Value : getLastDayOfSelectedMonth((DateTime)Value); }
         public static DateTime getLastDayOfSelectedMonth(DateTime dt)
         {
-            return new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month), 0, 0, 0, 0);
+            return (DateTime)Util.getAsEndDate(new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month), 0, 0, 0, 0));
         }
 
         public bool isValidEndDate(InputControl_DateTimePicker idtp_StartTime)
@@ -242,6 +240,16 @@ namespace LIBUtil.Desktop.UserControls
                 return ValueTimeSpan > idtp_StartTime.ValueTimeSpan;
             else
                 return true;
+        }
+
+        public DateTime getLastDateOfLastMonth()
+        {
+            return DateTime.Now.AddMonths(-1).AddDays(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day).Date;
+        }
+
+        public DateTime getFirstDateOfLastMonth()
+        {
+            return DateTime.Now.AddMonths(-1).AddDays(-1 *(DateTime.Now.Day - 1)).Date;
         }
 
         #endregion METHODS

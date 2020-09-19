@@ -47,8 +47,6 @@ namespace LIBUtil
 
     public class Util
     {
-        public static bool DBConnectionTestCompleted;
-
         public const string TYPE_ARRAY_NAME = "dbo.Array";
         public const string TYPE_ARRAY_STR = "value_str";
         public const string TYPE_ARRAY_INT = "value_int";
@@ -75,27 +73,6 @@ namespace LIBUtil
             return i;
         }
 
-        /*******************************************************************************************************/
-        #region DATABASE CONNECTION
-
-        /// <summary><para></para></summary>
-        public static bool isDBConnectionAvailable(System.Drawing.Icon icon, bool showError, bool showProgressBar)
-        {
-            var form = new Desktop.Forms.CheckDBConnection_Form(icon, showError, showProgressBar);
-            Util.displayForm(null, form, false);
-            return DBConnection.hasDBConnection = form.isDBConnectionAvailable;
-        }
-
-        /// <summary><para></para></summary>
-        public static void testDBConnection()
-        {
-            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(DBConnection.ConnectionString))
-            {
-                conn.Open();
-            }
-        }
-
-        #endregion
         /*******************************************************************************************************/
         #region DATABASE QUERY
 
@@ -523,8 +500,8 @@ namespace LIBUtil
                 return null;
         }
 
-        public static bool copyContentToClipboardIfGridview(Form form) { return copyContentToClipboardifGridview(form, true, true); }
-        public static bool copyContentToClipboardifGridview(Form form, bool includeHeaders, bool copyAllRows)
+        public static bool copyContentToClipboardIfGridview(Form form) { return copyContentToClipboardIfGridview(form, true, true, false); }
+        public static bool copyContentToClipboardIfGridview(Form form, bool includeHeaders, bool copyAllRows, bool copyCellOnly)
         {
             DataGridView datagridview = Util.getFocusedDataGridView(form);
             if (datagridview == null)
@@ -537,22 +514,31 @@ namespace LIBUtil
                 else
                     datagridview.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
 
-                DataGridViewSelectedRowCollection selectedRows = datagridview.SelectedRows; //save selection
+                //save original settings
+                DataGridViewSelectedRowCollection selectedRows = datagridview.SelectedRows; ;
                 bool isMultiSelect = datagridview.MultiSelect;
+                DataGridViewSelectionMode selectionMode = datagridview.SelectionMode;
+
                 if (copyAllRows)
                 {
                     datagridview.MultiSelect = true;
                     datagridview.SelectAll();
+                }
+                else if(copyCellOnly)
+                {
+                    datagridview.MultiSelect = false;
+                    datagridview.SelectionMode = DataGridViewSelectionMode.CellSelect;
                 }
 
                 DataObject obj = datagridview.GetClipboardContent();
                 if (obj != null)
                     Clipboard.SetDataObject(obj);
 
-                if (copyAllRows)
+                //reapply original settings
+                datagridview.MultiSelect = isMultiSelect;
+                datagridview.SelectionMode = selectionMode;
+                if (copyAllRows || copyCellOnly)
                 {
-                    datagridview.MultiSelect = isMultiSelect;
-
                     //reapply selections
                     datagridview.ClearSelection();
                     foreach (DataGridViewRow row in selectedRows)
@@ -696,7 +682,10 @@ namespace LIBUtil
         public static object getSelectedRowValue(object sender, DataGridViewColumn column) { return getSelectedRowValue((DataGridView)sender, column); }
         public static object getSelectedRowValue(DataGridView grid, DataGridViewColumn column)
         {
-            return grid.SelectedRows[0].Cells[column.Name].Value;
+            if (grid.Rows.Count > 0)
+                return grid.SelectedRows[0].Cells[column.Name].Value;
+            else
+                return null;
         }
 
         public static bool selectedItemIsNotNull(DataGridView dgv, DataGridViewColumn column)
@@ -1245,7 +1234,7 @@ namespace LIBUtil
 
         public static bool isMachineNameEqualConfigVariable(string key)
         {
-            return Environment.MachineName.ToUpper() == Util.getConfigVariable(key).ToUpper();
+            return Environment.MachineName.ToUpper() == getConfigVariable(key).ToUpper();
         }
 
         public static string saveAppData(string filename, string value)
@@ -1257,11 +1246,14 @@ namespace LIBUtil
 
         public static string getAppData(string filename)
         {
-            string filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
-            if (File.Exists(filepath))
-                return File.ReadAllText(filepath);
-            else
-                return null;
+            if(!string.IsNullOrWhiteSpace(filename))
+            {
+                string filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+                if (File.Exists(filepath))
+                    return File.ReadAllText(filepath);
+            }
+
+            return null;
         }
 
         public static void removeAppData(string filename)

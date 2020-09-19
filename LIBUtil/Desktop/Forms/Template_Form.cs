@@ -72,7 +72,7 @@ namespace BinaMitraTextile
         {
             if (keyData == (Keys.Control | Keys.C))
             {
-                if (Util.copyContentToClipboardifGridview(this, true, true))
+                if (Util.copyContentToClipboardIfGridview(this))
                     return true;
             }
 

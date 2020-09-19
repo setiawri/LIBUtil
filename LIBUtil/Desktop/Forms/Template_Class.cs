@@ -74,7 +74,7 @@ namespace TemplateClassNamespace
         /*******************************************************************************************************/
         #region DATABASE METHODS
 
-        public static Guid add(DateTime Timestamp, Guid? Customers_Id, Guid? Vendors_Id, string No, decimal DPP, decimal PPN, string Notes)
+        public static Guid? add(DateTime Timestamp, Guid? Customers_Id, Guid? Vendors_Id, string No, decimal DPP, decimal PPN, string Notes)
         {
             Guid Id = Guid.NewGuid();
             SqlQueryResult result = DBConnection.query(
@@ -92,10 +92,13 @@ namespace TemplateClassNamespace
                 new SqlQueryParameter(COL_DB_Notes, SqlDbType.NVarChar, Util.wrapNullable(Notes))
             );
 
-            //if (result.IsSuccessful)
-            //    ActivityLog.submit(Id, "Added");
-
-            return Id;
+            if (!result.IsSuccessful)
+                return null;
+            else
+            {
+                //ActivityLog.submit(Id, "Added");
+                return Id;
+            }
         }
 
         public static DataTable get(Guid? Id, string No, Guid? Customers_Id, Guid? Vendors_Id, DateTime? StartDate, DateTime? EndDate, bool showCompleted)

@@ -376,6 +376,7 @@
             this.ptRowInfo.Dock = System.Windows.Forms.DockStyle.Left;
             this.ptRowInfo.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Down;
             this.ptRowInfo.Location = new System.Drawing.Point(0, 0);
+            this.ptRowInfo.MinimumSplitterDistance = 100;
             this.ptRowInfo.Name = "ptRowInfo";
             this.ptRowInfo.Size = new System.Drawing.Size(20, 21);
             this.ptRowInfo.TabIndex = 5;
@@ -460,6 +461,7 @@
             this.ptInputPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.ptInputPanel.InitialArrowDirection = System.Windows.Forms.ArrowDirection.Up;
             this.ptInputPanel.Location = new System.Drawing.Point(0, 0);
+            this.ptInputPanel.MinimumSplitterDistance = 100;
             this.ptInputPanel.Name = "ptInputPanel";
             this.ptInputPanel.Size = new System.Drawing.Size(30, 28);
             this.ptInputPanel.TabIndex = 96;
@@ -514,7 +516,6 @@
         protected System.Windows.Forms.Button btnSubmit;
         protected System.Windows.Forms.Button btnCancel;
         protected System.Windows.Forms.Button btnReset;
-        protected System.Windows.Forms.DataGridView dgv;
         protected System.Windows.Forms.SplitContainer scMain;
         protected System.Windows.Forms.TextBox txtQuickSearch;
         protected System.Windows.Forms.Panel pnlButtons;
@@ -533,5 +534,6 @@
         protected System.Windows.Forms.Panel pnlRowInfoHeader;
         protected UserControls.PanelToggle ptRowInfo;
         protected System.Windows.Forms.Panel pnlRowInfoContent;
+        public System.Windows.Forms.DataGridView dgv;
     }
 }

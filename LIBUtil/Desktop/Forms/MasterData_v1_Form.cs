@@ -111,6 +111,25 @@ namespace LIBUtil.Desktop.Forms
         protected virtual void dgv_CellDoubleClick() { }
         protected virtual void updateInputPanelControls() { }
 
+        protected virtual void populateGridViewDataSource(bool reloadFromDB)
+        {
+            if (isValidToPopulateGridViewDataSource())
+            {
+                DataView dvw;
+                if (reloadFromDB)
+                    dvw = loadGridviewDataSource();
+                else
+                    dvw = (DataView)dgv.DataSource;
+
+                if (dvw != null)
+                    dvw.RowFilter = Util.compileQuickSearchFilter(txtQuickSearch.Text.Trim(), FieldnamesForQuickSearch.ToArray());
+
+                setGridviewDataSource(dvw);
+            }
+
+            if (dgv.Rows.Count == 0) btnUpdate.Enabled = false;
+        }
+
         #endregion
         /*******************************************************************************************************/
         #region PROTECTED METHODS
@@ -284,25 +303,6 @@ namespace LIBUtil.Desktop.Forms
                 if (reset)
                     input.reset();
             }
-        }
-
-        protected void populateGridViewDataSource(bool reloadFromDB)
-        {
-            if (isValidToPopulateGridViewDataSource())
-            {
-                DataView dvw;
-                if (reloadFromDB)
-                    dvw = loadGridviewDataSource();
-                else
-                    dvw = (DataView)dgv.DataSource;
-
-                if(dvw != null)
-                    dvw.RowFilter = Util.compileQuickSearchFilter(txtQuickSearch.Text.Trim(), FieldnamesForQuickSearch.ToArray());
-
-                setGridviewDataSource(dvw);
-            }
-
-            if (dgv.Rows.Count == 0) btnUpdate.Enabled = false;
         }
 
         private void setGridviewDataSource(DataView dvw)

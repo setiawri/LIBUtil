@@ -58,7 +58,16 @@ work with date time
 get date with time at 00:00:00
 	dateAdd(day, dateDiff(day, 0, CURRENT_TIMESTAMP ), 0) -- today
 	dateAdd(day, dateDiff(day, -1, CURRENT_TIMESTAMP ), 0) -- add 1 day
-	
+
+create date from parameters
+	select datefromparts(@year, @month, @day)
+
+create date without time and set day to 1
+	SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, getdate()), 0) 
+
+add 1 month to a date without time and set day to 1
+	DATEADD(MONTH, DATEDIFF(MONTH, 0, DATEADD(MONTH, 1, getdate())), 0) 
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 =================
