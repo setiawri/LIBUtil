@@ -338,8 +338,11 @@ namespace LIBUtil
                 builder = ConnectionStringBuilder;
             }
 
-            builder.UserID = ConnectionString_Username;
-            builder.Password = ConnectionString_Password;
+            if(ConnectionString_Username != null && ConnectionString_Password != null)
+            {
+                builder.UserID = ConnectionString_Username;
+                builder.Password = ConnectionString_Password;
+            }
             return builder.ConnectionString;
         }
 
@@ -386,7 +389,7 @@ namespace LIBUtil
                     if (_ActiveSqlConnection == null)
                         _ActiveSqlConnection = new SqlConnection(getConnectionString());
 
-                    if (_ActiveSqlConnection.State == ConnectionState.Closed)
+                    if (!string.IsNullOrEmpty(_ActiveSqlConnection.ConnectionString) && _ActiveSqlConnection.State == ConnectionState.Closed)
                         _ActiveSqlConnection.Open();
 
                     if (SqlConnectionTimer == null)

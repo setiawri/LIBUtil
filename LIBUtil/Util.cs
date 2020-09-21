@@ -977,7 +977,7 @@ namespace LIBUtil
         /// <summary><para></para></summary>
         public static DataRow getFirstRow(DataTable datatable)
         {
-            if (datatable.Rows.Count > 0)
+            if (datatable != null && datatable.Rows.Count > 0)
                 return datatable.Rows[0];
             else
                 return null;
@@ -1239,6 +1239,9 @@ namespace LIBUtil
 
         public static string saveAppData(string filename, string value)
         {
+            if (filename == null)
+                return "";
+
             string filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
             System.IO.File.WriteAllText(filepath, value);
             return value;
@@ -1638,6 +1641,20 @@ namespace LIBUtil
         }
 
         #endregion
-        /*******************************************************************************************************/        
+        /*******************************************************************************************************/
+        #region TOOLTIP
+
+        public static void setTooltip(Control control, string message)
+        {
+            ToolTip tooltip = new ToolTip();
+            tooltip.AutoPopDelay = 5000;
+            tooltip.InitialDelay = 1000;
+            tooltip.ReshowDelay = 500;
+            tooltip.ShowAlways = true;
+            tooltip.SetToolTip(control, message);
+        }
+
+        #endregion TOOLTIP
+        /*******************************************************************************************************/
     }
 }
