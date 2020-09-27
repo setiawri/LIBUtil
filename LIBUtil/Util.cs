@@ -11,6 +11,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Security.Cryptography;
+using LIBUtil.Desktop.UserControls;
 
 namespace LIBUtil
 {
@@ -223,6 +224,19 @@ namespace LIBUtil
             foreach (Panel panel in panels)
                 foreach (Control control in panel.Controls)
                     control.Enabled = value;
+        }
+
+        public static void setControlsVisibility(bool value, params object[] objects)
+        {
+            foreach (object obj in objects)
+            {
+                if (obj.GetType() == typeof(Control) || obj.GetType().IsSubclassOf(typeof(Control)))
+                    ((Control)obj).Visible = value;
+                else if (obj.GetType() == typeof(DataGridViewColumn))
+                    ((DataGridViewColumn)obj).Visible = value;
+                else if (obj.GetType() == typeof(InputControl) || obj.GetType().IsSubclassOf(typeof(InputControl)))
+                    ((InputControl)obj).Visible = value;
+            }
         }
 
         #endregion

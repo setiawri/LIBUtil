@@ -133,6 +133,7 @@ namespace LIBUtil.Desktop.UserControls
             set { numericUpDown.Increment = value; }
         }
 
+        public Guid? ValueGuid = null;
         public decimal ValueDecimal { get { return numericUpDown.Value; } }
         public int ValueInt { get { return (int)numericUpDown.Value; } }
         public long ValueLong { get { return (long)numericUpDown.Value; } }
@@ -157,10 +158,12 @@ namespace LIBUtil.Desktop.UserControls
         public override void reset()
         {
             numericUpDown.Value = 0;
-            if (!numericUpDown.Enabled)
+            if (!numericUpDown.Enabled || ShowCheckbox)
+            {
+                this.checkbox.CheckedChanged -= new System.EventHandler(this.checkbox_CheckedChanged);
                 checkbox.Checked = false;
-            else if (ShowCheckbox)
-                checkbox.Checked = false;
+                this.checkbox.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            }
         }
 
         public override void focus()
@@ -185,6 +188,12 @@ namespace LIBUtil.Desktop.UserControls
                 ShowCheckbox = value.ShowCheckBox;
                 checkbox.Checked = value.Checked;
             }
+        }
+
+        public void setValue(decimal value, Guid? guidValue)
+        {
+            Value = value;
+            ValueGuid = guidValue; //textbox must be set the latest because it triggers ontextchange event
         }
 
         #endregion METHODS
@@ -214,9 +223,13 @@ namespace LIBUtil.Desktop.UserControls
             numericUpDown.Select(0, numericUpDown.Text.Length);
         }
 
+        [Description("CheckedChanged Event"), Category("_Custom")]
+        public event EventHandler CheckedChanged;
         private void checkbox_CheckedChanged(object sender, EventArgs e)
         {
             numericUpDown.Enabled = checkbox.Checked;
+            if (CheckedChanged != null)
+                this.CheckedChanged(this, e);
         }
 
         private void chkShowDecimal_CheckedChanged(object sender, EventArgs e)
