@@ -11,6 +11,9 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Security.Cryptography;
+using System.Data.SqlClient;
+using System.Web.Mvc;
+
 using LIBUtil.Desktop.UserControls;
 
 namespace LIBUtil
@@ -473,12 +476,23 @@ namespace LIBUtil
         //{
         //    return appendChange(originalText, oldValue, newValue, format, Environment.NewLine);
         //}
+        public static string webAppendChange(string originalText, object oldValue, object newValue, string format) { return appendChange(originalText, oldValue, newValue, format).Replace(Environment.NewLine, "<BR>"); }
         public static string appendChange(string originalText, object oldValue, object newValue, string format)
         {
             if (oldValue != null & newValue != null && oldValue.GetType() == typeof(decimal) && newValue.GetType() == typeof(decimal))
             {
                 if ((decimal)oldValue != (decimal)newValue)
                     return append(originalText, String.Format(format, oldValue, newValue), Environment.NewLine);
+            }
+            else if (oldValue != null & newValue != null && oldValue.GetType() == typeof(int) && newValue.GetType() == typeof(int))
+            {
+                if ((int)oldValue != (int)newValue)
+                    return append(originalText, String.Format(format, oldValue, newValue), Environment.NewLine);
+            }
+            else if (oldValue != null & newValue != null && oldValue.GetType() == typeof(DateTime) && newValue.GetType() == typeof(DateTime))
+            {
+                if (!oldValue.Equals(newValue))
+                    return append(originalText, String.Format(format, DateTime.Parse(oldValue.ToString()), DateTime.Parse(newValue.ToString())), Environment.NewLine);
             }
             else
             {
@@ -748,22 +762,22 @@ namespace LIBUtil
         public static void populateDataGridView(DataGridView dgv, object data)
         {
             DataGridViewColumn sortColumn = dgv.SortedColumn;
-            SortOrder sortDirection = dgv.SortOrder;
+            System.Windows.Forms.SortOrder sortDirection = dgv.SortOrder;
 
             dgv.DataSource = data;
 
-            if (sortDirection != SortOrder.None)
+            if (sortDirection != System.Windows.Forms.SortOrder.None)
                 dgv.Sort(sortColumn, Util.getListSortDirection(sortDirection));
         }
 
         /// <summary><para></para></summary>
-        public static ListSortDirection getListSortDirection(SortOrder sortOrder)
+        public static ListSortDirection getListSortDirection(System.Windows.Forms.SortOrder sortOrder)
         {
             switch (sortOrder)
             {
-                case SortOrder.Ascending:
+                case System.Windows.Forms.SortOrder.Ascending:
                     return ListSortDirection.Ascending;
-                case SortOrder.Descending:
+                case System.Windows.Forms.SortOrder.Descending:
                     return ListSortDirection.Descending;
                 default:
                     return ListSortDirection.Ascending;
@@ -874,7 +888,7 @@ namespace LIBUtil
             //save sorting
             DataGridViewColumn sortColumn = grid.SortedColumn;
             ListSortDirection sortOrder = ListSortDirection.Ascending;
-            if (grid.SortOrder == SortOrder.Descending) sortOrder = ListSortDirection.Descending;
+            if (grid.SortOrder == System.Windows.Forms.SortOrder.Descending) sortOrder = ListSortDirection.Descending;
 
             //improve performance while binding datasource
             DataGridViewRowHeadersWidthSizeMode dataGridViewRowHeadersWidthSizeMode = grid.RowHeadersWidthSizeMode;
@@ -1069,7 +1083,7 @@ namespace LIBUtil
         }
 
         /// <summary><para></para></summary>
-        public static DataTable sortData(DataTable datatable, string column1Name, SortOrder? column1Direction, string column2Name, SortOrder? column2Direction)
+        public static DataTable sortData(DataTable datatable, string column1Name, System.Windows.Forms.SortOrder? column1Direction, string column2Name, System.Windows.Forms.SortOrder? column2Direction)
         {
             DataView dvw = datatable.DefaultView;
             dvw.Sort = compileSortPhrase(column1Name, column1Direction, column2Name, column2Direction);
@@ -1077,7 +1091,7 @@ namespace LIBUtil
         }
 
         /// <summary><para></para></summary>
-        private static string compileSortPhrase(string column1Name, SortOrder? column1Direction, string column2Name, SortOrder? column2Direction)
+        private static string compileSortPhrase(string column1Name, System.Windows.Forms.SortOrder? column1Direction, string column2Name, System.Windows.Forms.SortOrder? column2Direction)
         {
             string str = "";
             if (!string.IsNullOrEmpty(column1Name))
@@ -1088,9 +1102,9 @@ namespace LIBUtil
         }
 
         /// <summary><para></para></summary>
-        private static string getDirectionString(SortOrder? direction)
+        private static string getDirectionString(System.Windows.Forms.SortOrder? direction)
         {
-            if (direction == SortOrder.Descending)
+            if (direction == System.Windows.Forms.SortOrder.Descending)
                 return "DESC ";
             else
                 return "ASC";
@@ -1669,6 +1683,25 @@ namespace LIBUtil
         }
 
         #endregion TOOLTIP
+        /*******************************************************************************************************/
+        #region WEB APP
+
+        public static void debug(System.Web.Mvc.ModelStateDictionary ModelState, ViewDataDictionary ViewData)
+        {
+            if (!ModelState.IsValid)
+            {
+                foreach (System.Web.Mvc.ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (System.Web.Mvc.ModelError error in modelState.Errors)
+                    {
+                        string errorMessage = error.ErrorMessage;
+                        string exceptionMessage = error.Exception.Message;
+                    }
+                }
+            }
+        }
+
+        #endregion
         /*******************************************************************************************************/
     }
 }

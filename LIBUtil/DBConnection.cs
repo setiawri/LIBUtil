@@ -443,5 +443,11 @@ namespace LIBUtil
 
         #endregion
         /*******************************************************************************************************/
+
+        /// <summary><para>Web MVC use only.</para></summary>
+        public static SqlParameter getSqlParameter(string name, object value)
+        {
+            return new SqlParameter(name, Util.wrapNullable(value));
+        }
     }
 }
