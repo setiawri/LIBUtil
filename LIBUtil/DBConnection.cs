@@ -203,7 +203,9 @@ namespace LIBUtil
             //Util.displayMessageBoxError("TIMEOUT. Please try again");
         }
 
-        public static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
+        public static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, 
+            bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, 
+            string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
         {
             SqlQueryResult result = new SqlQueryResult();
             SqlParameter returnValueString = null;
@@ -447,7 +449,54 @@ namespace LIBUtil
         /// <summary><para>Web MVC use only.</para></summary>
         public static SqlParameter getSqlParameter(string name, object value)
         {
+            if (value != null && value.GetType() == typeof(string))
+                value = Util.sanitize(value.ToString());
             return new SqlParameter(name, Util.wrapNullable(value));
         }
+
+        public static string getWebConfigConnectionString(string key)
+        {
+            return System.Configuration.ConfigurationManager.ConnectionStrings[key].ConnectionString;
+        }
+
+        public static DataTable getDataTable(string connectionStringKey, string sqlOrStoredProcedureName, bool isStoredProcedure, params SqlParameter[] parameters)
+        {
+            DataSet dataset = getDataSet(connectionStringKey, sqlOrStoredProcedureName, isStoredProcedure, parameters);
+            if (dataset.Tables.Count > 0)
+                return dataset.Tables[0];
+            else
+                return null;
+        }
+        public static DataSet getDataSet(string connectionStringKey, string sqlOrStoredProcedureName, bool isStoredProcedure, params SqlParameter[] parameters)
+        {
+            DataSet dataset = new DataSet();
+            using (SqlConnection conn = new SqlConnection(getWebConfigConnectionString(connectionStringKey)))
+            using (SqlCommand cmd = new SqlCommand(sqlOrStoredProcedureName, conn))
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                if(isStoredProcedure)
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                if (parameters != null && parameters.Length > 0)
+                    foreach (SqlParameter parameter in parameters)
+                        cmd.Parameters.Add(parameter);
+
+                adapter.Fill(dataset);
+            }
+            return dataset;
+        }
+
+        public static string getWebConnectionString(string datasource, string DBName, string userID, string password)
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder("Integrated Security=False;Persist Security Info=False;");
+            builder.InitialCatalog = DBName;
+            builder.DataSource = datasource;
+            builder.UserID = userID;
+            builder.Password = password;
+
+            return builder.ConnectionString;
+        }
+
+
     }
 }

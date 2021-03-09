@@ -58,17 +58,25 @@ namespace LIBUtil
 
         public static void editCellGroup(ExcelWorksheet ws, int rowIdx, int colIdx, int colWidth, object groupValue, ExcelHorizontalAlignment? alignment, params ExcelCellFormat[] values)
         {
-            editCell(ws, rowIdx, colIdx, colWidth, groupValue, null, values.Length-1, 0, null);
-            foreach(ExcelCellFormat value in values)
+            if(groupValue == null && values.Length == 1) 
             {
-                editCell(ws, rowIdx+1, value.ColumnIndex, value.Width, value.Text, null, 0, 0, null);
+                //combine group row and header row
+                ExcelCellFormat value = values[0];
+                editCell(ws, rowIdx, value.ColumnIndex, value.Width, value.Text, null, 0, 1, null);
+            }
+            else
+            {
+                editCell(ws, rowIdx, colIdx, colWidth, groupValue, null, values.Length - 1, 0, null);
+                foreach (ExcelCellFormat value in values)
+                    editCell(ws, rowIdx + 1, value.ColumnIndex, value.Width, value.Text, null, 0, 0, null);
             }
         }
 
         public static void editCell(ExcelWorksheet ws, int rowIdx, int colIdx, int colWidth, object value, string format, int horizontalMergeCount, int verticalMergeCount, ExcelHorizontalAlignment? alignment)
         {
             ws.Column(colIdx).Width = colWidth;
-            mergeCells(ws, rowIdx, colIdx, horizontalMergeCount, verticalMergeCount);
+            if (horizontalMergeCount > 0 || verticalMergeCount > 0)
+                mergeCells(ws, rowIdx, colIdx, horizontalMergeCount, verticalMergeCount);
             editCell(ws, rowIdx, colIdx, value, format, alignment);
         }
 
@@ -99,8 +107,11 @@ namespace LIBUtil
 
         public static void setCellBorders(ExcelWorksheet ws, int startRowIdx, int startColIdx, int endRowIdx, int endColIdx, ExcelBorderStyle borderStyle)
         {
-            Border cellBorder = ws.Cells[startRowIdx, startColIdx, endRowIdx, endColIdx].Style.Border;
-            cellBorder.Left.Style = cellBorder.Top.Style = cellBorder.Right.Style = cellBorder.Bottom.Style = borderStyle;
+            if(endColIdx >= startColIdx)
+            {
+                Border cellBorder = ws.Cells[startRowIdx, startColIdx, endRowIdx, endColIdx].Style.Border;
+                cellBorder.Left.Style = cellBorder.Top.Style = cellBorder.Right.Style = cellBorder.Bottom.Style = borderStyle;
+            }
         }
 
         ////integer (not really needed unless you need to round numbers, Excel will use default cell properties)

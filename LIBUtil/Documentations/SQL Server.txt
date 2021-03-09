@@ -1,0 +1,42 @@
+﻿
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+********************************************************************************************************************************************
+
+ACCEPT IP ADDRESS CONNECTION
+============================
+
+SERVICES
+	- SQL Server, SQL Server Agent and SQL Server Browser must be set to automatic.
+	- SQL Server and SQL Server Browser must be running
+
+
+SQL SERVER CONFIGURATION MANAGER
+
+- SQL Services 
+	SQL Server and SQL Server Browser must be running
+	
+- SQL Server Network Configuration > Protocols
+	- All item must be enabled
+	- TCP/IP > IP Addresses 
+		TCP Dynamic Ports is empty
+		TCP Port set to 1433
+
+SQL SERVER MANAGEMENT STUDIO
+	- Open PROPERTIES
+	- SECURITY: Sql server and Windows Authentication Mode
+	- CONNECTIONS: check mark Allow remote connection to this server
+
+********************************************************************************************************************************************
+
+
+SQL SERVER MANAGEMENT STUDIO
+
+SECURITY > LOGINS > PROPERTY
+	- SERVER ROLES: set to all roles
+	- User mapping: set as db owner
+	- 
+
+
+********************************************************************************************************************************************

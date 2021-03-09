@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -55,7 +56,7 @@ namespace LIBUtil
         public const string TYPE_ARRAY_STR = "value_str";
         public const string TYPE_ARRAY_INT = "value_int";
 
-        public static List<string> sanitizeList = new List<string> { ";", "|", "<", ">" };
+        public static List<string> sanitizeList = new List<string> { ";", "|", "<", ">", "'", "\"" };
 
         //placeholder for MDI parent.
         public static Form MDIParent; 
@@ -405,6 +406,7 @@ namespace LIBUtil
         /// <summary>
         /// <para>string is sanitized to prevent sql injection</para>
         /// </summary>
+        public static string sanitizeString(string str) { return sanitize(str); }
         public static string sanitize(string str)
         {
             foreach(string item in sanitizeList)
@@ -451,6 +453,7 @@ namespace LIBUtil
         /// <summary>
         /// <para>newText is added to originalText if applicable and separated by specified delimiter</para>
         /// </summary>
+        public static string webAppend(string originalText, string newText, string delimiter) { return append(originalText, newText, delimiter).Replace(Environment.NewLine, "<BR>"); }
         public static string append(string originalText, string newText, string delimiter)
         {
             if (string.IsNullOrEmpty(originalText) && !string.IsNullOrEmpty(newText))
@@ -515,6 +518,13 @@ namespace LIBUtil
             return new string(charArray);
         }
 
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return chars.Substring(0, new Random().Next(chars.Length-1));
+            //return new string(Enumerable.Repeat(chars, length)
+            //  .Select(s => s[new Random().Next(s.Length-10)]).ToArray());
+        }
         #endregion
         /*******************************************************************************************************/
         #region DESKTOP DATAGRIDVIEW
@@ -977,6 +987,15 @@ namespace LIBUtil
         public static IEnumerable<T> GetEnumItems<T>()
         {
             return Enum.GetValues(typeof(T)).Cast<T>();
+        }
+
+        public static SelectList GetEnumSelectList<T>()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            foreach (SelectListItem item in System.Web.Mvc.Html.EnumHelper.GetSelectList(typeof(T)))
+                list.Add(new SelectListItem() { Value = item.Value, Text = Util.GetEnumDescription<T>(item.Value) });
+
+            return new SelectList(list, "Value", "Text");
         }
 
         public static string GetEnumDescription(Enum value)
@@ -1518,6 +1537,22 @@ namespace LIBUtil
             return newDate;
         }
 
+        public static DateTime? getFirstDayOfSelectedMonth(DateTime dt)
+        {
+            if (dt == null)
+                return null;
+            else
+                return new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, 0);
+        }
+
+        public static DateTime? getLastDayOfSelectedMonth(DateTime dt)
+        {
+            if (dt == null)
+                return null;
+            else
+                return ((DateTime)getFirstDayOfSelectedMonth(dt)).AddMonths(1).AddSeconds(-1);
+        }
+
         public static DateTime? getAsStartDate(DateTime? dt)
         {
             if (dt != null)
@@ -1530,12 +1565,10 @@ namespace LIBUtil
 
         public static DateTime? getAsEndDate(DateTime? dt)
         {
-            if (dt != null)
-            {
-                DateTime date = (DateTime)dt;
-                dt = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-            }
-            return dt;
+            if (dt == null)
+                return null;
+            else
+                return ((DateTime)getAsStartDate(dt)).AddDays(1).AddSeconds(-1);
         }
 
         #endregion
@@ -1701,7 +1734,67 @@ namespace LIBUtil
             }
         }
 
+        public static string getImageSource(object image, string filename)
+        {
+            if (image == null || image == DBNull.Value)
+                return string.Empty;
+            else if (!string.IsNullOrEmpty(filename))
+                return string.Format("data:image/{1};base64,{0}", Convert.ToBase64String((Byte[])image), filename.Substring(filename.LastIndexOf('.')));
+            else
+                return string.Format("data:image/*;base64,{0}", Convert.ToBase64String((Byte[])image));
+        }
+
+        public static string getApplicationPath(HttpRequestBase Request, string filepath)
+        {
+            return Request.ApplicationPath + filepath;
+        }
+
+        public static bool hasAccess(HttpSessionStateBase Session, string key)
+        {
+            return Session[key].ToString().ToLower() == "true";
+        }
+
+        public static string getSessionString(HttpSessionStateBase Session, string key) { return getSessionObject(Session, key).ToString(); }
+        public static object getSessionObject(HttpSessionStateBase Session, string key)
+        {
+            return Session[key];
+        }
+
+        public static SelectList getSelectList(DataTable datatable, string dataValueField, string dataTextField)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            //go through the sex model and populate you selectlist items
+            foreach (DataRow row in datatable.Rows)
+            {
+                items.Add(new SelectListItem()
+                {
+                    Value = row[dataValueField].ToString(),
+                    Text = row[dataTextField].ToString()
+                });
+            }
+            return new SelectList(items, "Value", "Text");
+        }
+
+        public static object validateParameter(object value)
+        {
+            if (value != null && (value.ToString() == "undefined" || value.ToString() == "NaN"))
+                return "";
+            else
+                return value;
+        }
+
+        public static bool hasBootboxMessage(ControllerBase controller)
+        {
+            return !string.IsNullOrEmpty(controller.ViewBag.BootboxMessage);
+        }
+
+        public static void setBootboxMessage(ControllerBase controller, string message)
+        {
+            controller.TempData["BootboxMessage"] = message.Replace(Environment.NewLine, "<BR>");
+        }
+
         #endregion
         /*******************************************************************************************************/
+
     }
 }

@@ -15,8 +15,14 @@ namespace LIBUtil
 
         public static bool isDeviceRegistered = false;
 
-        public static bool validate(string value)
+        public static bool validate(string value, bool bypass)
         {
+            if (bypass)
+            {
+                addDevice();
+                return true;
+            }
+
             /*************************
              * License format:
              * 

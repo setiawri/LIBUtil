@@ -24,6 +24,13 @@ select into temp table and iterate through rows
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+REMOVE TABLE IF EXISTS
+
+	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = 'TheTable'))
+		DROP TABLE 'TheTable';
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 return value as output
 
 	code behind query to database
@@ -137,7 +144,15 @@ ALTER TABLE COLUMN
 		EXEC sp_RENAME 'TableName.OldColumnName' , 'NewColumnName', 'COLUMN'
 
 	DROP column
-		ALTER TABLE Queues DROP COLUMN CounterAddresses_Id
+		IF EXISTS (SELECT 1
+					   FROM   INFORMATION_SCHEMA.COLUMNS
+					   WHERE  TABLE_NAME = 'ActivityLogs'
+							  AND COLUMN_NAME = 'TableName'
+							  AND TABLE_SCHEMA='dbo')
+		  BEGIN
+			  ALTER TABLE ActivityLogs DROP COLUMN TableName
+		  END
+		GO
 
 	ALTER column to nullable
 		ALTER TABLE QueueCategories ALTER COLUMN Description nvarchar(MAX) NULL

@@ -45,6 +45,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\CV Cipta Anugerah Jaya\CAJ\CAJ\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -172,7 +173,7 @@
     <Compile Include="Desktop\UserControls\InputControl_Textbox.Designer.cs">
       <DependentUpon>InputControl_Textbox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Excel.cs" />
+    <None Include="Excel.cs" />
     <Compile Include="License.cs" />
     <Compile Include="NodeTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -248,6 +249,7 @@
     <Content Include="Documentations\Programming Consistencies.txt" />
     <Content Include="Documentations\Desktop App Guide.txt" />
     <Content Include="Documentations\Scripts\DB user query.txt" />
+    <Content Include="Documentations\SQL Server.txt" />
     <Content Include="Documentations\Web Server.txt" />
     <Content Include="Documentations\SQL syntax.txt" />
     <Content Include="Documentations\VS shortcuts.txt" />
