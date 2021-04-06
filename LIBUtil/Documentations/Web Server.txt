@@ -48,10 +48,15 @@ WINDOWS FIREWALL
 	- Click 'Allow a program or feature through Windows Firewall'
 	- Checkmark 'World Wide Web Services (HTTP)'
 
+ROUTER
+- Add a "port mapping", mapping public TCP port 8080 incoming to the IP address of your local IIS computer on port 80.
+
 ACCESS MODEM ZTE
 	- https://www.modalsemangat.com/2017/07/username-password-admin-modem-zte-f660.html?m=1
+	- username/password: user/user ?? not verified
 	- install windows feature Telnet Client
 	- cmd > telnet 192.168.1.1
 	- root/Zte521
 	- to see password: sendcmd 1 DB p UserInfo
 	- *DOES NOT WORK* to set password: sendcmd 1 DB set 0 Password XXX
+

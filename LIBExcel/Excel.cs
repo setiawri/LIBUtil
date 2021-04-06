@@ -3,7 +3,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.IO;
 
-namespace LIBUtil
+namespace LIBExcel
 {
     public class ExcelCellFormat
     {
