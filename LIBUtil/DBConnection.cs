@@ -67,7 +67,8 @@ namespace LIBUtil
         public bool hasReturnValueDecimal;
         public bool hasReturnValueBoolean;
         public bool hasReturnValueGuid;
-        public string storedprocedurename;
+        public string sqlOrStoredProcedureName;
+        public bool isStoredProcedure;
         public SqlQueryTableParameter[] tableparameters;
         public SqlQueryParameter[] parameters;
 
@@ -78,22 +79,29 @@ namespace LIBUtil
         public void execute()
         {
             isQueryCompleted = false;
+            isStoredProcedure = true;
 
             if (sqlConnection != null)
-                result = DBConnection.executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, tableparameters, parameters);
+                result = DBConnection.executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, sqlOrStoredProcedureName, isStoredProcedure, tableparameters, parameters);
             else
             {
-                using (SqlConnection sqlConnection = new SqlConnection(DBConnection.ConnectionString))
-                    result = DBConnection.executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, tableparameters, parameters);
+                using(new SqlConnection(DBConnection.ConnectionString))
+                    result = DBConnection.executeQuery(sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, sqlOrStoredProcedureName, isStoredProcedure, tableparameters, parameters);
             }
 
             isQueryCompleted = true;
         }
     }
 
-    public struct SqlQueryResult
+    public class SqlQueryResult
     {
-        public DataTable Datatable;
+        public DataSet Dataset = new DataSet();
+        public DataTable Datatable 
+        { 
+            get { if (Dataset.Tables.Count > 0) return Dataset.Tables[0]; else return null; } 
+            set { Dataset.Tables.Clear(); Dataset.Tables.Add(value); }
+        }
+
         public bool IsSuccessful;
         public string ValueString;
         public int ValueInt;
@@ -101,6 +109,7 @@ namespace LIBUtil
         public bool ValueBoolean;
         public Guid ValueGuid;
 
+        public SqlQueryResult() { }
         public SqlQueryResult(DataTable datatable, bool isSuccessful, string valueString, int valueInt, decimal valueDecimal, bool valueBoolean, Guid valueGuid)
         {
             Datatable = datatable;
@@ -137,10 +146,10 @@ namespace LIBUtil
             return parameters;
         }
 
-        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, false, false, false, false, false, storedprocedurename, null, parameters); }
-        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, storedprocedurename, null, parameters); }
-        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, false, false, false, false, false, storedprocedurename, tableparameters, parameters); }
-        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, string sqlOrStoredProcedureName, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, false, false, false, false, false, sqlOrStoredProcedureName, null, parameters); }
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string sqlOrStoredProcedureName, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, sqlOrStoredProcedureName, null, parameters); }
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, string sqlOrStoredProcedureName, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters) { return query(showProgressBar, sqlConnection, querytype, false, false, false, false, false, sqlOrStoredProcedureName, tableparameters, parameters); }
+        public static SqlQueryResult query(bool showProgressBar, SqlConnection sqlConnection, QueryTypes querytype, bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, string sqlOrStoredProcedureName, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
         {
             _sqlQuery = new SqlQuery()
             {
@@ -151,7 +160,7 @@ namespace LIBUtil
                 hasReturnValueDecimal = hasReturnValueDecimal,
                 hasReturnValueBoolean = hasReturnValueBoolean,
                 hasReturnValueGuid = hasReturnValueGuid,
-                storedprocedurename = storedprocedurename,
+                sqlOrStoredProcedureName = sqlOrStoredProcedureName,
                 tableparameters = tableparameters,
                 parameters = parameters
             };
@@ -203,9 +212,15 @@ namespace LIBUtil
             //Util.displayMessageBoxError("TIMEOUT. Please try again");
         }
 
+        public static SqlQueryResult executeQuery(string connectionStringKey, string sqlOrStoredProcedureName, bool isStoredProcedure, 
+            bool hasReturnValueString, params SqlQueryParameter[] parameters)
+        {
+            SqlConnection sqlConnection = new SqlConnection(getWebConfigConnectionString(connectionStringKey));
+            return executeQuery(sqlConnection, QueryTypes.FillByAdapter, hasReturnValueString, false, false, false, false, sqlOrStoredProcedureName, isStoredProcedure, null, parameters);
+        }
         public static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, 
             bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, 
-            string storedprocedurename, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
+            string sqlOrStoredProcedureName, bool isStoredProcedure, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
         {
             SqlQueryResult result = new SqlQueryResult();
             SqlParameter returnValueString = null;
@@ -215,10 +230,13 @@ namespace LIBUtil
             SqlParameter returnValueGuid = null;
             try
             {
-                using (SqlCommand cmd = new SqlCommand(storedprocedurename, sqlConnection))
+                using (SqlCommand cmd = new SqlCommand(sqlOrStoredProcedureName, sqlConnection))
                 using (SqlDataAdapter adapter = new SqlDataAdapter())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (isStoredProcedure)
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.CommandTimeout = 3000;
 
                     if (parameters != null && parameters.Length > 0)
                         foreach (SqlQueryParameter parameter in parameters)
@@ -230,7 +248,7 @@ namespace LIBUtil
 
                     if(hasReturnValueString)
                     {
-                        returnValueString = cmd.Parameters.Add("@returnValueString", SqlDbType.NVarChar, 100);
+                        returnValueString = cmd.Parameters.Add("@returnValueString", SqlDbType.NVarChar, 1000);
                         returnValueString.Direction = ParameterDirection.Output;
                     }
                     if (hasReturnValueInt)
@@ -264,8 +282,7 @@ namespace LIBUtil
                     else if (querytype == QueryTypes.FillByAdapter)
                     {
                         adapter.SelectCommand = cmd;
-                        result.Datatable = new DataTable();
-                        adapter.Fill(result.Datatable);
+                        adapter.Fill(result.Dataset);
                     }
 
                     if (hasReturnValueString)
@@ -496,7 +513,6 @@ namespace LIBUtil
 
             return builder.ConnectionString;
         }
-
 
     }
 }

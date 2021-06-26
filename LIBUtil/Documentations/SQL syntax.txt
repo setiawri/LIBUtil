@@ -24,6 +24,22 @@ select into temp table and iterate through rows
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+FETCH PART OF ROWS
+
+DECLARE @SKIP int = 0 -- start of index
+DECALRE @TAKE int = 5 -- number of rows
+DECLARE @FILTER_Keyword varchar(MAX) = ''
+
+                        SELECT UserAccounts.*
+                        FROM UserAccounts
+                        WHERE 1=1
+							AND (@FILTER_Keyword IS NULL OR (UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'))
+						ORDER BY UserAccounts.Fullname ASC
+                        OFFSET COALESCE(@SKIP,0) ROWS
+                        FETCH NEXT COALESCE(CONVERT(int, @TAKE),0x7ffffff) ROWS ONLY
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 REMOVE TABLE IF EXISTS
 
 	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = 'TheTable'))
@@ -74,6 +90,48 @@ create date without time and set day to 1
 
 add 1 month to a date without time and set day to 1
 	DATEADD(MONTH, DATEDIFF(MONTH, 0, DATEADD(MONTH, 1, getdate())), 0) 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+GET BALANCE
+
+                    SELECT InitialBalance.Amount + (SUM(PettyCashRecords.Amount) OVER(ORDER BY PettyCashRecords.Timestamp ASC)) AS Balance
+                    FROM PettyCashRecords
+                        LEFT JOIN (
+                                SELECT 1 AS Id, SUM(PettyCashRecords.Amount) AS Amount
+                                FROM PettyCashRecords
+                                WHERE 1=1
+                                    AND (@FILTER_DateFrom IS NULL OR PettyCashRecords.Timestamp < @FILTER_DateFrom)
+                            ) InitialBalance ON InitialBalance.Id = 1
+                    WHERE 1=1
+						AND (@Id IS NULL OR PettyCashRecords.Id = @Id)
+						AND (@Id IS NOT NULL OR (
+                            (@FILTER_DateFrom IS NULL OR PettyCashRecords.Timestamp >= @FILTER_DateFrom)
+                            AND (@FILTER_DateTo IS NULL OR PettyCashRecords.Timestamp <= @FILTER_DateTo)
+                        ))
+					ORDER BY PettyCashRecords.Timestamp ASC
+					
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ROW NUMBER FOR ORDERING
+
+                        SELECT Inventory.*,
+                            ROW_NUMBER() OVER (ORDER BY Inventory.ReceiveDate DESC) AS InitialRowNumber
+                        FROM Inventory
+                        WHERE 1=1
+						ORDER BY Inventory.ReceiveDate DESC
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+GET string up to a space
+						
+                    SELECT LEFT(UserAccounts.Fullname, 
+                                CASE 
+                                    WHEN charindex(' ', UserAccounts.Fullname) = 0 
+                                    THEN LEN(UserAccounts.Fullname) 
+                                    ELSE charindex(' ', UserAccounts.Fullname) - 1 
+                                END
+                            ) AS UserAccounts_Firstname,
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -395,6 +395,15 @@ namespace LIBUtil
         /*******************************************************************************************************/
         #region STRING MANIPULATORS
 
+        public static string getFirstWord(string value)
+        {
+            string result = System.Text.RegularExpressions.Regex.Replace(value.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
+            if (string.IsNullOrEmpty(result))
+                result = value;
+
+            return result;
+        }
+
         /// <summary> append the first character to the end </summary>
         public static string getNextRollingText(string value)
         {
@@ -460,7 +469,7 @@ namespace LIBUtil
                 return originalText.Trim();
             else
             {
-                if (!string.IsNullOrEmpty(originalText)) originalText += " " + delimiter + " ";
+                if (!string.IsNullOrEmpty(originalText)) originalText += delimiter;
                 return originalText += newText.Trim();
             }
         }
@@ -518,8 +527,9 @@ namespace LIBUtil
 
         public static string RandomString(int length)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return chars.Substring(0, new Random().Next(chars.Length-1));
+            return Guid.NewGuid().ToString().Substring(0, length);
+            //const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            //return chars.Substring(0, new Random().Next(chars.Length-1));
             //return new string(Enumerable.Repeat(chars, length)
             //  .Select(s => s[new Random().Next(s.Length-10)]).ToArray());
         }
@@ -1707,5 +1717,12 @@ namespace LIBUtil
         #endregion TOOLTIP
         /*******************************************************************************************************/
 
+        public static string incrementHexNumber(string value)
+        {
+            int intFromHex = 0;
+            if(!string.IsNullOrEmpty(value))
+                intFromHex = int.Parse(value, System.Globalization.NumberStyles.HexNumber) + 1;
+            return intFromHex.ToString("X").PadLeft(value.Length, '0');
+        }
     }
 }

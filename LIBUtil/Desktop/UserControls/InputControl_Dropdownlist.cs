@@ -183,6 +183,27 @@ namespace LIBUtil.Desktop.UserControls
             dropdownlist.populate(datatable, "text", columnName, null);
         }
 
+        public void populateWithEnum<T>()
+        {
+            populate(null, null, null, null);
+
+            var list = Enum.GetValues(typeof(T))
+                .Cast<T>()
+                .Select(value => new
+                {
+                    Description = (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description ?? value.ToString(),
+                    Value = value
+                })
+                .OrderBy(item => item.Value.ToString())
+                .ToList();
+
+            dropdownlist.combobox.DataSource = list;
+            dropdownlist.combobox.DisplayMember = "Description";
+            dropdownlist.combobox.ValueMember = "Value";
+
+            reset();
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS

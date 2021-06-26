@@ -3,6 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 using LIBUtil;
 
@@ -40,7 +41,7 @@ namespace LIBWebMVC
 
         public static string getApplicationPath(HttpRequestBase Request, string filepath)
         {
-            return Request.ApplicationPath + filepath;
+            return (Request.ApplicationPath + filepath).Replace("//","/");
         }
 
         public static bool hasAccess(HttpSessionStateBase Session, string key)
@@ -79,11 +80,12 @@ namespace LIBWebMVC
 
         public static bool hasBootboxMessage(ControllerBase controller)
         {
-            return !string.IsNullOrEmpty(controller.ViewBag.BootboxMessage);
+            return controller.ViewBag.HasBootboxMessage == true;
         }
 
         public static void setBootboxMessage(ControllerBase controller, string message)
         {
+            controller.ViewBag.HasBootboxMessage = true;
             controller.TempData["BootboxMessage"] = message.Replace(Environment.NewLine, "<BR>");
         }
 
@@ -101,6 +103,50 @@ namespace LIBWebMVC
         }
 
         #endregion
+        /**********************************************************************************************************************************************************/
+        #region JSON
+
+        public static JsonResult Json(HttpResponseBase Response, string message)
+        {
+            if (string.IsNullOrEmpty(message))
+                return new JsonResult { Data = string.Empty }; //success
+            else
+            {
+                //error
+                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                return new JsonResult { Data = message };
+            }
+        }
+
+        #endregion
+        /**********************************************************************************************************************************************************/
+
+        public static string convertToSqlIdList(string list)
+        {
+            if (string.IsNullOrEmpty(list))
+                return null;
+            else
+                return "'" + string.Join("','", list.Split(',')) + "'";
+        }
+
+        public static bool hasNoFilter(params object[] values)
+        {
+            foreach(object value in values)
+            {
+                if (value == null)
+                    continue;
+                else if (value.GetType() == typeof(string))
+                {
+                    if (!string.IsNullOrWhiteSpace(value.ToString()))
+                        return false;
+                }
+                else if (value != null)
+                    return false;
+            }
+
+            return true;
+        }
+
         /**********************************************************************************************************************************************************/
     }
 }
