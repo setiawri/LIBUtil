@@ -1092,7 +1092,7 @@ namespace LIBUtil
                 if (!string.IsNullOrEmpty(word.Trim()))
                 {
                     foreach (string fieldname in fieldNames)
-                        filter = Util.append(filter, string.Format("{0} LIKE '%{1}%'", fieldname, word), "OR");
+                        filter = Util.append(filter, string.Format("{0} LIKE '%{1}%'", fieldname, word), " OR ");
 
                     //filter = Util.append(filter, string.Format("CONVERT({0},System.String) LIKE '%{1}%'", fieldname, word), "OR");
                 }
