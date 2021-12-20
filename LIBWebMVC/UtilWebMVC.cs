@@ -112,8 +112,9 @@ namespace LIBWebMVC
                 return new JsonResult { Data = string.Empty }; //success
             else
             {
-                //error
-                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                //throw error
+                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest; 
+                Response.StatusDescription = message;
                 return new JsonResult { Data = message };
             }
         }

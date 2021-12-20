@@ -57,6 +57,7 @@ namespace LIBUtil.Desktop.Forms
         protected List<InputControl> InputToDisableOnAdd = new List<InputControl>();
         protected List<InputControl> InputToDisablePermanently = new List<InputControl>();
         protected bool DoNotClearInputAfterSubmission = false;
+        protected bool isFormShown = false;
 
         #endregion PROTECTED VARIABLES
         /*******************************************************************************************************/
@@ -179,11 +180,22 @@ namespace LIBUtil.Desktop.Forms
                 col_dgv_Active.Visible = false;
                 chkIncludeInactive.Visible = false;
             }
+
+            if (col_Default != null)
+            {
+                col_dgv_Default.DataPropertyName = col_Default;
+                col_dgv_Default.Visible = true;
+            }
         }
 
         /// <summary><para></para></summary>
-        protected DataGridViewColumn addColumn<T>(DataGridView dgv, string columnName, string headerText, string dataPropertyName, 
+        protected DataGridViewColumn addColumn<T>(DataGridView dgv, string columnName, string headerText, string dataPropertyName,
             bool isReadOnly, bool isVisible, string format, bool addToQuickSearchFields, bool activateWordwrap, int? minimumWidth, DataGridViewContentAlignment textAlign)
+        {
+            return addColumn<T>(dgv, columnName, headerText, dataPropertyName, isReadOnly, isVisible, format, addToQuickSearchFields, activateWordwrap, minimumWidth, null, textAlign);
+        }
+        protected DataGridViewColumn addColumn<T>(DataGridView dgv, string columnName, string headerText, string dataPropertyName, 
+            bool isReadOnly, bool isVisible, string format, bool addToQuickSearchFields, bool activateWordwrap, int? minimumWidth, int? maxWidth, DataGridViewContentAlignment textAlign)
         {
             DataGridViewColumn column = new DataGridViewColumn();
             column.CellTemplate = (DataGridViewCell)Activator.CreateInstance(typeof(T));
@@ -201,7 +213,13 @@ namespace LIBUtil.Desktop.Forms
             if (minimumWidth != null)
                 column.MinimumWidth = (int)minimumWidth;
 
-            if (activateWordwrap) Util.setGridviewColumnWordwrap(column, DataGridViewAutoSizeColumnMode.AllCells);
+            if (maxWidth != null)
+            {
+                column.Width = (int)maxWidth;
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
+
+            if (activateWordwrap) Util.setGridviewColumnWordwrap(column, null);
 
             if (addToQuickSearchFields) FieldnamesForQuickSearch.Add(dataPropertyName); //add field name to quick search list
 
@@ -494,7 +512,7 @@ namespace LIBUtil.Desktop.Forms
             {
                 Mode = FormModes.Add;
                 clearInputFields();
-                populateGridViewDataSource(true);
+                //populateGridViewDataSource(true);
                 txtQuickSearch.Focus();
             }
         }
@@ -641,6 +659,7 @@ namespace LIBUtil.Desktop.Forms
 
         private void Form_Shown(object sender, EventArgs e)
         {
+            isFormShown = true;
             if (_startingMode == FormModes.Browse)
             {
                 scMain.Panel1Collapsed = true;
@@ -654,7 +673,8 @@ namespace LIBUtil.Desktop.Forms
             Mode = _startingMode;
             updateInputControls(InputToDisablePermanently, false, false);
 
-            populateGridViewDataSource(true);
+            if(_showDataOnLoad)
+                populateGridViewDataSource(true);
 
             txtQuickSearch.Focus();
         }

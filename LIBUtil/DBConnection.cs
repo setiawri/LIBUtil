@@ -212,10 +212,10 @@ namespace LIBUtil
             //Util.displayMessageBoxError("TIMEOUT. Please try again");
         }
 
-        public static SqlQueryResult executeQuery(string connectionStringKey, string sqlOrStoredProcedureName, bool isStoredProcedure, 
+        public static SqlQueryResult executeQuery(string connectionString, string sqlOrStoredProcedureName, bool isStoredProcedure, 
             bool hasReturnValueString, params SqlQueryParameter[] parameters)
         {
-            SqlConnection sqlConnection = new SqlConnection(getWebConfigConnectionString(connectionStringKey));
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
             return executeQuery(sqlConnection, QueryTypes.FillByAdapter, hasReturnValueString, false, false, false, false, sqlOrStoredProcedureName, isStoredProcedure, null, parameters);
         }
         public static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, 
@@ -476,18 +476,18 @@ namespace LIBUtil
             return System.Configuration.ConfigurationManager.ConnectionStrings[key].ConnectionString;
         }
 
-        public static DataTable getDataTable(string connectionStringKey, string sqlOrStoredProcedureName, bool isStoredProcedure, params SqlParameter[] parameters)
+        public static DataTable getDataTable(string connectionString, string sqlOrStoredProcedureName, bool isStoredProcedure, params SqlParameter[] parameters)
         {
-            DataSet dataset = getDataSet(connectionStringKey, sqlOrStoredProcedureName, isStoredProcedure, parameters);
+            DataSet dataset = getDataSet(connectionString, sqlOrStoredProcedureName, isStoredProcedure, parameters);
             if (dataset.Tables.Count > 0)
                 return dataset.Tables[0];
             else
                 return null;
         }
-        public static DataSet getDataSet(string connectionStringKey, string sqlOrStoredProcedureName, bool isStoredProcedure, params SqlParameter[] parameters)
+        public static DataSet getDataSet(string connectionString, string sqlOrStoredProcedureName, bool isStoredProcedure, params SqlParameter[] parameters)
         {
             DataSet dataset = new DataSet();
-            using (SqlConnection conn = new SqlConnection(getWebConfigConnectionString(connectionStringKey)))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(sqlOrStoredProcedureName, conn))
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
