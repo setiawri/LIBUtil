@@ -914,7 +914,7 @@ namespace LIBUtil
             DataGridViewAutoSizeColumnsMode dataGridViewAutoSizeColumnsMode = grid.AutoSizeColumnsMode;
             DataGridViewColumnHeadersHeightSizeMode dataGridViewColumnHeadersHeightSizeMode = grid.ColumnHeadersHeightSizeMode;
             grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing; 
-            grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            //grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 
@@ -926,7 +926,7 @@ namespace LIBUtil
 
             //reapply original settings
             grid.RowHeadersWidthSizeMode = dataGridViewRowHeadersWidthSizeMode;
-            grid.AutoSizeRowsMode = dataGridViewAutoSizeRowsMode;
+            //grid.AutoSizeRowsMode = dataGridViewAutoSizeRowsMode;
             grid.AutoSizeColumnsMode = dataGridViewAutoSizeColumnsMode;
             grid.ColumnHeadersHeightSizeMode = dataGridViewColumnHeadersHeightSizeMode;
 
