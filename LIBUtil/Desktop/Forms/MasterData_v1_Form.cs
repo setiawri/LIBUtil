@@ -58,6 +58,8 @@ namespace LIBUtil.Desktop.Forms
         protected List<InputControl> InputToDisablePermanently = new List<InputControl>();
         protected bool DoNotClearInputAfterSubmission = false;
         protected bool isFormShown = false;
+        protected bool IsBtnUpdateEnabled = true;
+        private bool IsBtnLogEnabled = true;
 
         #endregion PROTECTED VARIABLES
         /*******************************************************************************************************/
@@ -298,11 +300,8 @@ namespace LIBUtil.Desktop.Forms
         {
             if (dgv.Rows.Count > 0 && dgv.SelectedRows.Count > 0)
             {
-                btnLog.Enabled = true;
-                //if (GlobalData.UserAccount.role != Roles.Super)
-                //    btnUpdate.Enabled = false;
-                //else
-                btnUpdate.Enabled = true;
+                btnLog.Enabled = IsBtnLogEnabled;
+                btnUpdate.Enabled = IsBtnUpdateEnabled;
             }
             else
             {
@@ -670,6 +669,7 @@ namespace LIBUtil.Desktop.Forms
             }
 
             setupControlsBasedOnRoles();
+
             Mode = _startingMode;
             updateInputControls(InputToDisablePermanently, false, false);
 

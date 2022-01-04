@@ -914,7 +914,7 @@ namespace LIBUtil
             DataGridViewAutoSizeColumnsMode dataGridViewAutoSizeColumnsMode = grid.AutoSizeColumnsMode;
             DataGridViewColumnHeadersHeightSizeMode dataGridViewColumnHeadersHeightSizeMode = grid.ColumnHeadersHeightSizeMode;
             grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing; 
-            //grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            //grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None; //removed because this is causing long load time during update in customer form.
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 
