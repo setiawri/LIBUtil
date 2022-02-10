@@ -247,6 +247,20 @@ Run multiple times because dependencies throw errors
 
 EXEC sp_MSforeachtable @command1 = "DROP TABLE ?"
 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+===============
+COPY TABLE DATA
+===============
+
+INSERT INTO newTable
+SELECT * FROM oldTable
+
+Otherwise, you'll have to specify the column names 
+(the column list for newTable is optional if you are specifying a value for all columns and selecting columns in the same order as newTable's schema):
+INSERT INTO newTable (col1, col2, col3)
+SELECT column1, column2, column3
+FROM oldTable
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
