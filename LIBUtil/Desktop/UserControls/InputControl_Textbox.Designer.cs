@@ -44,19 +44,19 @@
             this.panel.Controls.Add(this.pbDelete);
             this.panel.Controls.Add(this.txtFilter);
             this.panel.Controls.Add(this.label);
-            this.panel.Location = new System.Drawing.Point(0, 3);
+            this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(240, 47);
+            this.panel.Size = new System.Drawing.Size(240, 50);
             this.panel.TabIndex = 0;
             // 
             // textbox
             // 
             this.textbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.textbox.Location = new System.Drawing.Point(40, 21);
+            this.textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.textbox.Location = new System.Drawing.Point(40, 23);
             this.textbox.Margin = new System.Windows.Forms.Padding(4);
             this.textbox.Name = "textbox";
-            this.textbox.Size = new System.Drawing.Size(176, 24);
+            this.textbox.Size = new System.Drawing.Size(173, 26);
             this.textbox.TabIndex = 1001;
             this.textbox.Click += new System.EventHandler(this.textbox_isBrowseMode_Clicked);
             this.textbox.TextChanged += new System.EventHandler(this.textbox_TextChanged);
@@ -70,10 +70,10 @@
             this.pbDelete.BackgroundImage = global::LIBUtil.Properties.Resources.delete_button_01;
             this.pbDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pbDelete.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pbDelete.Location = new System.Drawing.Point(216, 21);
-            this.pbDelete.Margin = new System.Windows.Forms.Padding(4);
+            this.pbDelete.Location = new System.Drawing.Point(213, 23);
+            this.pbDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 8);
             this.pbDelete.Name = "pbDelete";
-            this.pbDelete.Size = new System.Drawing.Size(24, 26);
+            this.pbDelete.Size = new System.Drawing.Size(27, 27);
             this.pbDelete.TabIndex = 1002;
             this.pbDelete.TabStop = false;
             this.pbDelete.Click += new System.EventHandler(this.pbDelete_Click);
@@ -81,12 +81,12 @@
             // txtFilter
             // 
             this.txtFilter.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.txtFilter.Location = new System.Drawing.Point(0, 21);
+            this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.txtFilter.Location = new System.Drawing.Point(0, 23);
             this.txtFilter.Margin = new System.Windows.Forms.Padding(0);
             this.txtFilter.MaxLength = 5;
             this.txtFilter.Name = "txtFilter";
-            this.txtFilter.Size = new System.Drawing.Size(40, 24);
+            this.txtFilter.Size = new System.Drawing.Size(40, 26);
             this.txtFilter.TabIndex = 1004;
             // 
             // label
@@ -96,7 +96,7 @@
             this.label.Location = new System.Drawing.Point(0, 0);
             this.label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(240, 21);
+            this.label.Size = new System.Drawing.Size(240, 23);
             this.label.TabIndex = 1003;
             this.label.Text = "textbox";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -107,7 +107,7 @@
             this.Controls.Add(this.panel);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "InputControl_Textbox";
-            this.Size = new System.Drawing.Size(240, 50);
+            this.Size = new System.Drawing.Size(240, 53);
             this.panel.ResumeLayout(false);
             this.panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbDelete)).EndInit();

@@ -29,8 +29,8 @@ namespace LIBUtil.Desktop.UserControls
         #region SETTINGS
 
         private const int ADDITIONALTEXTBOXROWHEIGHT = 15;
-        private const int INITIALTEXTBOXHEIGHT = 24;
-        private const int INITIALFORMHEIGHT = 50;
+        private const int INITIALTEXTBOXHEIGHT = 26;
+        private const int INITIALFORMHEIGHT = 53;
 
         #endregion SETTINGS
         /*******************************************************************************************************/
