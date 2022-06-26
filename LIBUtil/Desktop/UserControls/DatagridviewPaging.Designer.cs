@@ -38,9 +38,10 @@
             // 
             // btnFirstPage
             // 
-            this.btnFirstPage.Location = new System.Drawing.Point(55, 0);
+            this.btnFirstPage.Location = new System.Drawing.Point(73, 0);
+            this.btnFirstPage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnFirstPage.Name = "btnFirstPage";
-            this.btnFirstPage.Size = new System.Drawing.Size(28, 23);
+            this.btnFirstPage.Size = new System.Drawing.Size(37, 28);
             this.btnFirstPage.TabIndex = 1;
             this.btnFirstPage.Text = "<<";
             this.btnFirstPage.UseVisualStyleBackColor = true;
@@ -48,9 +49,10 @@
             // 
             // btnPrevious
             // 
-            this.btnPrevious.Location = new System.Drawing.Point(82, 0);
+            this.btnPrevious.Location = new System.Drawing.Point(109, 0);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnPrevious.Name = "btnPrevious";
-            this.btnPrevious.Size = new System.Drawing.Size(23, 23);
+            this.btnPrevious.Size = new System.Drawing.Size(31, 28);
             this.btnPrevious.TabIndex = 2;
             this.btnPrevious.Text = "<";
             this.btnPrevious.UseVisualStyleBackColor = true;
@@ -58,9 +60,10 @@
             // 
             // btnLastPage
             // 
-            this.btnLastPage.Location = new System.Drawing.Point(162, 0);
+            this.btnLastPage.Location = new System.Drawing.Point(216, 0);
+            this.btnLastPage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnLastPage.Name = "btnLastPage";
-            this.btnLastPage.Size = new System.Drawing.Size(28, 23);
+            this.btnLastPage.Size = new System.Drawing.Size(37, 28);
             this.btnLastPage.TabIndex = 4;
             this.btnLastPage.Text = ">>";
             this.btnLastPage.UseVisualStyleBackColor = true;
@@ -68,9 +71,10 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(140, 0);
+            this.btnNext.Location = new System.Drawing.Point(187, 0);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(23, 23);
+            this.btnNext.Size = new System.Drawing.Size(31, 28);
             this.btnNext.TabIndex = 3;
             this.btnNext.Text = ">";
             this.btnNext.UseVisualStyleBackColor = true;
@@ -79,10 +83,11 @@
             // lblPageNo
             // 
             this.lblPageNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.lblPageNo.Location = new System.Drawing.Point(105, -1);
+            this.lblPageNo.Location = new System.Drawing.Point(140, -1);
+            this.lblPageNo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPageNo.Name = "lblPageNo";
             this.lblPageNo.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.lblPageNo.Size = new System.Drawing.Size(35, 22);
+            this.lblPageNo.Size = new System.Drawing.Size(47, 27);
             this.lblPageNo.TabIndex = 5;
             this.lblPageNo.Text = "1/1";
             this.lblPageNo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -100,6 +105,7 @@
             0});
             this.in_PageSize.LabelText = "numeric";
             this.in_PageSize.Location = new System.Drawing.Point(0, 0);
+            this.in_PageSize.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.in_PageSize.MaximumValue = new decimal(new int[] {
             1000000,
             0,
@@ -114,7 +120,7 @@
             this.in_PageSize.ShowAllowDecimalCheckbox = false;
             this.in_PageSize.ShowCheckbox = false;
             this.in_PageSize.ShowTextboxOnly = true;
-            this.in_PageSize.Size = new System.Drawing.Size(55, 23);
+            this.in_PageSize.Size = new System.Drawing.Size(73, 28);
             this.in_PageSize.TabIndex = 0;
             this.in_PageSize.Value = new decimal(new int[] {
             50,
@@ -124,16 +130,16 @@
             // 
             // DatagridviewPaging
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.in_PageSize);
             this.Controls.Add(this.lblPageNo);
             this.Controls.Add(this.btnLastPage);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.btnFirstPage);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "DatagridviewPaging";
-            this.Size = new System.Drawing.Size(190, 23);
+            this.Size = new System.Drawing.Size(253, 28);
             this.Load += new System.EventHandler(this.Form_Load);
             this.ResumeLayout(false);
 

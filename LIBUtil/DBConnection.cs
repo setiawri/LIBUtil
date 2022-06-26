@@ -218,6 +218,13 @@ namespace LIBUtil
             SqlConnection sqlConnection = new SqlConnection(connectionString);
             return executeQuery(sqlConnection, QueryTypes.FillByAdapter, hasReturnValueString, false, false, false, false, sqlOrStoredProcedureName, isStoredProcedure, null, parameters);
         }
+        public static SqlQueryResult executeQuery(string connectionString, string sqlOrStoredProcedureName, bool isStoredProcedure,
+            bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, 
+            params SqlQueryParameter[] parameters)
+        {
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            return executeQuery(sqlConnection, QueryTypes.FillByAdapter, hasReturnValueString, hasReturnValueInt, hasReturnValueDecimal, hasReturnValueBoolean, hasReturnValueGuid, sqlOrStoredProcedureName, isStoredProcedure, null, parameters);
+        }
         public static SqlQueryResult executeQuery(SqlConnection sqlConnection, QueryTypes querytype, 
             bool hasReturnValueString, bool hasReturnValueInt, bool hasReturnValueDecimal, bool hasReturnValueBoolean, bool hasReturnValueGuid, 
             string sqlOrStoredProcedureName, bool isStoredProcedure, SqlQueryTableParameter[] tableparameters, params SqlQueryParameter[] parameters)
@@ -464,10 +471,18 @@ namespace LIBUtil
         /*******************************************************************************************************/
 
         /// <summary><para>Web MVC use only.</para></summary>
-        public static SqlParameter getSqlParameter(string name, object value)
+        public static SqlParameter getUnsanitizedSqlParameter(string name, object value) { return getSqlParameter(name, value, false); }
+        public static SqlParameter getSqlParameter(string name, object value) { return getSqlParameter(name, value, true); }
+        public static SqlParameter getSqlParameter(string name, object value, bool sanitize)
         {
             if (value != null && value.GetType() == typeof(string))
-                value = Util.sanitize(value.ToString());
+            {
+                if (sanitize)
+                    value = Util.sanitize(value.ToString());
+                else
+                    value = value.ToString();
+            }
+
             return new SqlParameter(name, Util.wrapNullable(value));
         }
 

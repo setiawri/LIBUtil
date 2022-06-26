@@ -16,7 +16,7 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region SETTINGS
 
-        public const int LABEL_DEFAULTLEFTPADDING = 15;
+        public const int LABEL_DEFAULTLEFTPADDING = 22;
 
         #endregion
         /*******************************************************************************************************/
@@ -26,7 +26,7 @@ namespace LIBUtil.Desktop.UserControls
         public string LabelText
         {
             get { return label.Text; }
-            set { label.Text = value; }
+            set { label.Text = value; setLabelPadding(); }
         }
 
         [Description("Show dropdownlist only"), Category("_Custom")]
@@ -56,10 +56,7 @@ namespace LIBUtil.Desktop.UserControls
             set {
                 _hideUpdateLink = value;
                 pbUpdate.Visible = !value;
-                if (value)
-                    label.Padding = new Padding(0);
-                else
-                    label.Padding = new Padding(LABEL_DEFAULTLEFTPADDING, 0, 0, 0);
+                setLabelPadding();
             }
         }
         private bool _hideUpdateLink = false;
@@ -72,7 +69,7 @@ namespace LIBUtil.Desktop.UserControls
             {
                 _hideFilter = value;
                 txtFilter.Visible = !value;
-                lnkClearFilter.Visible = !value;
+                pnlFilter.Visible = !value;
             }
         }
         private bool _hideFilter = false;
@@ -158,11 +155,6 @@ namespace LIBUtil.Desktop.UserControls
                 dropdownlist.Filter = string.Format("{0} LIKE '%{1}%'", dropdownlist.DisplayMember, txtFilter.Text);
         }
 
-        private void lnkClearFilter_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            txtFilter.Text = "";
-        }
-
         public void populateWithTime(int startHour, int startMinute, int endHour, int endMinute, int intervalMinutes, string columnName, string format)
         {
             TimeSpan startTime = new TimeSpan(startHour, startMinute, 0);
@@ -204,6 +196,14 @@ namespace LIBUtil.Desktop.UserControls
             reset();
         }
 
+        public void setLabelPadding()
+        {
+            if (pbUpdate.Visible)
+                label.Padding = new Padding(LABEL_DEFAULTLEFTPADDING, 0, 0, 0);
+            else
+                label.Padding = new Padding(0);
+        }
+
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS
@@ -222,6 +222,16 @@ namespace LIBUtil.Desktop.UserControls
         {
             if (this.UpdateLink_Click != null)
                 this.UpdateLink_Click(this, e);
+        }
+
+        private void InputControl_Dropdownlist_Load(object sender, EventArgs e)
+        {
+            setLabelPadding();
+        }
+
+        private void pbDelete_Click(object sender, EventArgs e)
+        {
+            txtFilter.Text = "";
         }
 
         #endregion

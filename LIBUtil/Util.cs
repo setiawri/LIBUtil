@@ -1471,14 +1471,15 @@ namespace LIBUtil
         /*******************************************************************************************************/
         #region DESKTOP PRINTING
 
-        public static bool print(bool showPrintDialog, bool showPrintStatus, Panel printPanel)
+        public static bool print(bool showPrintDialog, bool showPrintStatus, Panel printPanel) { return print(showPrintDialog, showPrintStatus, printPanel, 30); }
+        public static bool print(bool showPrintDialog, bool showPrintStatus, Panel printPanel, int leftMargin)
         {
             PrintDocument doc = new PrintDocument();
             doc.PrintPage += delegate (object sender, System.Drawing.Printing.PrintPageEventArgs e)
             {
                 LIBUtil.Util.printControl(printPanel, e);
             };
-            doc.DefaultPageSettings.Margins = new System.Drawing.Printing.Margins(30, 0, 0, 0);
+            doc.DefaultPageSettings.Margins = new System.Drawing.Printing.Margins(leftMargin, 0, 0, 0);
 
             if (!showPrintStatus)
                 doc.PrintController = new StandardPrintController();

@@ -17,6 +17,8 @@ namespace LIBUtil.Desktop.UserControls
         /*******************************************************************************************************/
         #region VARIABLES
 
+        public const int LABEL_DEFAULTLEFTPADDING = 22;
+
         private List<object> _checkedItemsID = new List<object>();
         private string _displayMember;
         private string _valueMember;
@@ -29,7 +31,7 @@ namespace LIBUtil.Desktop.UserControls
         public string LabelText
         {
             get { return label.Text; }
-            set { label.Text = value; }
+            set { label.Text = value; setLabelPadding(); }
         }
 
         [Description("Show list only"), Category("_Custom")]
@@ -40,6 +42,7 @@ namespace LIBUtil.Desktop.UserControls
             {
                 _showListOnly = value;
                 chk.Visible = label.Visible = txtFilter.Visible = lnkClearFilter.Visible = !value;
+                setLabelPadding();
             }
         }
         private bool _showListOnly;
@@ -276,6 +279,14 @@ namespace LIBUtil.Desktop.UserControls
 
             if (this.Item_Checked != null)
                 this.Item_Checked(this, e);
+        }
+
+        public void setLabelPadding()
+        {
+            if (chk.Visible)
+                label.Padding = new Padding(LABEL_DEFAULTLEFTPADDING, 0, 0, 0);
+            else
+                label.Padding = new Padding(0);
         }
 
         #endregion

@@ -1,4 +1,26 @@
-﻿--------------------------------------------------------------------------------------------------------------------------------------------
+﻿
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+RECURSION
+
+	DECLARE @ParentId uniqueidentifier = 'A1CABB69-EF88-4842-ADF8-6E0380F3DCF9'
+
+	;WITH FolderPaths AS (
+
+	   SELECT Files.*
+	   FROM Files
+	   WHERE Id = @ParentId -- Recursion starting point
+
+	   UNION ALL
+
+	   SELECT Files.*
+	   FROM Files 
+		 JOIN FolderPaths on FolderPaths.ParentId = Files.Id -- Recursion while ParentId IS NOT NULL
+		  AND Files.Id <> Files.ParentId -- Exit condition
+
+	) SELECT FolderPaths.* FROM FolderPaths
+
+--------------------------------------------------------------------------------------------------------------------------------------------
 
 select into temp table and iterate through rows
 
@@ -8,15 +30,15 @@ select into temp table and iterate through rows
 		
 	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM @ARRAY_UserAccountAccessEnum) AS x
 	
-	DECLARE @Iteration_Id int
+	DECLARE @Iteration_Id umiqueidentifier
 	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
 	BEGIN
-		SELECT TOP 1 @Iteration_Id = value_int FROM #TEMP_INPUTARRAY
+		-- (SELECT CONVERT(UNIQUEIDENTIFIER, Id) FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 
 		-- add operation here
 		
 		-- remove row to iterate to the next row
-		DELETE #TEMP_INPUTARRAY WHERE value_int = @Iteration_Id
+		DELETE #TEMP_INPUTARRAY WHERE Id = @Iteration_Id
 	END
 	
 	-- clean up
@@ -125,13 +147,20 @@ ROW NUMBER FOR ORDERING
 
 GET string up to a space
 						
-                    SELECT LEFT(UserAccounts.Fullname, 
-                                CASE 
-                                    WHEN charindex(' ', UserAccounts.Fullname) = 0 
-                                    THEN LEN(UserAccounts.Fullname) 
-                                    ELSE charindex(' ', UserAccounts.Fullname) - 1 
-                                END
-                            ) AS UserAccounts_Firstname,
+    SELECT LEFT(UserAccounts.Fullname, 
+                CASE 
+                    WHEN charindex(' ', UserAccounts.Fullname) = 0 
+                    THEN LEN(UserAccounts.Fullname) 
+                    ELSE charindex(' ', UserAccounts.Fullname) - 1 
+                END
+            ) AS UserAccounts_Firstname,
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Compare column after converted to uppercase
+
+	UPDATE StudentSchedules SET Notes = 'ONLINE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONLINE'
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

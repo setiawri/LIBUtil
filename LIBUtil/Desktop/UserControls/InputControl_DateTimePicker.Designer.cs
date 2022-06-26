@@ -36,10 +36,11 @@
             // 
             this.datetimepicker.Checked = false;
             this.datetimepicker.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.datetimepicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.datetimepicker.Location = new System.Drawing.Point(0, 20);
+            this.datetimepicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.datetimepicker.Location = new System.Drawing.Point(0, 26);
+            this.datetimepicker.Margin = new System.Windows.Forms.Padding(4);
             this.datetimepicker.Name = "datetimepicker";
-            this.datetimepicker.Size = new System.Drawing.Size(180, 21);
+            this.datetimepicker.Size = new System.Drawing.Size(240, 24);
             this.datetimepicker.TabIndex = 4;
             this.datetimepicker.Value = new System.DateTime(2000, 1, 1, 0, 0, 0, 0);
             this.datetimepicker.ValueChanged += new System.EventHandler(this.dropdownlist_ValueChanged);
@@ -49,20 +50,21 @@
             this.label.Dock = System.Windows.Forms.DockStyle.Top;
             this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label.Location = new System.Drawing.Point(0, 0);
+            this.label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(180, 18);
+            this.label.Size = new System.Drawing.Size(240, 22);
             this.label.TabIndex = 19;
             this.label.Text = "dropdownlist";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // InputControl_DateTimePicker
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.datetimepicker);
+            this.Controls.Add(this.label);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "InputControl_DateTimePicker";
-            this.Size = new System.Drawing.Size(180, 41);
+            this.Size = new System.Drawing.Size(240, 50);
             this.ResumeLayout(false);
 
         }

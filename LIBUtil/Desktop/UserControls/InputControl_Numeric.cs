@@ -45,12 +45,12 @@ namespace LIBUtil.Desktop.UserControls
                 if (value)
                 {
                     chkAllowDecimal.Visible = ShowAllowDecimalCheckbox;
-                    this.Height = numericUpDown.Height + 3;
+                    this.Height = pnlNumericUpDown.Height;
                 }
                 else
                 {
                     chkAllowDecimal.Visible = false;
-                    this.Height = numericUpDown.Height + label.Height;
+                    this.Height = pnlNumericUpDown.Height + label.Height;
                 }
             }
         }

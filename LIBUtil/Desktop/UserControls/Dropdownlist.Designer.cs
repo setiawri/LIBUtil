@@ -35,19 +35,20 @@
             // 
             this.combobox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.combobox.FormattingEnabled = true;
-            this.combobox.Location = new System.Drawing.Point(0, 0);
+            this.combobox.Location = new System.Drawing.Point(0, 2);
+            this.combobox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.combobox.Name = "combobox";
-            this.combobox.Size = new System.Drawing.Size(180, 21);
+            this.combobox.Size = new System.Drawing.Size(240, 24);
             this.combobox.TabIndex = 15;
             this.combobox.SelectedIndexChanged += new System.EventHandler(this.dropdownlist_SelectedIndexChanged);
             // 
             // Dropdownlist
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.combobox);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Dropdownlist";
-            this.Size = new System.Drawing.Size(180, 21);
+            this.Size = new System.Drawing.Size(240, 26);
             this.ResumeLayout(false);
 
         }

@@ -40,9 +40,10 @@
             this.label.Dock = System.Windows.Forms.DockStyle.Top;
             this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label.Location = new System.Drawing.Point(0, 0);
+            this.label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label.Name = "label";
-            this.label.Padding = new System.Windows.Forms.Padding(18, 0, 0, 0);
-            this.label.Size = new System.Drawing.Size(180, 19);
+            this.label.Padding = new System.Windows.Forms.Padding(24, 0, 0, 0);
+            this.label.Size = new System.Drawing.Size(240, 23);
             this.label.TabIndex = 1;
             this.label.Text = "checkedlistbox";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -51,9 +52,10 @@
             // 
             this.checkedlistbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkedlistbox.FormattingEnabled = true;
-            this.checkedlistbox.Location = new System.Drawing.Point(0, 19);
+            this.checkedlistbox.Location = new System.Drawing.Point(0, 23);
+            this.checkedlistbox.Margin = new System.Windows.Forms.Padding(4);
             this.checkedlistbox.Name = "checkedlistbox";
-            this.checkedlistbox.Size = new System.Drawing.Size(180, 68);
+            this.checkedlistbox.Size = new System.Drawing.Size(240, 84);
             this.checkedlistbox.TabIndex = 0;
             this.checkedlistbox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedlistbox_ItemCheck);
             // 
@@ -61,18 +63,20 @@
             // 
             this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFilter.Location = new System.Drawing.Point(132, 0);
+            this.txtFilter.Location = new System.Drawing.Point(180, 3);
+            this.txtFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtFilter.Name = "txtFilter";
-            this.txtFilter.Size = new System.Drawing.Size(35, 18);
+            this.txtFilter.Size = new System.Drawing.Size(45, 18);
             this.txtFilter.TabIndex = 0;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
             // chk
             // 
-            this.chk.Location = new System.Drawing.Point(-4, 0);
+            this.chk.Location = new System.Drawing.Point(-5, 0);
+            this.chk.Margin = new System.Windows.Forms.Padding(4);
             this.chk.Name = "chk";
-            this.chk.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            this.chk.Size = new System.Drawing.Size(25, 22);
+            this.chk.Padding = new System.Windows.Forms.Padding(9, 0, 0, 0);
+            this.chk.Size = new System.Drawing.Size(28, 27);
             this.chk.TabIndex = 0;
             this.chk.UseVisualStyleBackColor = true;
             this.chk.CheckedChanged += new System.EventHandler(this.chk_CheckedChanged);
@@ -85,7 +89,7 @@
             this.lnkClearFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkClearFilter.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.lnkClearFilter.LinkColor = System.Drawing.Color.DarkOrange;
-            this.lnkClearFilter.Location = new System.Drawing.Point(167, 3);
+            this.lnkClearFilter.Location = new System.Drawing.Point(227, 7);
             this.lnkClearFilter.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.lnkClearFilter.Name = "lnkClearFilter";
             this.lnkClearFilter.Size = new System.Drawing.Size(15, 13);
@@ -97,15 +101,15 @@
             // 
             // InputControl_CheckedListBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.lnkClearFilter);
             this.Controls.Add(this.checkedlistbox);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.chk);
             this.Controls.Add(this.label);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "InputControl_CheckedListBox";
-            this.Size = new System.Drawing.Size(180, 87);
+            this.Size = new System.Drawing.Size(240, 107);
             this.ResumeLayout(false);
             this.PerformLayout();
 

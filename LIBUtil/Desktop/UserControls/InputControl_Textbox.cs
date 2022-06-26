@@ -29,8 +29,8 @@ namespace LIBUtil.Desktop.UserControls
         #region SETTINGS
 
         private const int ADDITIONALTEXTBOXROWHEIGHT = 15;
-        private const int INITIALTEXTBOXHEIGHT = 21;
-        private const int INITIALFORMHEIGHT = 41;
+        private const int INITIALTEXTBOXHEIGHT = 24;
+        private const int INITIALFORMHEIGHT = 50;
 
         #endregion SETTINGS
         /*******************************************************************************************************/
@@ -45,9 +45,11 @@ namespace LIBUtil.Desktop.UserControls
                 _showTextboxOnly = value;
                 label.Visible = !value;
                 if (value)
-                    this.Height = textbox.Height;
+                    this.Height = panel.Height = textbox.Height;
                 else
-                    this.Height = textbox.Height + label.Height;
+                    this.Height = panel.Height = textbox.Height + label.Height;
+                panel.Location = new Point(this.Padding.Left, 0);
+                panel.Width = this.Width - this.Padding.Left - this.Padding.Right;
             }
         }
         private bool _showTextboxOnly;
@@ -63,17 +65,22 @@ namespace LIBUtil.Desktop.UserControls
             get { return textbox.Multiline; } 
             set {
                 textbox.Multiline = value;
+                if(ShowDeleteButton)
+                    pbDelete.Visible = !value;
                 if (value)
                 {
+                    panel.Dock = DockStyle.Fill;
                     int additionalHeight = (_rowCount-1) * ADDITIONALTEXTBOXROWHEIGHT;
                     this.Height = INITIALFORMHEIGHT + additionalHeight;
                     textbox.Height = INITIALTEXTBOXHEIGHT + additionalHeight;
                 }
                 else
                 {
+                    panel.Dock = DockStyle.None;
                     this.Height = INITIALFORMHEIGHT;
                     textbox.Height = INITIALTEXTBOXHEIGHT;
                 }
+                panel.Location = new Point(this.Padding.Left, 0);
             } 
         }
 
@@ -104,15 +111,11 @@ namespace LIBUtil.Desktop.UserControls
         {
             get
             {
-                return false;
-                //return pnlFilter.Visible;
+                return txtFilter.Visible;
             }
             set
             {
-                //if (value && _isBrowseMode)
-                //    pnlFilter.Visible = true;
-                //else
-                //    pnlFilter.Visible = false;
+                txtFilter.Visible = value;
             }
         }
 
@@ -139,12 +142,12 @@ namespace LIBUtil.Desktop.UserControls
             } 
         }
         private int _rowCount = 1;
-        
+
         [Description("Show delete button"), Category("_Custom")]
         public bool ShowDeleteButton
         {
-            get { return pnlDelete.Visible; }
-            set { pnlDelete.Visible = value; }
+            get { return pbDelete.Visible; }
+            set { pbDelete.Visible = value; }
         }
 
         [Description("Text"), Category("_Custom")]
@@ -317,7 +320,7 @@ namespace LIBUtil.Desktop.UserControls
         #endregion METHODS
         /*******************************************************************************************************/
         #region EVENT HANDLERS
-            
+
         [Description("is Browse Mode Clicked Event"), Category("_Custom")]
         public event EventHandler isBrowseMode_Clicked;
         private void textbox_isBrowseMode_Clicked(object sender, EventArgs e)

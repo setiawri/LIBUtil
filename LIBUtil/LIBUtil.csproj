@@ -183,6 +183,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="ActivityLog.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Desktop\UserControls\Dropdownlist.resx">
       <DependentUpon>Dropdownlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Desktop\UserControls\InputControl.resx">
+      <DependentUpon>InputControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Desktop\UserControls\InputControl_Numeric.resx">
       <DependentUpon>InputControl_Numeric.cs</DependentUpon>

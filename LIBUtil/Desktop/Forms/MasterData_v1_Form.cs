@@ -59,7 +59,6 @@ namespace LIBUtil.Desktop.Forms
         protected bool DoNotClearInputAfterSubmission = false;
         protected bool isFormShown = false;
         protected bool IsBtnUpdateEnabled = true;
-        private bool IsBtnLogEnabled = true;
 
         #endregion PROTECTED VARIABLES
         /*******************************************************************************************************/
@@ -118,14 +117,15 @@ namespace LIBUtil.Desktop.Forms
         {
             if (isValidToPopulateGridViewDataSource())
             {
-                DataView dvw;
-                if (reloadFromDB)
-                    dvw = loadGridviewDataSource();
-                else
+                DataView dvw = null;
+                if (!reloadFromDB)
                     dvw = (DataView)dgv.DataSource;
 
+                if(reloadFromDB || dvw == null)
+                    dvw = loadGridviewDataSource();
+
                 if (dvw != null)
-                    dvw.RowFilter = Util.compileQuickSearchFilter(txtQuickSearch.Text.Trim(), FieldnamesForQuickSearch.ToArray());
+                    dvw.RowFilter = Util.compileQuickSearchFilter(itxt_QuickSearch.ValueText.Trim(), FieldnamesForQuickSearch.ToArray());
 
                 setGridviewDataSource(dvw);
             }
@@ -288,7 +288,7 @@ namespace LIBUtil.Desktop.Forms
 
             if(isChildFormInitialized()) updateInputPanelControls();
             updateModeButtonsAvailabilityForGridRow();
-            txtQuickSearch.Focus();
+            itxt_QuickSearch.Focus();
         }
 
         private bool isChildFormInitialized()
@@ -299,15 +299,9 @@ namespace LIBUtil.Desktop.Forms
         private void updateModeButtonsAvailabilityForGridRow()
         {
             if (dgv.Rows.Count > 0 && dgv.SelectedRows.Count > 0)
-            {
-                btnLog.Enabled = IsBtnLogEnabled;
                 btnUpdate.Enabled = IsBtnUpdateEnabled;
-            }
             else
-            {
                 btnUpdate.Enabled = false;
-                btnLog.Enabled = false;
-            }
         }
 
         private void updateInputControls(List<InputControl> inputToDisable, bool enabled, bool reset)
@@ -352,11 +346,6 @@ namespace LIBUtil.Desktop.Forms
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
-            //double clicking is reserved for other operation now
-            //else if (btnLog.Enabled)
-            //{
-            //    btnLog.PerformClick();
-            //}
         }
 
         public void saveFilterValues()
@@ -501,7 +490,7 @@ namespace LIBUtil.Desktop.Forms
                 Mode = FormModes.Search;
                 clearInputFields();
                 reapplyFilterValues();
-                txtQuickSearch.Focus();
+                itxt_QuickSearch.Focus();
             }
         }
 
@@ -512,7 +501,7 @@ namespace LIBUtil.Desktop.Forms
                 Mode = FormModes.Add;
                 clearInputFields();
                 //populateGridViewDataSource(true);
-                txtQuickSearch.Focus();
+                itxt_QuickSearch.Focus();
             }
         }
 
@@ -522,7 +511,7 @@ namespace LIBUtil.Desktop.Forms
             {
                 Mode = FormModes.Update;
                 populateInputFieldsForUpdate();
-                txtQuickSearch.Focus();
+                itxt_QuickSearch.Focus();
             }
         }
 
@@ -556,7 +545,7 @@ namespace LIBUtil.Desktop.Forms
             {
                 btnUpdate.PerformClick();
             }
-            txtQuickSearch.Focus();
+            itxt_QuickSearch.Focus();
         }
 
         protected void btnReset_Click(object sender, EventArgs e)
@@ -573,7 +562,7 @@ namespace LIBUtil.Desktop.Forms
                 }
             }
 
-            txtQuickSearch.Focus();
+            itxt_QuickSearch.Focus();
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
@@ -591,7 +580,7 @@ namespace LIBUtil.Desktop.Forms
 
         protected void lnkClearQuickSearch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            txtQuickSearch.Text = "";
+            itxt_QuickSearch.ValueText = "";
         }
 
         private void dgv_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -637,7 +626,7 @@ namespace LIBUtil.Desktop.Forms
             if (Mode == FormModes.Update)
             {
                 populateInputFieldsForUpdate();
-                txtQuickSearch.Focus();
+                itxt_QuickSearch.Focus();
             }
         }
 
@@ -676,7 +665,7 @@ namespace LIBUtil.Desktop.Forms
             if(_showDataOnLoad)
                 populateGridViewDataSource(true);
 
-            txtQuickSearch.Focus();
+            itxt_QuickSearch.Focus();
         }
 
         private void dgv_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -688,7 +677,7 @@ namespace LIBUtil.Desktop.Forms
             }
         }
 
-        private void TxtQuickSearch_KeyDown(object sender, KeyEventArgs e)
+        private void itxt_QuickSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
@@ -696,8 +685,14 @@ namespace LIBUtil.Desktop.Forms
                     btnAdd.PerformClick();
 
                 populateGridViewDataSource(false);
-                txtQuickSearch.Focus();
+                itxt_QuickSearch.Focus();
             }
+        }
+
+        private void pbRefresh_Click(object sender, EventArgs e)
+        {
+            populateGridViewDataSource(true);
+            itxt_QuickSearch.Focus();
         }
 
         #endregion EVENT HANDLERS
