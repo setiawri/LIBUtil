@@ -103,6 +103,7 @@
             this.txtFilter.Size = new System.Drawing.Size(42, 18);
             this.txtFilter.TabIndex = 1004;
             this.txtFilter.TabStop = false;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
             // pbDelete
             // 
