@@ -310,17 +310,7 @@ namespace LIBUtil.Desktop.UserControls
         {
             if(ContainerPanel != null)
             {
-                if (ContainerPanel.GetType() == typeof(SplitterPanel))
-                {
-                    return isPanelOpen;
-                }
-                else
-                {
-                    if (ArrowOrientation == Orientation.Horizontal)
-                        return ContainerPanel.Width != this.Width;
-                    else
-                        return ContainerPanel.Height != this.Height;
-                }
+                return isPanelOpen;
             }
             else if (TogglePanel.GetType() == typeof(SplitterPanel))
             {
