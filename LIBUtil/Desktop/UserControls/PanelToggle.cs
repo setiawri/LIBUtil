@@ -312,21 +312,7 @@ namespace LIBUtil.Desktop.UserControls
             {
                 if (ContainerPanel.GetType() == typeof(SplitterPanel))
                 {
-                    SplitContainer parent = (SplitContainer)ContainerPanel.Parent;
-                    if (parent.Panel1 == ContainerPanel)
-                    {
-                        if (ArrowOrientation == Orientation.Horizontal)
-                            return parent.SplitterDistance != this.Width;
-                        else
-                            return parent.SplitterDistance != this.Height;
-                    }
-                    else
-                    {
-                        if (ArrowOrientation == Orientation.Horizontal)
-                            return parent.SplitterDistance != (parent.Width - this.Width);
-                        else
-                            return parent.SplitterDistance != (parent.Height - this.Height);
-                    }
+                    return isPanelOpen;
                 }
                 else
                 {
