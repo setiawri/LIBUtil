@@ -243,7 +243,7 @@ namespace LIBUtil
                     if (isStoredProcedure)
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.CommandTimeout = 3000;
+                    cmd.CommandTimeout = 300;
 
                     if (parameters != null && parameters.Length > 0)
                         foreach (SqlQueryParameter parameter in parameters)
@@ -398,7 +398,7 @@ namespace LIBUtil
         
         public static void populatePorts(Desktop.UserControls.InputControl_Dropdownlist iddl)
         {
-            iddl.populate(typeof(ConnectionPorts));
+            iddl.populate<ConnectionPorts>();
         }
 
         public static SqlConnection ActiveSqlConnection

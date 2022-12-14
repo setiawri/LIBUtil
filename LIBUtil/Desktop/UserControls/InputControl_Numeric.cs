@@ -66,9 +66,10 @@ namespace LIBUtil.Desktop.UserControls
         [Description("Show Checkbox"), Category("_Custom")]
         public bool ShowCheckbox
         {
-            get { return checkbox.Visible; }
-            set { checkbox.Visible = value; numericUpDown.Enabled = !checkbox.Visible; }
+            get { return _showCheckbox; }
+            set { checkbox.Visible = _showCheckbox = value; numericUpDown.Enabled = !checkbox.Visible; }
         }
+        private bool _showCheckbox;
 
         [Description("Show Allow Decimal Checkbox"), Category("_Custom")]
         public bool ShowAllowDecimalCheckbox

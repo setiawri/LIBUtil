@@ -1,6 +1,34 @@
 ﻿
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+=================
+ADD ROLE ACCESSES
+=================
+
+	--ClubClassOnlineLinks
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Notes varchar(MAX) null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Add bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_View bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Edit bit default 0 not null;
+	GO
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+=================
+DELETE ALL TABLES
+=================
+
+Run multiple times because dependencies throw errors
+
+EXEC sp_MSforeachtable @command1 = "DROP TABLE ?"
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 RECURSION
 
 	DECLARE @ParentId uniqueidentifier = 'A1CABB69-EF88-4842-ADF8-6E0380F3DCF9'
@@ -265,16 +293,6 @@ CONVERSION
 
 		UPDATE Sales SET hexbarcode=RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), Sales.barcode), 1),5)
 
-
---------------------------------------------------------------------------------------------------------------------------------------------
-
-=================
-DELETE ALL TABLES
-=================
-
-Run multiple times because dependencies throw errors
-
-EXEC sp_MSforeachtable @command1 = "DROP TABLE ?"
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -249,7 +249,7 @@
     <Content Include="Audio\Notification02.wav" />
     <Content Include="Audio\Notification03.wav" />
     <Content Include="Documentations\Info\Troubleshoot.txt" />
-    <Content Include="Documentations\OnlineHosting.txt" />
+    <Content Include="Documentations\OnlineHosting and godaddy issues.txt" />
     <Content Include="Documentations\Programming Consistencies.txt" />
     <Content Include="Documentations\Desktop App Guide.txt" />
     <Content Include="Documentations\Scripts\DB user query.txt" />

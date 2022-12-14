@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data;
 
 using LIBUtil;
+using System.Linq;
 
 namespace LIBWebMVC
 {
@@ -43,14 +44,28 @@ namespace LIBWebMVC
             return output.Value.ToString();
         }
 
+        public static bool IsExist(Database database, string tableName, params SqlParameter[] parameters)
+        {
+            string whereClause = string.Empty;
+            foreach (SqlParameter param in parameters)
+            {
+                if (param.ParameterName.ToLower() == "id")
+                    whereClause = string.Format("AND (@{0} IS NULL OR ({0} <> @{0}))", param.ParameterName);
+                else
+                    whereClause = Util.append(whereClause, string.Format("[{0}] = @{0}", param.ParameterName), " AND ");
+            }
+
+            return database.SqlQuery<int>(string.Format(@"SELECT COUNT(*) FROM {0} WHERE 1=1 {1}", tableName, whereClause), parameters).FirstOrDefault() > 0;
+        }
+
         public static void Insert(Database database, string tableName, params SqlParameter[] parameters)
         {
             string fields = string.Empty;
             string values = string.Empty;
-            foreach (SqlParameter parameter in parameters)
+            foreach (SqlParameter param in parameters)
             {
-                fields = Util.append(fields, parameter.ParameterName, ",");
-                values = Util.append(values, "@" + parameter.ParameterName, ",");
+                fields = Util.append(fields, "["+ param.ParameterName + "]", ",");
+                values = Util.append(values, "@" + param.ParameterName, ",");
             }
 
             database.ExecuteSqlCommand(string.Format("INSERT INTO {0} ({1}) VALUES ({2})", tableName, fields, values), parameters);
@@ -63,9 +78,9 @@ namespace LIBWebMVC
             foreach (SqlParameter param in parameters)
             {
                 if (param.ParameterName.ToLower() == "id")
-                    whereClause = string.Format("{0}.{1} = @{1}", tableName, param.ParameterName);
+                    whereClause = string.Format("{0}.[{1}] = @{1}", tableName, param.ParameterName);
                 else
-                    fields = Util.append(fields, string.Format("{0} = @{0}", param.ParameterName), ", ");
+                    fields = Util.append(fields, string.Format("[{0}] = @{0}", param.ParameterName), ", ");
             }
 
             database.ExecuteSqlCommand(string.Format("UPDATE {0} SET {1} WHERE {2}", tableName, fields, whereClause), parameters);
@@ -75,7 +90,7 @@ namespace LIBWebMVC
         {
             string fields = string.Empty;
             foreach (SqlParameter param in parameters)
-                fields = Util.append(fields, string.Format("{0} = @{0}", param.ParameterName), ", ");
+                fields = Util.append(fields, string.Format("[{0}] = @{0}", param.ParameterName), ", ");
 
             database.ExecuteSqlCommand(string.Format("UPDATE {0} SET {1}", tableName, fields), parameters);
         }
@@ -87,9 +102,9 @@ namespace LIBWebMVC
             foreach (SqlParameter param in parameters)
             {
                 if (param.ParameterName.ToLower() == "id")
-                    whereClause = string.Format("{0}.{1} = @{1}", tableName, param.ParameterName);
+                    whereClause = string.Format("{0}.[{1}] = @{1}", tableName, param.ParameterName);
                 else
-                    fields = Util.append(fields, string.Format("{0} = @{0}", param.ParameterName), ", ");
+                    fields = Util.append(fields, string.Format("[{0}] = @{0}", param.ParameterName), ", ");
             }
 
             database.ExecuteSqlCommand(string.Format("DELETE {0} WHERE {1}", tableName, whereClause), parameters);

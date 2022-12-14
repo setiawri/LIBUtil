@@ -54,7 +54,7 @@ namespace LIBUtil
         public const string TYPE_ARRAY_STR = "value_str";
         public const string TYPE_ARRAY_INT = "value_int";
 
-        public static List<string> sanitizeList = new List<string> { ";", "|", "<", ">", "'", "\"" };
+        public static List<string> sanitizeList = new List<string> { ";", "|", "'", "\"" };
 
         //placeholder for MDI parent.
         public static Form MDIParent; 
@@ -1571,6 +1571,19 @@ namespace LIBUtil
                 return ((DateTime)getAsStartDate(dt)).AddDays(1).AddSeconds(-1);
         }
 
+        public static DateTime standardizeTimeToIgnoreDate(DateTime datetime)
+        {
+            return new DateTime(1970, 1, 1, datetime.Hour, datetime.Minute, 0);
+        }
+
+        public static DateTime? standardizeTimeToIgnoreDate(string time)
+        {
+            if (string.IsNullOrWhiteSpace(time))
+                return null;
+            else
+                return new DateTime(1970, 1, 1, Convert.ToInt32(time.Split('_')[0]), Convert.ToInt32(time.Split('_')[1]), 0);
+        }
+
         #endregion
         /*******************************************************************************************************/
         #region CONTROL LOCATION
@@ -1725,5 +1738,6 @@ namespace LIBUtil
                 intFromHex = int.Parse(value, System.Globalization.NumberStyles.HexNumber) + 1;
             return intFromHex.ToString("X").PadLeft(value.Length, '0');
         }
+
     }
 }

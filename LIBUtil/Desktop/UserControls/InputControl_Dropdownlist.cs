@@ -121,9 +121,9 @@ namespace LIBUtil.Desktop.UserControls
 
         public override void setAsDefaultControl() { dropdownlist.setAsDefaultControl(); }
 
-        public void populate(Type enumName)
+        public void populate<T>()
         {
-            dropdownlist.populate(Enum.GetValues(enumName), "", "", null);
+            dropdownlist.populate<T>();
             reset();
         }
 

@@ -18,3 +18,17 @@ Comment out the following section
   </system.codedom>
 
 
+  ==============
+  GODADDY ISSUES
+  ==============
+  
+  12/10/2022
+  ----------
+  database hostname suddenly changed and the customer service cannot explain why except that the name changes because it is a shared server.
+  To get the new hostname, go to plesk admin and go to databases.
+
+
+  website does not load: toggle aspnet version to older version and back to higher one.
+
+  cannot connect to ftp (user cannot login, home directory inaccessible): create new ftp user access 
+

@@ -123,6 +123,30 @@ namespace LIBUtil.Desktop.UserControls
                 clearSelection();
         }
 
+        public void populate<T>()//(T defaultSelection)
+        {
+            var list = Enum.GetValues(typeof(T))
+                .Cast<T>()
+                .Select(value => new
+                {
+                    Description = (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description ?? value.ToString(),
+                    Value = value
+                })
+                .OrderBy(item => item.Value.ToString())
+                .ToList();
+
+            combobox.DataSource = list;
+            combobox.DisplayMember = "Description";
+            combobox.ValueMember = "Value";
+
+            //if(defaultSelection != null)
+            //{
+            //    foreach (var opts in list)
+            //        if (opts.Value.ToString() == defaultSelection.ToString())
+            //            combobox.SelectedItem = opts;
+            //}
+        }
+
         private static void cb_TextChanged(object sender, EventArgs e)
         {
             ComboBox cb = (ComboBox)sender;

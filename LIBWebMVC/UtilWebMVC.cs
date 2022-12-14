@@ -78,12 +78,12 @@ namespace LIBWebMVC
                 return value;
         }
 
-        public static bool hasBootboxMessage(ControllerBase controller)
+        public static bool hasBootboxMessage(Controller controller)
         {
             return controller.ViewBag.HasBootboxMessage == true;
         }
 
-        public static void setBootboxMessage(ControllerBase controller, string message)
+        public static void setBootboxMessage(Controller controller, string message)
         {
             controller.ViewBag.HasBootboxMessage = true;
             controller.TempData["BootboxMessage"] = message.Replace(Environment.NewLine, "<BR>");
