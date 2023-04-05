@@ -58,9 +58,10 @@ select into temp table and iterate through rows
 		
 	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM @ARRAY_UserAccountAccessEnum) AS x
 	
-	DECLARE @Iteration_Id umiqueidentifier
+	DECLARE @Iteration_Id uniqueidentifier
 	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
 	BEGIN
+		SELECT TOP 1 @Iteration_Id = Id FROM #TEMP_INPUTARRAY
 		-- (SELECT CONVERT(UNIQUEIDENTIFIER, Id) FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 
 		-- add operation here
