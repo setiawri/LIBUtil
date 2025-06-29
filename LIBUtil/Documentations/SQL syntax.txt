@@ -193,6 +193,21 @@ Compare column after converted to uppercase
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+MOVE INVENTORY ITEM
+
+	select InventoryItems.id, InventoryItems.barcode, Inventory.code 
+	from inventoryitems
+	left join inventory on inventory.id = InventoryItems.inventory_id
+	where InventoryItems.barcode = '0f581'
+
+	select * from inventory where code = 4546
+
+	--update InventoryItems set inventory_id='E9F27C46-9ADC-4490-8C17-8F2574933ED6'
+	--where id='2789FE7E-ED7A-40A6-BDEE-F860443E81AA'
+
+	
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 =================
 STORED PROCEDURES
 =================

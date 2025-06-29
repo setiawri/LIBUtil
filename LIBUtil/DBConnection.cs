@@ -132,11 +132,12 @@ namespace LIBUtil
         FillByAdapter,
         ExecuteNonQuery
     }
-
+    
     public class DBConnection
     {
         public static bool DBConnectionTestCompleted;
         private static bool _MultipleSQLConnectionUse = true;
+        public static int SQLCOMMANDTIMEOUT = 600;
 
         /*******************************************************************************************************/
         #region EXECUTE QUERY
@@ -243,7 +244,7 @@ namespace LIBUtil
                     if (isStoredProcedure)
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.CommandTimeout = 300;
+                    cmd.CommandTimeout = SQLCOMMANDTIMEOUT;
 
                     if (parameters != null && parameters.Length > 0)
                         foreach (SqlQueryParameter parameter in parameters)

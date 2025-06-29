@@ -1739,5 +1739,26 @@ namespace LIBUtil
             return intFromHex.ToString("X").PadLeft(value.Length, '0');
         }
 
+        public static Guid? TryParseGuid(string input)
+        {
+            if (Guid.TryParse(input, out Guid result))
+            {
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static List<string> removeNullOrEmpty(List<string> list)
+        {
+            if (list.Contains(string.Empty) || list.Contains(null))
+            {
+                list.RemoveAll(null);
+                list.RemoveAll(x => x == string.Empty);
+            }
+            return list;
+        }
     }
 }

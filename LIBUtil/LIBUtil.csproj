@@ -254,6 +254,7 @@
     <Content Include="Documentations\Desktop App Guide.txt" />
     <Content Include="Documentations\Scripts\DB user query.txt" />
     <Content Include="Documentations\SQL Server.txt" />
+    <Content Include="Documentations\MySQL syntax.txt" />
     <Content Include="Documentations\Web Server.txt" />
     <Content Include="Documentations\SQL syntax.txt" />
     <Content Include="Documentations\VS shortcuts.txt" />
