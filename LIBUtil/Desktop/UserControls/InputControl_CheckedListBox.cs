@@ -135,16 +135,41 @@ namespace LIBUtil.Desktop.UserControls
                     setItemCheckState(i, CheckState.Unchecked);
         }
 
-        public static void populateCheckedListBox(CheckedListBox clb, object data, string displayMember, string valueMember)
-        {
-            clb.DataSource = data;
-            clb.DisplayMember = displayMember;
-            clb.ValueMember = valueMember;
-            clb.CheckOnClick = true;
-            clb.ClearSelected();
-        }
+		public static void populateCheckedListBox(CheckedListBox clb, object data, string displayMember, string valueMember)
+		{
+			if (clb == null || data == null)
+				return;
 
-        public DataTable getCheckedItemsInArrayTable(string columnName)
+			DataView view;
+
+			if (data is DataView dv)
+				view = dv;
+			else if (data is DataTable dt)
+				view = dt.DefaultView;
+			else
+				throw new ArgumentException($"Unsupported data type: {data.GetType().FullName}");
+
+			clb.BeginUpdate();
+
+			// HARD reset – avoids WinForms crash
+			clb.DataSource = null;
+			clb.Items.Clear();
+
+			foreach (DataRowView row in view)
+			{
+				if (row.Row.RowState == DataRowState.Deleted) // defensive guard
+					continue;
+
+				clb.Items.Add(row, false);
+			}
+
+			clb.DisplayMember = displayMember;
+			clb.ValueMember = valueMember;
+
+			clb.EndUpdate();
+		}
+
+		public DataTable getCheckedItemsInArrayTable(string columnName)
         {
             //remove filter to get all checked items
             int selectedIdx = checkedlistbox.SelectedIndex;
