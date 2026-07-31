@@ -14,10 +14,12 @@ namespace LIBUtil.Desktop.UserControls
     [DefaultEvent("Item_Checked")]
     public partial class InputControl_CheckedListBox : InputControl
     {
-        /*******************************************************************************************************/
-        #region VARIABLES
+		private DataView _view;
 
-        public const int LABEL_DEFAULTLEFTPADDING = 22;
+		/*******************************************************************************************************/
+		#region VARIABLES
+
+		public const int LABEL_DEFAULTLEFTPADDING = 22;
 
         private List<object> _checkedItemsID = new List<object>();
         private string _displayMember;
@@ -115,14 +117,22 @@ namespace LIBUtil.Desktop.UserControls
             populateCheckedListBox(checkedlistbox, datatable, _displayMember, _valueMember);
         }
 
-        public void populate(object data, string displayMember, string valueMember)
-        {
-            populateCheckedListBox(checkedlistbox, data, displayMember, valueMember);
-            _displayMember = displayMember;
-            _valueMember = valueMember;
-        }
+		public void populate(object data, string displayMember, string valueMember)
+		{
+			if (data is DataView dv)
+				_view = dv;
+			else if (data is DataTable dt)
+				_view = dt.DefaultView;
+			else
+				throw new ArgumentException();
 
-        public string getDataViewRowFilter(string fieldName, Type type) { return compileRowFilterString(checkedlistbox, fieldName, type); }
+			populateCheckedListBox(checkedlistbox, _view, displayMember, valueMember);
+
+			_displayMember = displayMember;
+			_valueMember = valueMember;
+		}
+
+		public string getDataViewRowFilter(string fieldName, Type type) { return compileRowFilterString(checkedlistbox, fieldName, type); }
 
         public string getDBFilterString(string fieldName, Type type) { return compileDBFilterString(checkedlistbox, fieldName, type); }
 
@@ -165,6 +175,9 @@ namespace LIBUtil.Desktop.UserControls
 
 			clb.DisplayMember = displayMember;
 			clb.ValueMember = valueMember;
+
+			clb.CheckOnClick = true;
+			clb.ClearSelected();
 
 			clb.EndUpdate();
 		}
@@ -261,28 +274,41 @@ namespace LIBUtil.Desktop.UserControls
                 clb.SetItemCheckState(i, CheckState.Unchecked);
         }
 
-        #endregion METHODS
-        /*******************************************************************************************************/
-        #region EVENT HANDLERS
+		#endregion METHODS
+		/*******************************************************************************************************/
+		#region EVENT HANDLERS
 
-        private void txtFilter_TextChanged(object sender, EventArgs e)
-       {
-            Util.sanitize(txtFilter);
-            DataView dvw = (DataView)checkedlistbox.DataSource;
-            if(dvw != null)
-            {
-                //apply filter
-                dvw.RowFilter = string.Format("{0} LIKE '%{1}%'", _displayMember, txtFilter.Text);
-                checkedlistbox.DataSource = dvw;
+		private void txtFilter_TextChanged(object sender, EventArgs e)
+		{
+			Util.sanitize(txtFilter);
 
-                //reapply checked items
-                for (int i = 0; i < checkedlistbox.Items.Count; i++)
-                    if (_checkedItemsID.Contains(getItemGuid(i)))
-                        setItemCheckState(i, CheckState.Checked);
-            }
-        }
+			if (_view == null)
+				return;
 
-        private void lnkClearFilter_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+			_view.RowFilter = string.Format(
+				"{0} LIKE '%{1}%'",
+				_displayMember,
+				txtFilter.Text.Replace("'", "''"));
+
+			refreshList();
+		}
+
+		private void refreshList()
+		{
+			populateCheckedListBox(
+				checkedlistbox,
+				_view,
+				_displayMember,
+				_valueMember);
+
+			for (int i = 0; i < checkedlistbox.Items.Count; i++)
+			{
+				if (_checkedItemsID.Contains(getItemGuid(i)))
+					setItemCheckState(i, CheckState.Checked);
+			}
+		}
+
+		private void lnkClearFilter_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             txtFilter.Text = "";
         }
